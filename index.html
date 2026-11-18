@@ -35,6 +35,8 @@ body[data-theme=easy3]{--bg1:#b07d10;--bg2:#3d2a03;--accent:#e67700;--accent2:#b
 body[data-theme=easy4]{--bg1:#0c8599;--bg2:#06363f;--accent:#1098ad;--accent2:#0b7285;--soft:#e3fafc;--cell:#c5f6fa}
 body[data-theme=easy5]{--bg1:#4f7a12;--bg2:#1a2a05;--accent:#5c940d;--accent2:#3f6b06;--soft:#f4fce3;--cell:#e9fac8}
 body[data-theme=easy6]{--bg1:#8b3aa8;--bg2:#2e0d3b;--accent:#ae3ec9;--accent2:#862e9c;--soft:#f8f0fc;--cell:#f3d9fa}
+body[data-theme=tower]{--bg1:#2b3a8f;--bg2:#0d1338;--accent:#4263eb;--accent2:#364fc7;--soft:#edf2ff;--cell:#dbe4ff}
+body[data-theme=robot]{--bg1:#1f4a3a;--bg2:#08180f;--accent:#2f9e44;--accent2:#237032;--soft:#ebfbee;--cell:#1b2f4a}
 body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -174,6 +176,9 @@ button{font-family:inherit}
 .hline{display:flex;gap:2px;overflow-x:auto;margin:6px 0}
 .hline{gap:1px}.hline div{flex:1 1 0;min-width:0;text-align:center;font:700 11.5px 'Fredoka';background:#f3f0fa;border-radius:4px;padding:6px 0}
 .hline .zero{background:#ffe08a}
+.coords{border-collapse:separate;border-spacing:4px;margin:6px auto}
+.coords td{width:46px;height:46px;background:#1b2f4a;border-radius:8px;text-align:center;font-size:26px}
+.coords th{font:700 17px 'Fredoka';color:var(--accent2);width:24px}
 .vtable{width:100%;border-collapse:collapse;font-size:15px}
 .vtable th{background:var(--soft);font-weight:900;padding:6px 4px;text-align:left}
 .vtable td{padding:6px 4px;border-bottom:1px solid #eee;font-weight:700}
@@ -3027,7 +3032,448 @@ const MIA = {
   }
 };
 
-const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, SEA, PYRAMID];
+
+V.coords = (rows, cols) => {
+  const n = rows.length;
+  let h = `<table class="coords"><tr><th></th>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>`;
+  rows.forEach((r,i)=>{ h += `<tr><th>${n-i}</th>${r.split(" ").map(c=>`<td>${c==="."?"":c}</td>`).join("")}</tr>`; });
+  return h + `</table>`;
+};
+
+/* ================================================================
+   ADVENTURE — THE TOWER OF A HUNDRED STEPS  (gets harder as you climb)
+   ================================================================ */
+const TOWER = {
+  id:"tower", theme:"tower", start:"gate", length:"medium", mins:"15",
+  title:"The Tower of a Hundred Steps",
+  cover:"🗼🔔🧗", coverBg:"#e0e5ff",
+  blurb:"At the top of the Puzzle Queen's tower hangs a golden bell. Every floor has a guardian with a challenge — and each one is trickier than the last.",
+  helper:{name:"Clink the clockwork mouse", icon:"🐭"},
+  runner:"🧗", goal:"🔔",
+  ranks:["Master of the Tower","Tower Champion","Brave Climber"],
+  bag: st => [`🪜 Step ${st.n.step||0} of 100`],
+  badges:{shapes:"🔺 Shape Sorter", cakes:"🧁 Cake Counter", mirror:"🪞 Mirror Solver", vault:"🪙 Coin Keeper"},
+  ending: st => [
+    `You grab the rope and pull. <b>DONNNNG!</b> The golden bell rings out across the whole kingdom, and every window in every house lights up.`,
+    `The Puzzle Queen steps out from behind the bell, smiling. Her crown is covered in tiny numbers that twinkle like stars.`,
+    say("The Puzzle Queen","👸",`Nobody has reached the top of my tower for a hundred years. You have a very clever brain.`),
+    `She gives you a golden key with "100" engraved on it. It opens the tower whenever you like — so you can come back and climb it again.`
+  ],
+  scenes:{
+    gate:{ name:"The Tower Gate", art:"🗼🚪",
+      story:[
+        `On top of a green hill stands the tallest, thinnest tower you have ever seen. It has exactly one hundred steps, and at the very top hangs a golden bell.`,
+        `Nobody has rung the bell for a hundred years. They say the guardians on each floor are too tricky.`,
+        `A tiny clockwork mouse whirrs up to you. TICK-TICK-TICK.`,
+        say("Clink","🐭",`I'm Clink! I'll climb with you. But first you need to open the gate. Look — there's a number missing!`)
+      ],
+      puzzle:{ tag:"Missing number",
+        q:`What number is hiding behind the ❓?`,
+        vis: V.big("❓ + 7 = 15"),
+        options:["8","7","22","9","6","15"], answer:"8",
+        hints:[`What do you add to 7 to make 15?`,`Count up from 7 to 15 on your fingers: 8, 9, 10…`,`Or work backwards: 15 take away 7.`],
+        win:[`8! The gate swings open, and you start to climb. Step 1, step 2, step 3…`]},
+      onWin: st => st.n.step = 10,
+      after:[{to:"floor10", label:"Climb to the first guardian ➜"}]
+    },
+    floor10:{ name:"The Stone Guardian", art:"🗿🔢",
+      story:[
+        `On the tenth step sits a stone guardian with mossy eyebrows. Every step above him has a number carved into it.`,
+        say("The Stone Guardian","🗿",`Every number is made of tens and ones. 46 is 4 tens and 6 ones. Show me the step that is 7 tens and 3 ones, and you may pass.`)
+      ],
+      puzzle:{ tag:"Tens and ones",
+        q:`Which number is 7 tens and 3 ones?`,
+        vis: V.big("🔟🔟🔟🔟🔟🔟🔟 + 1️⃣1️⃣1️⃣"),
+        options:["73","37","703","10","70","76"], answer:"73",
+        hints:[`The tens digit comes first, then the ones digit.`,`7 tens is 70. Add 3 ones…`],
+        win:[
+          `73! The guardian rumbles and moves aside. The stairs split in two: one way leads to a room full of shapes, the other smells of warm cakes.`
+        ]},
+      onWin: st => st.n.step = 20,
+      after:[
+        {to:"shapes", label:"The Room of Shapes 🔺", sub:"Triangles, squares and more"},
+        {to:"cakes", label:"The Tower Kitchen 🧁", sub:"Something smells delicious"}
+      ]
+    },
+    shapes:{ name:"The Room of Shapes", art:"🔺🟦⬟",
+      story:[
+        `The walls of this room are covered in shapes made of glowing wire. A shape-guardian with a pointy hat floats in the middle.`,
+        say("The Shape Guardian","🧙",`A triangle has 3 sides. A square has 4. A pentagon has 5. I have built a picture from 2 triangles, 1 square and 1 pentagon. How many sides altogether?`)
+      ],
+      puzzle:{ tag:"Shapes",
+        q:`2 triangles, 1 square and 1 pentagon. How many sides altogether?`,
+        vis: V.big("🔺🔺 🟦 ⬟"),
+        options:["15","12","14","16","11","20"], answer:"15",
+        hints:[`Two triangles have 3 + 3 sides.`,`6 sides for the triangles, 4 for the square, 5 for the pentagon.`,`6 + 4 + 5 = ?`],
+        win:[`15 sides! The wire shapes buzz and rearrange themselves into a big rectangle on the floor.`]},
+      after:[{to:"shapes2", label:"Look at the rectangle ➜"}]
+    },
+    shapes2:{ name:"The Rectangle Floor", art:"🟩🟩🟩",
+      story:[ say("The Shape Guardian","🧙",`To open the next door, tell me how many squares make up this rectangle.`) ],
+      puzzle:{ tag:"Area",
+        q:`How many squares are in the rectangle?`,
+        vis: V.grid([". . . .",". . . .",". . . ."], ""),
+        options:["12","7","14","10","16","9"], answer:"12",
+        hints:[`Count the squares in one row.`,`There are 4 squares in each row, and 3 rows.`,`3 rows of 4: 4, 8, 12…`],
+        win:[`12 squares! The door clicks open and you climb on up.`]},
+      onWin: st => st.n.step = 35,
+      after:[{to:"clock", label:"Keep climbing ➜"}]
+    },
+    cakes:{ name:"The Tower Kitchen", art:"🧁👩‍🍳",
+      story:[
+        `In the kitchen, a cook with flour on her nose is taking trays out of the oven.`,
+        say("Cook Crumpet","👩‍🍳",`Help me count, and I'll let you through! I've baked 4 trays of cakes, with 6 cakes on each tray.`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`4 trays with 6 cakes on each. How many cakes altogether?`,
+        vis: V.big("🧁🧁🧁🧁🧁🧁 × 4 trays"),
+        options:["24","10","20","28","18","30"], answer:"24",
+        hints:[`Count in 6s, once for each tray.`,`6, 12, 18… one more tray!`],
+        win:[`24 cakes! "Now I need to pack them," says Cook Crumpet.`]},
+      after:[{to:"cakes2", label:"Help pack the cakes ➜"}]
+    },
+    cakes2:{ name:"Packing the Cakes", art:"📦🧁",
+      story:[ say("Cook Crumpet","👩‍🍳",`Each box holds exactly 5 cakes. Any cakes that don't fill a whole box, I'll eat myself!`) ],
+      puzzle:{ tag:"Sharing",
+        q:`24 cakes go into boxes of 5. How many FULL boxes can she make?`,
+        vis: V.big("🧁 × 24 → 📦 = 5"),
+        options:["4","5","6","3","20","19"], answer:"4",
+        hints:[`Count in 5s: 5, 10, 15, 20, 25… Stop before you go past 24.`,`20 cakes fill 4 boxes. Is there enough for a 5th box?`,`4 boxes use 20 cakes, with 4 left over for the cook.`],
+        win:[`4 full boxes, and 4 cakes left over. Cook Crumpet eats one and gives you another. Yum! You climb on.`]},
+      onWin: st => st.n.step = 35,
+      after:[{to:"clock", label:"Keep climbing ➜"}]
+    },
+    clock:{ name:"The Clock Room", art:"🕒⚙️",
+      story:[
+        `Halfway up the tower is a room full of ticking clocks. TICK-TOCK. TICK-TOCK. Clink's ears twitch.`,
+        say("Clink","🐭",`The clock guardian says it's 20 past 3 right now. The next door opens in 35 minutes. We need to know exactly when!`)
+      ],
+      puzzle:{ tag:"Time",
+        q:`It's 20 past 3 (3:20). What time will it be in 35 minutes?`,
+        vis: V.big("🕒 3:20 + 35 minutes"),
+        options:["3:55","4:55","3:45","4:05","3:15","2:55"], answer:"3:55",
+        hints:[`Add 30 minutes first: 3:20 → 3:50.`,`Now add the last 5 minutes.`,`3:50 and 5 more minutes…`],
+        win:[`3:55! At exactly five to four, the door creaks open.`]},
+      onWin: st => st.n.step = 50,
+      after:[{to:"fruit", label:"Through the door ➜"}]
+    },
+    fruit:{ name:"The Fruit Scales", art:"⚖️🍎🍌",
+      story:[
+        `In this room, an old set of weighing scales holds apples and bananas. A sign says the scales show the fruit's weight in kilograms.`,
+        say("Clink","🐭",`I know one thing: each apple weighs 2 kilograms. But how heavy is the banana?`)
+      ],
+      puzzle:{ tag:"Balance",
+        q:`🍎 + 🍎 + 🍌 = 7. Each 🍎 weighs 2. How much does the 🍌 weigh?`,
+        vis: V.big("🍎 + 🍎 + 🍌 = 7"),
+        options:["3","5","2","4","1","7"], answer:"3",
+        hints:[`Two apples weigh 2 + 2.`,`The apples weigh 4. What do you add to 4 to make 7?`],
+        win:[
+          `3 kilograms! The scales balance with a soft ding.`,
+          `Two doors stand in front of you now: one made of mirrors, and one made of gold coins.`
+        ]},
+      onWin: st => st.n.step = 60,
+      after:[
+        {to:"mirror", label:"The Mirror Door 🪞", sub:"Odd and even"},
+        {to:"vault", label:"The Coin Door 🪙", sub:"Pounds and pence"}
+      ]
+    },
+    mirror:{ name:"The Mirror Door", art:"🪞🪞",
+      story:[
+        `The Mirror Door shows two of everything. In the glass, glowing writing appears.`,
+        say("The Mirror","🪞",`Odd numbers are 1, 3, 5, 7, 9… Even numbers are 2, 4, 6, 8… Only ONE of my sums has an EVEN answer. Find it!`)
+      ],
+      puzzle:{ tag:"Odd and even",
+        q:`Which sum has an EVEN answer?`,
+        vis: V.big("🪞 2, 4, 6, 8 …"),
+        options:["3 + 5","3 + 4","5 + 6","7 + 2","1 + 8","9 + 4"], answer:"3 + 5",
+        hints:[`Work out each answer, then check whether it's odd or even.`,`3 + 4 = 7, which is odd. 5 + 6 = 11, also odd…`,`Here's a secret: odd + odd always makes even!`],
+        win:[`3 + 5 = 8, which is even! The mirror shimmers and you step right through it.`]},
+      onWin: st => st.n.step = 70,
+      after:[{to:"tables", label:"Keep climbing ➜"}]
+    },
+    vault:{ name:"The Coin Door", art:"🪙🚪",
+      story:[
+        `The Coin Door has a little shop window in it. You can buy things for the climb ahead.`,
+        say("Clink","🐭",`We have £5. A map costs £2.40, and a torch costs £1.35. Let's buy both!`)
+      ],
+      puzzle:{ tag:"Money",
+        q:`You buy a map for £2.40 and a torch for £1.35. You pay with £5. How much change do you get?`,
+        vis: V.big("🗺️ £2.40 + 🔦 £1.35<br>💷 £5"),
+        options:["£1.25","£1.75","£3.75","£2.25","£1.15","75p"], answer:"£1.25",
+        hints:[`Add up the pounds first: £2 + £1 = £3. Then the pence: 40p + 35p = 75p.`,`You spend £3.75. Now count up from £3.75 to £5.`,`£3.75 → £4 is 25p. £4 → £5 is £1.`],
+        win:[`£1.25 change! The door opens, and you switch on your new torch to light the way.`]},
+      onWin: st => st.n.step = 70,
+      after:[{to:"tables", label:"Keep climbing ➜"}]
+    },
+    tables:{ name:"The Times Table Door", art:"✖️🔐",
+      story:[
+        `Step 70. This door has a keypad, and on it is a sum with a number missing.`,
+        say("Clink","🐭",`This one is about times tables. You might need to work backwards!`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`What number is hiding behind the ❓?`,
+        vis: V.big("❓ × 4 = 28"),
+        options:["7","6","8","24","32","4"], answer:"7",
+        hints:[`How many 4s make 28? Count in 4s: 4, 8, 12…`,`4, 8, 12, 16, 20, 24, 28. How many jumps was that?`],
+        win:[`7! Because 7 lots of 4 is 28. The door slides open.`]},
+      onWin: st => st.n.step = 80,
+      after:[{to:"halves", label:"Keep climbing ➜"}]
+    },
+    halves:{ name:"The Shrinking Stairs", art:"🪜⬇️",
+      story:[
+        `Step 80. These stairs are magic: each time you step on one, the number on the next step halves!`,
+        `The first step says 96.`
+      ],
+      puzzle:{ tag:"Halving",
+        q:`Start at 96. Halve it. Halve it again. Halve it one more time. What number do you reach?`,
+        vis: V.big("96 → ½ → ½ → ½"),
+        options:["12","24","48","6","32","16"], answer:"12",
+        hints:[`Half of 96 is 48.`,`Half of 48 is 24.`,`Now halve 24…`],
+        win:[`12! The shrinking stairs stop wobbling, and you're nearly at the top.`]},
+      onWin: st => st.n.step = 90,
+      after:[{to:"wind", label:"Climb to the windy top ➜"}]
+    },
+    wind:{ name:"The Windy Top", art:"🌬️🌡️",
+      story:[
+        `Step 90. You come out onto an open balcony. The wind is freezing, and there's a thermometer on the wall.`,
+        say("Clink","🐭",`Brrr! It's minus 3 degrees. Oh no, it's dropping by 4 more… now the sun's coming out, and it's going up by 10!`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`It starts at −3. It drops 4 degrees, then rises 10 degrees. What's the temperature now?`,
+        vis: V.hline(-8,8),
+        options:["3","−7","−17","7","17","−3"], answer:"3",
+        hints:[`Dropping 4 from −3 takes you further below zero: −4, −5, −6, −7.`,`Now you're on −7. Count UP 10 steps.`,`−7 up 7 gets you to 0. Then 3 more…`],
+        win:[`3 degrees — warm enough! One last door, and the golden bell is right behind it.`]},
+      onWin: st => st.n.step = 99,
+      after:[{to:"bell", label:"The very last door ➜"}]
+    },
+    bell:{ name:"The Last Door", art:"🔔🚪",
+      story:[
+        `Step 99. The last door is covered in dots arranged in neat squares: 1 dot, then a square of 4 dots, then 9 dots, then 16…`,
+        say("Clink","🐭",`Each pattern is a bigger square! 1 × 1, 2 × 2, 3 × 3… What's the next one?`)
+      ],
+      puzzle:{ tag:"Square numbers",
+        q:`1, 4, 9, 16, 25… What comes next?`,
+        vis: V.big("1 · 4 · 9 · 16 · 25 · ❓"),
+        options:["36","30","35","49","32","26"], answer:"36",
+        hints:[`1 = 1×1, 4 = 2×2, 9 = 3×3, 16 = 4×4, 25 = 5×5.`,`What's the next one? 6 × 6.`,`6 × 6 is 6 lots of 6: 6, 12, 18, 24, 30…`],
+        win:[`36! The last door swings open. Step 100. In front of you hangs the golden bell, with a long red rope.`]},
+      onWin: st => st.n.step = 100,
+      after:[{to:"end", label:"Ring the bell! 🔔"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   ADVENTURE — THE ROBOT WHO COUNTED THE STARS
+   ================================================================ */
+const BOLT = {
+  id:"bolt", theme:"robot", start:"intro", length:"medium", mins:"15",
+  title:"The Robot Who Counted the Stars",
+  cover:"🤖⭐🔭", coverBg:"#e9fac8",
+  blurb:"Bolt the robot's job is to count every star in the sky — but his memory has gone fizzy, and the stars are going out one by one!",
+  helper:{name:"Bolt the robot", icon:"🤖"},
+  runner:"🤖", goal:"⭐",
+  ranks:["Chief Star Counter","Star Engineer","Space Apprentice"],
+  bag: st => [`⭐ Stars relit: ${st.n.lit||0}/10`],
+  badges:{moonbase:"🌑 Moon Base Visitor", train:"🚂 Comet Train Rider", blackhole:"🌀 Black Hole Brave", market:"🛒 Asteroid Shopper"},
+  ending: st => [
+    `One by one, the stars flicker back on. Then they ALL come on at once, and the whole sky blazes with light.`,
+    say("Bolt","🤖",`ALL STARS COUNTED. ALL STARS SHINING. Thank you, friend. My circuits feel… warm.`),
+    `Bolt gives you a tiny silver star to keep. When you get home and switch off your light, it glows on your ceiling — and if you count the real stars outside your window, it twinkles once for every ten.`
+  ],
+  scenes:{
+    intro:{ name:"The Star Counter", art:"🤖🔭",
+      story:[
+        `On top of the highest hill in the world stands an old observatory with a telescope as long as a bus. Inside lives Bolt, a little robot with a round head and a blinking blue light.`,
+        `Bolt's job is to count every star in the sky, every single night. If a star doesn't get counted, it slowly goes out.`,
+        `But tonight, something is wrong. Bolt's light is flickering, and stars are disappearing from the sky.`,
+        say("Bolt","🤖",`HELP. My memory has gone fizzy. I count stars in groups of 5, but I have forgotten my 5 times table. Tonight I counted 8 groups.`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`Bolt counted 8 groups of 5 stars. How many stars is that?`,
+        vis: V.big("⭐⭐⭐⭐⭐ × 8"),
+        options:["40","13","35","45","58","85"], answer:"40",
+        hints:[`Count in 5s, once for each group: 5, 10, 15…`,`5, 10, 15, 20, 25, 30, 35… one more group!`],
+        win:[`40 stars! Bolt's light glows brighter, and two stars blink back on.`, say("Bolt","🤖",`THANK YOU. Please remember that number. I may need it later.`)]},
+      onWin: st => st.n.lit = 2,
+      after:[{to:"jumps", label:"Help Bolt with the star line ➜"}]
+    },
+    jumps:{ name:"The Star Line", art:"🌟➡️",
+      story:[
+        `Across the ceiling of the observatory is a long line of numbered stars, from 0 to 100. Bolt rolls along beneath them on his wheels.`,
+        say("Bolt","🤖",`I am at star 27. I will jump forward 10, back 3, and then forward 10 again. Where will I land?`)
+      ],
+      puzzle:{ tag:"Number line",
+        q:`Start at 27. Jump forward 10, back 3, then forward 10. Where does Bolt land?`,
+        vis: V.big("27 ➕10 ➖3 ➕10"),
+        options:["44","40","47","34","50","37"], answer:"44",
+        hints:[`27 forward 10 is 37. (Only the tens digit changes!)`,`37 back 3 is 34.`,`34 forward 10 is…?`],
+        win:[
+          `44! Bolt lands with a clunk, and another star blinks on.`,
+          say("Bolt","🤖",`I need spare parts to fix my memory. We can fly to the Moon Base, or ride the Comet Train.`)
+        ]},
+      onWin: st => st.n.lit = 3,
+      after:[
+        {to:"moonbase", label:"Fly to the Moon Base 🌑", sub:"Rocks and robots"},
+        {to:"train", label:"Ride the Comet Train 🚂", sub:"All aboard!"}
+      ]
+    },
+    moonbase:{ name:"The Moon Base", art:"🌑🏗️",
+      story:[
+        `The Moon Base is a cluster of silver domes. A helpful moon-robot is weighing rocks.`,
+        say("Moon-robot","🦾",`This rock weighs 38 kilograms. For my records, I only write numbers to the nearest 10.`)
+      ],
+      puzzle:{ tag:"Rounding",
+        q:`38 rounded to the nearest 10 is…?`,
+        vis: V.hline(30,40),
+        options:["40","30","38","50","35","45"], answer:"40",
+        hints:[`Is 38 closer to 30 or to 40?`,`38 is only 2 away from 40, but 8 away from 30.`],
+        win:[`40! The moon-robot gives you a box of spare parts — but one of them doesn't belong.`]},
+      after:[{to:"moonbase2", label:"Check the spare parts ➜"}]
+    },
+    moonbase2:{ name:"The Odd Part", art:"🔩❓",
+      story:[ say("Moon-robot","🦾",`All of my parts are numbered in the 6 times table. Except one. That one is a fake!`) ],
+      puzzle:{ tag:"Odd one out",
+        q:`Which number is NOT in the 6 times table?`,
+        vis: V.big("🔩12 🔩18 🔩24<br>🔩27 🔩30 🔩36"),
+        options:["12","18","24","27","30","36"], answer:"27",
+        hints:[`Count in 6s: 6, 12, 18, 24, 30, 36.`,`Which number didn't you say?`],
+        win:[`27! You throw the fake part away, and Bolt clicks the real ones into place. Two more stars light up.`]},
+      onWin: st => st.n.lit = 5,
+      after:[{to:"starmap", label:"Back to the observatory ➜"}]
+    },
+    train:{ name:"The Comet Train", art:"🚂☄️",
+      story:[
+        `The Comet Train zooms along a track made of stardust. You check the timetable at the station.`,
+        say("Bolt","🤖",`The train leaves at quarter past 6 — that is 6:15. The journey takes 50 minutes.`)
+      ],
+      puzzle:{ tag:"Time",
+        q:`The train leaves at 6:15. The journey takes 50 minutes. What time does it arrive?`,
+        vis: V.big("🕕 6:15 + 50 minutes"),
+        options:["7:05","6:65","7:15","6:55","7:50","6:05"], answer:"7:05",
+        hints:[`45 minutes after 6:15 is 7:00.`,`You still have 5 more minutes to go.`,`Careful — there's no such time as 6:65! An hour only has 60 minutes.`],
+        win:[`7:05! The train glides into Spare Parts Station right on time.`]},
+      after:[{to:"train2", label:"Count the passengers ➜"}]
+    },
+    train2:{ name:"All Aboard!", art:"🚃🚃🚃",
+      story:[ say("The Train Guard","💂",`Before you get off — I must count my passengers! I have 5 carriages, with 8 seats in each. And I can see 13 empty seats.`) ],
+      puzzle:{ tag:"Two steps",
+        q:`5 carriages with 8 seats each. 13 seats are empty. How many passengers are on the train?`,
+        vis: V.big("🚃 × 5 · 💺 8 each<br>13 empty"),
+        options:["27","40","53","35","13","32"], answer:"27",
+        hints:[`First, how many seats altogether? 5 lots of 8.`,`There are 40 seats. 13 are empty.`,`40 − 13 = ?`],
+        win:[`27 passengers! The guard gives you a bag of spare parts as a thank-you. Two more stars light up.`]},
+      onWin: st => st.n.lit = 5,
+      after:[{to:"starmap", label:"Back to the observatory ➜"}]
+    },
+    starmap:{ name:"The Star Map", art:"🗺️⭐",
+      story:[
+        `Back at the observatory, Bolt shows you his star map. It's a grid with letters along the bottom and numbers up the side.`,
+        say("Bolt","🤖",`To find a star, go ALONG to the letter first, then UP to the number. I need the star at C3.`)
+      ],
+      puzzle:{ tag:"Coordinates",
+        q:`Go along to C, then up to 3. What's there?`,
+        vis: V.coords(["⭐ . 🌙 🪐",". ☄️ 🌟 .","🛰️ . . 💫",". 🌍 👾 ."],["A","B","C","D"]),
+        options:["🌟 Bright star","☄️ Comet","🌙 Moon","💫 Shooting star","👾 Space bug","🪐 Planet"], answer:"🌟 Bright star",
+        hints:[`Find the letter C along the bottom first.`,`Now go straight up from C until you reach row 3.`],
+        win:[`The bright star! Bolt points his telescope at it — PING — and it shines even brighter.`]},
+      onWin: st => st.n.lit = 6,
+      after:[{to:"panel", label:"Fix the light panel ➜"}]
+    },
+    panel:{ name:"The Light Panel", art:"💡💡💡",
+      story:[
+        `Bolt opens a panel in his chest. Inside are 12 tiny lights.`,
+        say("Bolt","🤖",`Three quarters of my lights are working. The rest are broken.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Bolt has 12 lights. Three quarters of them work. How many lights work?`,
+        vis: V.big("💡💡💡💡💡💡<br>💡💡💡💡💡💡"),
+        options:["9","3","4","6","8","10"], answer:"9",
+        hints:[`First find ONE quarter of 12. Share 12 into 4 equal groups.`,`One quarter is 3. Three quarters is 3 + 3 + 3.`],
+        win:[
+          `9 lights work! You swap in new bulbs for the 3 broken ones. Bolt's eyes glow.`,
+          say("Bolt","🤖",`Nearly fixed! The last parts are near the Black Hole — or at the Asteroid Market.`)
+        ]},
+      onWin: st => st.n.lit = 7,
+      after:[
+        {to:"blackhole", label:"Brave the Black Hole 🌀", sub:"Spooky and swirly"},
+        {to:"market", label:"Visit the Asteroid Market 🛒", sub:"Busy and noisy"}
+      ]
+    },
+    blackhole:{ name:"The Black Hole", art:"🌀⭐",
+      story:[
+        `Near the Black Hole, stars spiral round and round. Each one has a number, and the numbers follow a strange rule.`,
+        say("Bolt","🤖",`I have worked out the rule: DOUBLE the number, then take away 1. 2, 3, 5, 9, 17… What comes next?`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`Double it, then take away 1: 2, 3, 5, 9, 17… What comes next?`,
+        vis: V.big("2 → 3 → 5 → 9 → 17 → ❓"),
+        options:["33","34","25","31","35","19"], answer:"33",
+        hints:[`Check the rule: double 9 is 18, take away 1 is 17. ✓`,`Now double 17.`,`Double 17 is 34. Take away 1…`],
+        win:[`33! The spiral slows down, and a shiny memory chip floats out of it, right into your hand.`]},
+      onWin: st => st.n.lit = 8,
+      after:[{to:"rows", label:"Race back with the chip ➜"}]
+    },
+    market:{ name:"The Asteroid Market", art:"🪨🛒",
+      story:[
+        `The Asteroid Market is a jumble of stalls on floating rocks. A three-eyed shopkeeper is selling robot parts.`,
+        say("Bolt","🤖",`I need 3 bolts at 25p each, and 1 spring for 60p. Here is a £2 coin.`)
+      ],
+      puzzle:{ tag:"Money",
+        q:`3 bolts cost 25p each. 1 spring costs 60p. You pay £2. How much change?`,
+        vis: V.big("🔩 25p × 3 + 🌀 60p<br>🪙 £2 = 200p"),
+        options:["65p","£1.35","75p","55p","35p","85p"], answer:"65p",
+        hints:[`3 bolts: 25p + 25p + 25p = 75p.`,`75p + 60p = 135p, which is £1.35.`,`Count up from 135p to 200p: 5p makes 140p, then 60p more…`],
+        win:[`65p change! The shopkeeper hands over the parts in a paper bag, and throws in a free memory chip.`]},
+      onWin: st => st.n.lit = 8,
+      after:[{to:"rows", label:"Race back with the chip ➜"}]
+    },
+    rows:{ name:"Stars in Rows", art:"⭐⭐⭐",
+      story:[
+        `Bolt plugs in his new memory chip. WHIRR. To test it, he arranges 50 stars into rows of 6.`,
+        say("Bolt","🤖",`How many FULL rows will I make? And how many stars will be left over?`)
+      ],
+      puzzle:{ tag:"Remainders",
+        q:`50 stars in rows of 6. How many full rows, and how many left over?`,
+        vis: V.big("⭐ × 50 → rows of 6"),
+        options:["8 rows, 2 left","8 rows, 0 left","9 rows, 4 left","7 rows, 8 left","6 rows, 8 left","8 rows, 6 left"], answer:"8 rows, 2 left",
+        hints:[`Count in 6s: 6, 12, 18, 24, 30, 36, 42, 48… Stop before you go past 50.`,`8 rows use 48 stars.`,`50 − 48 = ? That's how many are left over.`],
+        win:[`8 full rows, with 2 left over. "MEMORY TEST: PASSED," says Bolt. One last thing to fix!`]},
+      onWin: st => st.n.lit = 9,
+      after:[{to:"code", label:"The last repair ➜"}]
+    },
+    code:{ name:"The Restart Code", art:"🔢🤖",
+      story:[
+        say("Bolt","🤖",`To restart my star-counting program, I need a code. It is the BIGGEST number you can make using the digits 4, 9 and 2. Use each digit once.`)
+      ],
+      puzzle:{ tag:"Place value",
+        q:`Using 4, 9 and 2 once each, what is the BIGGEST number you can make?`,
+        vis: V.big("4️⃣ 9️⃣ 2️⃣"),
+        options:["942","924","249","492","429","294"], answer:"942",
+        hints:[`The first digit is the hundreds — it matters most. Put the biggest digit there.`,`9 goes first. Which digit is the next biggest?`],
+        win:[`942! Bolt's lights flash all the colours of the rainbow. "RESTARTING…"`]},
+      after:[{to:"final", label:"Watch Bolt restart ➜"}]
+    },
+    final:{ name:"The Final Count", art:"🤖🔭✨",
+      story:[
+        say("Bolt","🤖",`RESTART COMPLETE. To finish, I must check my very first count of the night. How many stars did I count at the start?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`How many stars did Bolt count at the very start of the story?`,
+        vis: V.big("⭐ ❓"),
+        options:["40","13","45","35","50","8"], answer:"40",
+        hints:[`Think back to the very first puzzle. Bolt counted groups of 5…`,`He counted 8 groups of 5.`],
+        win:[`40! "CORRECT," says Bolt, and he aims his telescope at the sky.`]},
+      onWin: st => st.n.lit = 10,
+      after:[{to:"end", label:"Look at the sky ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, SEA, PYRAMID];
 </script>
 
 <!-- ======================= ENGINE ======================= -->
@@ -3164,7 +3610,7 @@ const VERB={"Polly":"squawks","BLIP":"beeps","Station Guard":"beeps","Mortimer t
 function bookSay(b, tag){
   let t=b.text.replace(/"([^"]*)"/g,'‘$1’');
   if(!tag) return `“${t}”`;
-  const name=SHORT[b.who]||b.who;
+  const name=(SHORT[b.who]||b.who).replace(/^The /,'the ');
   let s1=t, rest='';
   const m=t.match(/^(.+?[.!?…])\s+(?=[A-Z0-9‘(“])([\s\S]+)$/);
   const openInner = x => (x.match(/‘/g)||[]).length > (x.match(/’/g)||[]).length;

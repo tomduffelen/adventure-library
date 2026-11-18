@@ -4,7 +4,7 @@ Choose-your-path puzzle adventures for young explorers — plus easy readers for
 
 - **🌱 Easy readers** in three levels (Level 1 simplest → Level 3 longer pages, 6 puzzles): big, simple text, and a 🔊 "Hear it" button.
 - **⚡ Quick stories** (about 7 min, 5 puzzles)
-- **📘 Adventures** (about 15 min, 10 puzzles)
+- **📘 Adventures** (about 15 min, 10 puzzles) — including two number-packed ones that get harder as you go
 - **🏔️ Epic quests** (about 30 min, 16 puzzles, place saved automatically)
 
 Puzzles include multi-step maths, fractions, minus numbers, secret codes, detective logic, compass maps and riddles. Every choice changes the path.
