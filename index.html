@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Adventure Library</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2a2360">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Adventures">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parch:#fffaf0; --parch2:#f8edd3; --ink:#2e2418; --ui:#1f1b2e;
+  --good:#1f8a4c; --bad:#c03b3b; --hint:#fff6d1; --hintb:#e8b400;
+}
+body{--bg1:#2a2360;--bg2:#100d2b;--accent:#6b46c1;--accent2:#4c2f99;--soft:#efe9ff;--cell:#d7ecc9;--celltext:#1f1b2e}
+body[data-theme=castle]{--bg1:#33246b;--bg2:#120c2e;--accent:#6b46c1;--accent2:#4a2c94;--soft:#efe9ff;--cell:#bfe0a8}
+body[data-theme=space]{--bg1:#10275a;--bg2:#02040d;--accent:#1f6fd1;--accent2:#144f9c;--soft:#e2eeff;--cell:#1d2b4f}
+body[data-theme=pirate]{--bg1:#0f6a78;--bg2:#05303a;--accent:#0b7f7f;--accent2:#075a5a;--soft:#dcf5f2;--cell:#8fd3ea}
+body[data-theme=zoo]{--bg1:#6a2456;--bg2:#220a1c;--accent:#c0347a;--accent2:#8f2259;--soft:#fde7f1;--cell:#d9efc4}
+body[data-theme=lighthouse]{--bg1:#22304d;--bg2:#070b16;--accent:#b7791f;--accent2:#8a5a12;--soft:#fdf2dc;--cell:#9ccbe6}
+body[data-theme=sea]{--bg1:#0b5573;--bg2:#021a26;--accent:#e05a47;--accent2:#b23b2b;--soft:#ffe9e5;--cell:#a7dbe8}
+body[data-theme=desert]{--bg1:#8a5520;--bg2:#2b1607;--accent:#9b2c2c;--accent2:#741f1f;--soft:#fbe9d7;--cell:#f1d9a3}
+body[data-theme=snow]{--bg1:#2c4a86;--bg2:#0b1630;--accent:#4f6bd8;--accent2:#3651b5;--soft:#e7ecff;--cell:#eef4ff}
+body[data-theme=fair]{--bg1:#7a1f2b;--bg2:#2a070c;--accent:#d6336c;--accent2:#a61e4d;--soft:#ffe3ec;--cell:#ffe8cc}
+body[data-theme=easy1]{--bg1:#3d8b37;--bg2:#163d14;--accent:#2f9e44;--accent2:#237032;--soft:#ebfbee;--cell:#d3f9d8}
+body[data-theme=easy2]{--bg1:#1d5fb8;--bg2:#0a1f45;--accent:#1c7ed6;--accent2:#1864ab;--soft:#e7f5ff;--cell:#d0ebff}
+body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#100d2b}
+body{font-family:'Nunito',system-ui,sans-serif;color:var(--ui);min-height:100vh;background-color:var(--bg2);
+  background-image:radial-gradient(ellipse at top,var(--bg1),var(--bg2) 75%);background-attachment:fixed;padding:0 12px 60px}
+.sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.sky i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;opacity:.55;animation:tw 3.5s infinite ease-in-out}
+@keyframes tw{50%{opacity:.1}}
+.wrap{position:relative;z-index:1;max-width:660px;margin:0 auto}
+button{font-family:inherit}
+
+/* ---------- HOME ---------- */
+.hero{text-align:center;color:#fff;padding:30px 8px 18px}
+.hero .big{font-size:54px;line-height:1}
+.hero h1{font:700 34px/1.15 'Fredoka';margin:10px 0 6px}
+.hero p{font-size:18px;opacity:.85}
+.guide{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:18px;color:#fff;margin-bottom:18px}
+.guide summary{cursor:pointer;padding:14px 18px;font:600 17px 'Fredoka';list-style:none}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"▾";float:right;opacity:.7}
+.guide[open] summary::after{content:"▴"}
+.guide .gbody{padding:0 16px 18px;color:var(--ui)}
+.guide .gbody>p{color:#fff;font-size:15px;margin:2px 4px 12px;opacity:.9}
+.legend{display:grid;gap:12px}
+.legend .lg{background:#fff;border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.45}
+.legend .lg b{font-weight:900}
+.cardlist{display:grid;gap:14px}
+.scard{display:flex;gap:14px;align-items:center;text-align:left;width:100%;border:none;cursor:pointer;
+  background:var(--parch);border-radius:20px;padding:16px;box-shadow:0 6px 0 rgba(0,0,0,.25),0 14px 30px rgba(0,0,0,.3);
+  transition:transform .12s}
+.scard:active{transform:translateY(3px)}
+.scard .cov{flex:0 0 86px;height:86px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:30px;letter-spacing:-2px;line-height:1.05;text-align:center;flex-wrap:wrap;padding:6px}
+.scard .t{font:700 20px/1.2 'Fredoka';color:var(--ui);margin-bottom:4px}
+.scard .b{font-size:15px;line-height:1.4;color:#4a4458}
+.scard .m{margin-top:8px;font:800 13px 'Nunito';color:#6a6280;display:flex;gap:10px;flex-wrap:wrap}
+.scard .done{color:var(--good)}
+
+/* ---------- TOP BAR ---------- */
+.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 0 8px;
+  background:linear-gradient(var(--bg1) 70%,transparent)}
+.iconbtn{flex:0 0 auto;height:44px;min-width:44px;border-radius:14px;border:none;cursor:pointer;
+  background:rgba(255,255,255,.14);color:#fff;font:800 15px 'Nunito';display:flex;align-items:center;gap:5px;padding:0 10px;font-size:20px}
+.iconbtn .c{font-size:14px;background:#ffd23f;color:#3a2a00;border-radius:99px;padding:1px 7px;font-weight:900}
+.iconbtn.pulse{animation:pulse .8s 2}
+@keyframes pulse{50%{transform:scale(1.18);background:#ffd23f}}
+.track{flex:1;position:relative;height:14px;border-radius:99px;background:rgba(255,255,255,.16);margin:0 16px 0 6px}
+.track .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff);transition:width .8s}
+.track .runner{position:absolute;top:50%;transform:translate(-50%,-55%);font-size:24px;transition:left .8s}
+.track .goal{position:absolute;right:-16px;top:50%;transform:translateY(-55%);font-size:24px}
+.starchip{flex:0 0 auto;color:#ffd23f;font:900 17px 'Nunito';background:rgba(255,255,255,.14);height:44px;border-radius:14px;display:flex;align-items:center;padding:0 10px}
+.bagrow{color:#fff;font-size:14px;font-weight:800;opacity:.92;margin:0 4px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bagrow .it{background:rgba(255,255,255,.14);border-radius:99px;padding:3px 10px;font-size:15px}
+
+/* ---------- CHAPTER ---------- */
+.chap{text-align:center;color:#fff;margin:4px 0 16px;animation:in .45s ease}
+.chap .num{font:800 13px 'Nunito';letter-spacing:2px;text-transform:uppercase;opacity:.75}
+.chap .art{font-size:58px;line-height:1.15;margin:6px 0 2px;letter-spacing:4px}
+.chap h2{font:700 27px/1.2 'Fredoka'}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ---------- READ ALOUD STORY BOX ---------- */
+.read{position:relative;background:linear-gradient(var(--parch),var(--parch2));border-radius:20px;
+  padding:30px 20px 10px;margin:22px 0 14px;border:2px solid #e6cf9a;box-shadow:0 8px 0 #c9a96a,0 16px 34px rgba(0,0,0,.35);
+  font-family:'Literata',Georgia,serif;color:var(--ink);font-size:20px;line-height:1.7;animation:in .45s ease}
+.read::before{content:"📖  READ ALOUD";position:absolute;top:-14px;left:18px;background:#8a5a1c;color:#fff;
+  font:900 12px 'Nunito';letter-spacing:1.5px;padding:6px 12px;border-radius:99px;box-shadow:0 3px 0 #5e3c10}
+.read p{margin-bottom:14px}
+.read b{font-weight:700}
+.say{display:flex;gap:10px;align-items:flex-start;margin:4px 0 16px}
+.say .av{flex:0 0 46px;height:46px;border-radius:50%;background:#fff;border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px}
+.say .bub{position:relative;background:#fff;border-radius:4px 18px 18px 18px;padding:8px 14px 10px;border:2px solid #eadbb8;flex:1}
+.say .who{font:900 12px 'Nunito';letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:2px}
+.say .tx{font-style:italic}
+
+/* ---------- NOTEBOOK CALLOUT ---------- */
+.note{background:#fff3b0;border:3px dashed #d29d00;border-radius:16px;padding:12px 14px;margin:0 0 14px;font-size:17px;line-height:1.45;animation:in .45s ease}
+.note .lab{font:900 12px 'Nunito';letter-spacing:1.3px;color:#8a6400;margin-bottom:4px}
+
+/* ---------- PUZZLE ---------- */
+.puz{background:#fff;border-radius:20px;overflow:hidden;border:3px solid var(--accent);margin:22px 0 14px;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:in .45s ease}
+.puzhead{background:var(--accent);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.puzhead .l{font:700 18px 'Fredoka'}
+.puzhead .r{font:800 12px 'Nunito';letter-spacing:1px;text-transform:uppercase;opacity:.9;text-align:right}
+.puzbody{padding:16px}
+.q{font:800 20px/1.45 'Nunito';color:var(--ui);margin-bottom:12px}
+.q ul{margin:8px 0 0 0;list-style:none}
+.q li{padding:3px 0 3px 26px;position:relative}
+.q li::before{content:"🔎";position:absolute;left:0;font-size:16px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{font:700 19px/1.2 'Fredoka';min-height:62px;padding:10px 8px;border-radius:14px;border:3px solid #d9d2ea;background:var(--soft);
+  color:var(--ui);cursor:pointer;transition:transform .1s}
+.opt:active{transform:scale(.96)}
+.opt.wrong{background:#fde5e5;border-color:#efaaaa;color:#b14a4a;text-decoration:line-through;opacity:.65;animation:shake .4s}
+.opt.right{background:#dcf6e6;border-color:var(--good);color:var(--good)}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.hint{display:flex;gap:10px;align-items:flex-start;background:var(--hint);border:2px solid var(--hintb);border-radius:14px;padding:10px 12px;margin-top:14px;font-size:17px;line-height:1.45;animation:in .3s}
+.hint .av{font-size:28px;line-height:1}
+.hint .lab{font:900 12px 'Nunito';letter-spacing:1px;color:#8a6a00;text-transform:uppercase}
+.correct{display:flex;align-items:center;gap:10px;background:#e2f7ea;border:2px solid #9ddcb6;border-radius:14px;padding:10px 14px;margin-top:14px;font:800 17px 'Nunito';color:var(--good);animation:in .3s}
+.correct .s{font-size:28px;animation:pop .6s}
+@keyframes pop{0%{transform:scale(.2)}70%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+/* visuals */
+.vbig{font-size:34px;text-align:center;letter-spacing:3px;line-height:1.35;margin:4px 0 6px}
+.vcode{font:700 22px 'Fredoka';text-align:center;letter-spacing:2px;white-space:nowrap;overflow-x:auto;background:#fbf4e2;border:2px dashed #c9a96a;border-radius:12px;padding:12px 8px;margin:4px 0 10px;color:#5a3d12}
+.vkey{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:14px}
+.vkey span{background:#f3f0fa;border-radius:8px;padding:4px 2px;text-align:center;display:flex;flex-direction:column}
+.vkey b{font:700 17px 'Fredoka'}
+.vkey i{font-style:normal;color:#6a6280;font-weight:800}
+.vkey.sym{grid-template-columns:repeat(4,1fr)}
+.vkey.sym b{font-size:24px}
+.vkey.morse b{font-size:19px;letter-spacing:1px}
+.sec{color:#fff;font:700 23px 'Fredoka';margin:26px 4px 2px}
+.secsub{color:#fff;opacity:.75;font-size:14px;font-weight:800;margin:0 4px 12px}
+.tag{background:#ffd23f;color:#3a2a00;border-radius:99px;padding:1px 8px}
+.vstrip{display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+.vstrip span{width:28px;height:30px;display:flex;align-items:center;justify-content:center;background:#f3f0fa;border-radius:6px;font:700 16px 'Fredoka'}
+.vrow{display:flex;gap:4px;margin:4px 0}
+.vrow .c{flex:1;min-width:0;background:#f4f2f8;border-radius:10px;padding:6px 2px;text-align:center;font-size:22px;line-height:1.35}
+.vrow .n{font:800 13px 'Nunito';color:#6a6280}
+.vcards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.vcards.two{grid-template-columns:1fr 1fr}
+.vc{background:#f4f2f8;border-radius:12px;padding:8px 6px;text-align:center;font-size:14px;line-height:1.35}
+.vc .n{font:700 15px 'Fredoka';color:var(--accent2)}
+.vc .ic{font-size:28px;margin:2px 0}
+.vc .ln{font-weight:800;color:#3c3550}
+.vlegend{font-size:14px;font-weight:700;color:#5c5470;text-align:center;margin-top:8px;line-height:1.5}
+.vline{display:flex;flex-direction:column;align-items:center;gap:2px;margin:4px auto;width:120px}
+.vline div{width:100%;text-align:center;font:700 15px 'Fredoka';background:#f3f0fa;border-radius:6px;padding:1px 0}
+.vline .zero{background:#ffe08a}
+.hline{display:flex;gap:2px;overflow-x:auto;margin:6px 0}
+.hline{gap:1px}.hline div{flex:1 1 0;min-width:0;text-align:center;font:700 11.5px 'Fredoka';background:#f3f0fa;border-radius:4px;padding:6px 0}
+.hline .zero{background:#ffe08a}
+.vtable{width:100%;border-collapse:collapse;font-size:15px}
+.vtable th{background:var(--soft);font-weight:900;padding:6px 4px;text-align:left}
+.vtable td{padding:6px 4px;border-bottom:1px solid #eee;font-weight:700}
+.grid{display:grid;gap:4px;margin:6px auto 4px;width:max-content;max-width:100%}
+.grid div{width:48px;height:48px;border-radius:8px;background:var(--cell);display:flex;align-items:center;justify-content:center;font-size:27px}
+.grid .st{box-shadow:0 0 0 3px #ff4f8b inset;background:#fff}
+.dirs{text-align:center;font:700 19px/1.5 'Fredoka';margin:6px 0}
+.compass{text-align:center;font:800 14px 'Nunito';color:#5c5470;margin-top:6px}
+.clues{background:#fff8d8;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:15px;line-height:1.45}
+.clues div{padding:2px 0}
+
+/* ---------- CHOICES ---------- */
+.choose{margin-top:20px;animation:in .45s ease}
+.choose .lab{color:#fff;font:800 14px 'Nunito';letter-spacing:1.2px;text-transform:uppercase;margin:0 0 10px 4px;opacity:.85}
+.btn{display:block;width:100%;text-align:left;font:700 20px/1.25 'Fredoka';padding:16px 18px;margin-bottom:12px;border-radius:18px;border:none;cursor:pointer;
+  background:#ffd23f;color:#3a2a00;box-shadow:0 5px 0 #c99b00;transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c99b00}
+.btn small{display:block;font:700 15px 'Nunito';opacity:.8;margin-top:3px}
+.btn.alt{background:#fff;box-shadow:0 5px 0 #bbb;color:var(--ui)}
+.btn.center{text-align:center}
+
+/* ---------- COVER & END ---------- */
+.cover{background:linear-gradient(var(--parch),var(--parch2));border-radius:22px;padding:24px 20px;margin-top:16px;text-align:center;box-shadow:0 8px 0 #c9a96a,0 16px 34px rgba(0,0,0,.35);animation:in .45s}
+.cover .art{font-size:60px;letter-spacing:4px}
+.cover h1{font:700 30px/1.15 'Fredoka';color:var(--accent2);margin:8px 0}
+.cover .bl{font-family:'Literata',serif;font-size:19px;line-height:1.6;color:var(--ink);margin-bottom:14px}
+.cover .meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cover .meta span{background:#fff;border-radius:99px;padding:5px 12px;font-weight:800;font-size:14px}
+.helperbox{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border-radius:14px;padding:10px 12px;font-size:15px;line-height:1.4}
+.helperbox .av{font-size:32px}
+.cert{text-align:center;background:#fff;border:5px double #d1a43a;border-radius:18px;padding:18px 14px;margin:16px 0}
+.cert .r{font:700 26px 'Fredoka';color:var(--accent2);margin:4px 0}
+.cert .stars{font-size:26px;letter-spacing:2px;margin:6px 0;word-break:break-all}
+.badges{text-align:center;margin:8px 0 16px}
+.badge{display:inline-block;background:#fff;border:3px solid #ffd23f;border-radius:14px;padding:6px 12px;margin:4px;font:700 15px 'Fredoka'}
+.tip{color:#fff;background:rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;font-size:16px;line-height:1.45;margin-bottom:14px}
+
+/* ---------- MODAL ---------- */
+.modal{position:fixed;inset:0;background:rgba(10,8,25,.7);z-index:20;display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet{background:#fffdf6;border-radius:22px;max-width:620px;width:100%;max-height:85vh;overflow:auto;padding:20px;animation:in .3s}
+.sheet h3{font:700 24px 'Fredoka';margin-bottom:10px}
+.sheet .nb{background:#fff3b0;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:17px;line-height:1.45}
+.sheet .empty{color:#777;font-size:16px;margin-bottom:12px}
+.sheet p{font-size:17px;margin-bottom:14px;line-height:1.5}
+/* ---------- EASY READERS ---------- */
+body.easy .read{font-family:'Andika','Nunito',sans-serif;font-size:30px;line-height:1.55;padding:34px 22px 14px}
+body.easy .read::before{content:"📖  READ IT YOURSELF";background:var(--accent2);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+body.easy .read p{margin-bottom:10px}
+body.easy .say .tx{font-style:normal}
+body.easy .say .who{font-size:14px}
+body.easy .q{font-family:'Andika','Nunito',sans-serif;font-size:28px;font-weight:700}
+body.easy .opts{grid-template-columns:1fr 1fr 1fr}
+body.easy .opt{font-family:'Andika','Nunito',sans-serif;font-size:25px;min-height:88px;font-weight:700}
+body.easy .vbig{font-size:48px}
+body.easy .hint{font-size:22px;font-family:'Andika','Nunito',sans-serif}
+body.easy .correct{font-size:20px}
+body.easy .chap h2{font-size:34px}
+body.easy .chap .art{font-size:72px}
+body.easy .btn{font-size:24px}
+.hear{display:inline-flex;align-items:center;gap:6px;margin:2px 0 10px;border:none;border-radius:99px;background:#fff;box-shadow:0 2px 0 #d9c79c;
+  font:800 16px 'Nunito';color:var(--accent2);padding:8px 14px;cursor:pointer}
+.qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.qrow .hear{flex-shrink:0;white-space:nowrap;background:var(--soft);box-shadow:none}
+.ertag{display:inline-block;background:#d3f9d8;color:#1b5e20;border-radius:99px;padding:2px 10px;font-weight:900}
+.installbtn{margin:14px auto 0;display:none;background:#ffd23f;color:#3a2a00;border:none;border-radius:99px;padding:10px 18px;font:800 16px 'Nunito';cursor:pointer;box-shadow:0 4px 0 #c99b00}
+.foot{color:rgba(255,255,255,.55);text-align:center;font-size:13px;margin-top:26px}
+
+@media (max-width:380px){
+  .read{font-size:18.5px;padding:28px 16px 8px}
+  .q{font-size:18.5px}
+  .opt{font-size:17px}
+  .grid div{width:42px;height:42px;font-size:23px}
+  .vrow .c{font-size:19px}
+}
+</style>
+</head>
+<body data-theme="home">
+<div class="sky" id="sky"></div>
+<div class="wrap" id="app"></div>
+<div id="modal"></div>
+
+<!-- ======================= STORY DATA ======================= -->
+<script id="data">
+const AL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const say = (who, icon, text) => ({t:"say", who, icon, text});
+const note = (text) => ({t:"note", text});
+const fmtSigned = i => i > 0 ? "+" + i : i < 0 ? "−" + (-i) : "0";
+
+const V = {
+  big: s => `<div class="vbig">${s}</div>`,
+  code: s => `<div class="vcode">${s}</div>`,
+  a1z26: () => `<div class="vkey">${AL.map((l,i)=>`<span><b>${l}</b><i>${i+1}</i></span>`).join("")}</div>`,
+  strip: () => `<div class="vstrip">${AL.map(l=>`<span>${l}</span>`).join("")}</div>`,
+  symkey: pairs => `<div class="vkey sym">${pairs.map(([s,l])=>`<span><b>${s}</b><i>${l}</i></span>`).join("")}</div>`,
+  row: cols => `<div class="vrow">${cols.map(c=>`<div class="c"><div class="n">${c[0]}</div>${c.slice(1).map(x=>`<div>${x}</div>`).join("")}</div>`).join("")}</div>`,
+  cards: (list, two) => `<div class="vcards ${two?"two":""}">${list.map(c=>`<div class="vc"><div class="n">${c.n}</div><div class="ic">${c.icon}</div>${(c.lines||[]).map(x=>`<div class="ln">${x}</div>`).join("")}</div>`).join("")}</div>`,
+  legend: s => `<div class="vlegend">${s}</div>`,
+  vline: (top, bottom, fmt) => { let h = `<div class="vline">`; for (let i = top; i >= bottom; i--) h += `<div class="${i===0?"zero":""}">${fmt?fmt(i):i}</div>`; return h + `</div>`; },
+  hline: (a, b) => { let h = `<div class="hline">`; for (let i = a; i <= b; i++) h += `<div class="${i===0?"zero":""}">${i<0?"−"+(-i):i}</div>`; return h + `</div>`; },
+  table: (head, rows) => `<table class="vtable"><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`,
+  clues: list => `<div class="clues">${list.map(c=>`<div>${c}</div>`).join("")}</div>`,
+  grid: (rows, start, cell) => {
+    const cells = rows.map(r => r.split(" "));
+    const cols = cells[0].length;
+    let h = `<div class="grid" style="grid-template-columns:repeat(${cols},auto)${cell?`;--cell:${cell}`:""}">`;
+    cells.forEach(r => r.forEach(c => { h += `<div class="${c===start?"st":""}">${c==="."?"":c}</div>`; }));
+    return h + `</div>`;
+  }
+};
+
+/* ================================================================
+   STORY 1 — THE CASE OF THE VANISHING SPELLBOOK
+   ================================================================ */
+const CASTLE = {
+  id:"castle", theme:"castle", start:"intro", length:"medium", mins:"15",
+  title:"The Case of the Vanishing Spellbook",
+  cover:"🏰📖🔍", coverBg:"#e9e0ff",
+  blurb:"Someone has stolen Wizard Bramble's spellbook on the morning of his birthday! Gather clues, crack codes and catch the thief.",
+  helper:{name:"Wizard Bramble", icon:"🧙‍♂️"},
+  runner:"🔍", goal:"📖",
+  ranks:["Grand Detective of the Castle","Senior Detective","Junior Detective"],
+  bag: st => {
+    const out = [`🔍 Clues: ${st.notes.length}/4`];
+    if (st.items.has("key")) out.push("🗝️ Iron key");
+    if (st.items.has("gribble")) out.push("👺 Gribble");
+    return out;
+  },
+  badges:{stairs:"🪜 Lift Rider", laundry:"🧺 Laundry Diver", maze:"🌿 Maze Runner", ferry:"⛵ Ferry Passenger"},
+  ending: st => [
+    `That evening, Castle Thistlewick holds the biggest birthday party it has ever seen. Lanterns float in the air. Ember the dragon lights the candles (very, very carefully). Gribble dances on the table, and Pip the owl hoots "Happy Birthday" perfectly in tune.`,
+    say("Wizard Bramble","🧙‍♂️",`Apprentice, you found my spellbook AND my birthday cake. You're the finest detective this castle has ever had!`),
+    `He pins a shiny silver badge onto your cloak. It has a magnifying glass on it, and it says <b>CASTLE DETECTIVE</b>.`,
+    `And Mrs Crumble? She promises that next time she borrows a book, she'll write her note in plain old letters.`
+  ],
+  scenes:{
+    intro:{ name:"The Empty Shelf", art:"🧙‍♂️📚❓",
+      story:[
+        `It's the morning of Wizard Bramble's birthday, and Castle Thistlewick is buzzing with excitement. You are Bramble's apprentice, and you've been up since sunrise polishing his wands.`,
+        `Suddenly, a howl echoes down the corridor.`,
+        say("Wizard Bramble","🧙‍♂️",`My spellbook! My Great Big Book of Spells has VANISHED! It was on the top shelf of the library last night, and this morning — gone!`),
+        say("Wizard Bramble","🧙‍♂️",`I was in my workshop right next door all night, brewing a cough potion. And I didn't hear a thing. Not a creak. Not a squeak. Not a single CLANK.`),
+        note(`Wizard Bramble was right next door to the library all night. He didn't hear a single sound — not even a clank.`),
+        `Pinned to the empty shelf is a scrap of paper. There are no words on it — only numbers.`,
+        say("Wizard Bramble","🧙‍♂️",`You're good at puzzles, apprentice. What does it say?`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Each number stands for a letter: A is 1, B is 2, C is 3, and so on. What word does the note say?`,
+        vis: V.code("19 · 15 · 18 · 18 · 25") + V.a1z26(),
+        options:["SORRY","STORY","WORRY","SOFTY","SORTS","SPRAY"], answer:"SORRY",
+        hints:[`Use the key! Find 19. Which letter sits on top of it?`,`19 is S and 15 is O. Now find 18 and 25.`,`S, O, R, R… and 25 is Y.`],
+        win:[
+          `"SORRY," you read out.`,
+          say("Wizard Bramble","🧙‍♂️",`Sorry? A thief who says sorry? How very peculiar. A good detective remembers everything, apprentice — so don't forget that.`)
+        ]},
+      after:[{to:"library", label:"Search the library ➜"}]
+    },
+
+    library:{ name:"The Scene of the Crime", art:"📚👻",
+      story:[
+        `The library is a terrible mess. Books are scattered across the floor, some still flapping their pages like startled birds.`,
+        `Floating above them is Miss Whisper, the castle's ghostly librarian. She has no feet at all — just a wispy tail of mist — so she never walks anywhere. She glides.`,
+        say("Miss Whisper","👻",`Oh, my poor books! There were 24 books on the spellbook's shelf last night. I need to know how many are still up there, but I'm far too upset to count.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Half of the 24 books fell off the shelf. Then a quarter of the books still on the shelf fell off too. How many books are left on the shelf?`,
+        vis: V.big("📚 × 24"),
+        options:["9","12","6","3","18","8"], answer:"9",
+        hints:[`Do it in two steps. First: what is half of 24? That's how many are still on the shelf.`,`12 books are still on the shelf. Now a quarter of those 12 fall off. Split 12 into 4 equal groups — one group falls.`,`A quarter of 12 is 3. So 12 take away 3 is…?`],
+        win:[
+          say("Miss Whisper","👻",`Nine. Thank you, dear.`),
+          `You look up at where the spellbook was kept. It's the very top shelf — so high it almost touches the ceiling. The library ladder stands in the corner, covered in thick, undisturbed dust. Nobody has moved it.`,
+          note(`The spellbook was kept on the very top shelf, and nobody moved the ladder. So whoever took it could reach VERY high up.`),
+          `Where should you look next? Bramble says the Moving Staircase goes down to the cellars — or you could take the quick way and jump down the Laundry Chute!`
+        ]},
+      after:[
+        {to:"stairs", label:"Ride the Moving Staircase 🪜", sub:"Down to the dark cellars"},
+        {to:"laundry", label:"Jump down the Laundry Chute 🧺", sub:"Wheeee!"}
+      ]
+    },
+
+    stairs:{ name:"The Moving Staircase", art:"🪜✨",
+      story:[
+        `The Moving Staircase is the most magical staircase in the castle. It's really more like a lift. You step onto the top stair, and a brass voice announces, "Floor three!"`,
+        `There's a button for every floor. Floor 0 is the ground floor. The floors underground have minus numbers: minus one, minus two, minus three.`,
+        `The staircase lurches UP two floors first… and then it starts going DOWN seven floors!`
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`You start on floor 3. You go up 2 floors, then down 7 floors. Which floor do you end up on?`,
+        vis: V.vline(5,-3,i=>i===0?"0 (ground)":i<0?"−"+(-i):i),
+        options:["−2","2","−4","12","−1","−3"], answer:"−2",
+        hints:[`First go up 2 from floor 3. Which floor are you on now?`,`You're on floor 5. Now count down 7 floors, one at a time, using the buttons. Don't forget floor 0!`,`5, 4, 3, 2, 1, 0, minus 1… one more step down!`],
+        win:[
+          `DING! "Floor minus two," says the brass voice. The doors open onto a dark cellar full of barrels.`,
+          `A mouse in a tiny velvet waistcoat steps out in front of you.`,
+          say("Mortimer the Mouse","🐭",`I am Mortimer, Keeper of the Cellar! No one passes without solving my number riddle!`)
+        ]},
+      after:[{to:"stairs2", label:"Listen to Mortimer's riddle ➜"}]
+    },
+
+    stairs2:{ name:"Mortimer's Riddle", art:"🐭🔢",
+      story:[
+        say("Mortimer the Mouse","🐭",`I'm thinking of a number with two digits — a tens digit and a ones digit. Listen VERY carefully!`)
+      ],
+      puzzle:{ tag:"Number riddle",
+        q:`"My two digits add up to 9. My tens digit is double my ones digit. What number am I?"`,
+        vis: V.big("❓ ❓<br><span style='font-size:15px;letter-spacing:0'>tens · ones</span>"),
+        options:["63","36","54","81","72","90"], answer:"63",
+        hints:[`Which two-digit numbers have digits that add up to 9? For example 18, because 1 + 8 = 9…`,`Now look for one where the first digit is twice as big as the second.`,`Try 6 and 3. Do they add up to 9? Is 6 double 3?`],
+        win:[
+          say("Mortimer the Mouse","🐭",`Sixty-three! Correct!`),
+          `Mortimer twirls his whiskers and scurries off. He comes back with a crumb dusted in white flour.`,
+          say("Mortimer the Mouse","🐭",`I found this on the cellar stairs this morning. Somebody went UP to the Great Hall in a terrible hurry.`)
+        ]},
+      after:[{to:"hall", label:"Climb up to the Great Hall ➜"}]
+    },
+
+    laundry:{ name:"The Laundry Chute", art:"🧺🧦",
+      story:[
+        `WHEEEEEE! You whizz down the twisty laundry chute and land — FLUMP — in an enormous pile of warm washing.`,
+        `Across the laundry room, six things are drying in a row on a washing line. A label pinned to the line says <b>Sir Clank's washing is on this line</b>.`,
+        say("Wizard Bramble","🧙‍♂️",`Sir Clank is our walking suit of armour. He CLANKS so loudly with every step that he wakes up the whole castle! If we find his washing, he can't be far away.`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which one belongs to Sir Clank?<ul><li>It is to the RIGHT of the scarf.</li><li>It is right NEXT TO the sock.</li><li>It is NOT the hat.</li></ul>`,
+        vis: V.row([["1","👕"],["2","🧣"],["3","🎩"],["4","🧦"],["5","🧤"],["6","👗"]]),
+        options:["👕 Shirt","🧣 Scarf","🎩 Hat","🧦 Sock","🧤 Gloves","👗 Dress"], answer:"🧤 Gloves",
+        hints:[`Find the scarf first. Only things to its RIGHT can be the answer.`,`Now find the sock. Which things are touching it, one on each side?`,`The hat and the gloves are both next to the sock. But it's NOT the hat…`],
+        win:[
+          `Sir Clank's enormous iron gloves! Just then — CLANK! CLANK! CLANK! — in marches Sir Clank himself, so loudly that the windows rattle.`,
+          say("Sir Clank","🛡️",`My gloves! Thank you, young detective. I'll help you — if you can answer the riddle my grandfather's helmet taught me.`)
+        ]},
+      after:[{to:"laundry2", label:"Hear Sir Clank's riddle ➜"}]
+    },
+
+    laundry2:{ name:"Sir Clank's Riddle", art:"🛡️❓",
+      story:[
+        say("Sir Clank","🛡️",`Listen well!`)
+      ],
+      puzzle:{ tag:"Riddle",
+        q:`"I'm small and made of metal. I have teeth, but I never bite or chew. Turn me the right way, and a door will open for you." What am I?`,
+        vis: V.big("🦷 🚪 ❓"),
+        options:["🔑 A key","🐊 A crocodile","🪚 A saw","🔒 A lock","🦷 A tooth","🍴 A fork"], answer:"🔑 A key",
+        hints:[`It has "teeth", but not real teeth — they're bumpy metal edges.`,`You turn it to open a door…`],
+        win:[
+          say("Sir Clank","🛡️",`A key! Exactly right. And here's a real one for you — it opens the back door of the Great Hall.`),
+          `He hands you a heavy iron key.`
+        ]},
+      onWin: st => st.items.add("key"),
+      after:[{to:"hall", label:"Unlock the Great Hall ➜"}]
+    },
+
+    hall:{ name:"Footprints in the Flour", art:"🍞👣",
+      story:[
+        `In the Great Hall, breakfast is being laid out on a table as long as a bus. Mrs Crumble, the castle cook, is setting down a mountain of muffins. She's a giant — so tall she has to duck under every doorway — and her apron is always covered in flour.`,
+        say("Mrs Crumble","👩‍🍳",`Morning, dears! Muffin? … The spellbook? No, no, I haven't seen it. Not at all. Nope.`),
+        `She suddenly becomes very busy with the muffins.`,
+        `Then you spot something on the stone floor: a trail of white, floury footprints leading away from the library door. On every tile there's a number scratched into the stone.`,
+        note(`A trail of floury footprints leads away from the library. The thief walked out on FEET.`),
+        say("Wizard Bramble","🧙‍♂️",`The numbers make a pattern. Find the next number and we'll know which tile the footprints go to!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The footprints cross tiles numbered 1, 3, 6, 10… What number is on the next tile?`,
+        vis: V.big("👣1 → 👣3 → 👣6 → 👣10 → ❓"),
+        options:["15","14","13","16","12","20"], answer:"15",
+        hints:[`Look at how much the number grows each time. 1 to 3 is +2.`,`3 to 6 is +3. 6 to 10 is +4. What will the next jump be?`,`The next jump is +5. What's 10 + 5?`],
+        win:[`Tile 15! The footprints stop right by the big doors to the courtyard. Whoever took the spellbook went outside!`]},
+      after:[{to:"courtyard", label:"Follow the trail outside ➜"}]
+    },
+
+    courtyard:{ name:"The Snoring Dragon", art:"🐉💤🦉",
+      story:[
+        `Out in the sunny courtyard lies Ember, the castle dragon, curled up like an enormous cat. Perched on the end of her nose is Pip the owl, fast asleep with his head tucked under his wing.`,
+        `Sitting on the edge of the well, swinging his legs, is Gribble the goblin. He's very small — he only comes up to your knee — with ears like two floppy cabbage leaves.`,
+        say("Gribble","👺",`Lookin' for clues? I was out here ALL night, counting stars. And I can tell you: Ember never moved. She snored all night long, with Pip asleep on her nose. I even counted the snores!`),
+        note(`Gribble says Ember the dragon snored all night without moving, with Pip the owl asleep on her nose.`),
+        say("Wizard Bramble","🧙‍♂️",`Hmm. Gribble does love a tall tale. Let's check his counting.`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`Ember snores 4 times every minute. Gribble counted for 6 minutes. Then he heard 3 extra-loud snores. How many snores did he count altogether?`,
+        vis: V.big("💤💤💤💤 every minute<br>⏱️ × 6  +  💥💥💥"),
+        options:["27","24","13","10","30","21"], answer:"27",
+        hints:[`First work out the snores in 6 minutes. That's 6 lots of 4.`,`Count in fours: 4, 8, 12, 16, 20, 24. Now add the 3 extra snores.`,`24 + 3 = ?`],
+        win:[
+          say("Gribble","👺",`Twenty-seven! Exactly what I counted!`),
+          say("Wizard Bramble","🧙‍♂️",`Then I believe you, Gribble.`),
+          `Gribble hops down from the well. "Can I come too? I LOVE a mystery!" To reach the Back Tower, you can go through the Hedge Maze, or take the little ferry across the moat.`
+        ]},
+      onWin: st => st.items.add("gribble"),
+      after:[
+        {to:"maze", label:"Go through the Hedge Maze 🌿", sub:"Gribble knows the way"},
+        {to:"ferry", label:"Take the Moat Ferry ⛵", sub:"There's a grumpy troll"}
+      ]
+    },
+
+    maze:{ name:"The Hedge Maze", art:"🌿🌿🌿",
+      story:[
+        `The Hedge Maze is taller than a house, and every path looks the same. Gribble climbs onto your shoulders to see over the top.`,
+        say("Gribble","👺",`From where you're standing: go DOWN 1 square, then RIGHT 2 squares, then UP 3 squares!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Put your finger on 🧒 (that's you). Follow Gribble's directions. Where do you end up?`,
+        grid:["⛲ . 🌹 . 🦉",". . . 🐇 .","🍄 . 🧒 . .",". 🐢 . . .","🌳 . 🗿 . 🦔"],
+        start:"🧒", moves:[["D",1],["R",2],["U",3]],
+        options:["🦉 Owl statue","⛲ Fountain","🦔 Hedgehog","🗿 Stone head","🐇 Rabbit","🌹 Rose bush"], answer:"🦉 Owl statue",
+        hints:[`Move down ONE square first — towards the bottom of the map.`,`Now slide 2 squares to the right. Then 3 squares up, towards the top.`,`You should be in the top-right corner. What's there?`],
+        win:[`The owl statue! Behind it is a little gate, and a winding path leads straight to the Back Tower.`]},
+      after:[{to:"tower", label:"Hurry to the Back Tower ➜"}]
+    },
+
+    ferry:{ name:"The Moat Ferry", art:"⛵🧌",
+      story:[
+        `Down at the castle moat, a grumpy old troll in a woolly hat runs a little ferry boat.`,
+        say("Ferry Troll","🧌",`Three coins for grown-ups. Two coins for children. Two coins for goblins. No coins, no boat!`),
+        `Bramble, you and Gribble all climb aboard. Bramble pays with one shiny 10-coin piece.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`Bramble pays 3 coins for himself, and 2 coins each for you and Gribble. He pays with a 10-coin piece. How much change should he get?`,
+        vis: V.big("🧙‍♂️ 3  +  🧒 2  +  👺 2<br>paid: 🪙10"),
+        options:["3","7","5","4","13","6"], answer:"3",
+        hints:[`First add up the cost: 3 for Bramble, 2 for you and 2 for Gribble.`,`That's 7 coins. Bramble paid 10. How much more is 10 than 7?`,`Count up from 7 to 10: 8, 9, 10…`],
+        win:[`Three coins change! The troll grumbles, but hands it over, and paddles you across the moat to the Back Tower.`]},
+      after:[{to:"tower", label:"Climb out at the Back Tower ➜"}]
+    },
+
+    tower:{ name:"The Detective's Test", art:"🛡️🗼",
+      story: st => [
+        st.path.includes("laundry")
+          ? `At the foot of the Back Tower, Sir Clank is back on guard duty. CLANK! CLANK! He salutes you.`
+          : `At the foot of the Back Tower stands Sir Clank, the castle's walking suit of armour. Every time he moves — CLANK! CLANK! CLANK! — the whole courtyard echoes.`,
+        say("Sir Clank","🛡️",`Halt! At the top of this tower is the castle's secret Detective Room. Only a TRUE detective may enter, and a true detective remembers everything. So tell me: the thief left a note on the empty shelf. What did it say?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What word was on the thief's secret note?`,
+        vis: V.big("📝 ❓"),
+        options:["SORRY","STORY","WORRY","SOFTY","SORTS","SPRAY"], answer:"SORRY",
+        hints:[`Think back to the very beginning, when you found the note full of numbers…`,`It's a word people say when they feel bad about something they've done.`],
+        win:[say("Sir Clank","🛡️",`SORRY! Correct! A true detective indeed. Up you go!`)]},
+      after:[{to:"detective", label:"Climb to the Detective Room ➜"}]
+    },
+
+    detective:{ name:"Who Took the Spellbook?", art:"🔍🧵📌",
+      story:[
+        `At the top of the tower is a round room with a big board covered in pins and string: the Detective Room. You open your notebook and read every clue out loud.`,
+        say("Wizard Bramble","🧙‍♂️",`Everyone in the castle is a suspect. Use ALL your clues to work out who took my spellbook!`)
+      ],
+      puzzle:{ tag:"Detective",
+        q:`Read your clues. Who took the spellbook?`,
+        vis: st => V.clues(st.notes.map(n=>"📒 "+n)) + V.cards([
+          {n:"Miss Whisper", icon:"👻", lines:["a ghost","floats — no feet"]},
+          {n:"Sir Clank", icon:"🛡️", lines:["suit of armour","CLANKS when he walks"]},
+          {n:"Gribble", icon:"👺", lines:["a goblin","only knee-high"]},
+          {n:"Ember", icon:"🐉", lines:["the dragon"]},
+          {n:"Pip", icon:"🦉", lines:["the owl"]},
+          {n:"Mrs Crumble", icon:"👩‍🍳", lines:["a giant cook","very tall"]}
+        ], true),
+        options:["👻 Miss Whisper","🛡️ Sir Clank","👺 Gribble","🐉 Ember","🦉 Pip","👩‍🍳 Mrs Crumble"], answer:"👩‍🍳 Mrs Crumble",
+        hints:[`Go through the suspects one at a time. The thief left footprints — does Miss Whisper have feet?`,`Bramble heard no clanking — so not Sir Clank. Could knee-high Gribble reach the top shelf without the ladder?`,`Ember and Pip were asleep all night. Who's left who is tall, has feet and doesn't clank?`],
+        win:[
+          `"Mrs Crumble?!" gasps Bramble.`,
+          `Just then, the door creaks open — and there, ducking under the doorway, is Mrs Crumble herself. Her cheeks are bright pink. In her floury hands is the Great Big Book of Spells.`,
+          say("Mrs Crumble","👩‍🍳",`I'm so sorry! I only borrowed it to find the spell for a magic birthday cake. It was meant to be a surprise! I left a note to say sorry — but I wrote it in code so you wouldn't guess.`),
+          say("Wizard Bramble","🧙‍♂️",`A magic birthday cake? For ME?`)
+        ]},
+      after:[{to:"cake", label:"Go to the birthday party ➜"}]
+    },
+
+    cake:{ name:"The Magic Cake", art:"🎂✨",
+      story:[
+        `Back in the Great Hall, the whole castle gathers round as Mrs Crumble carries in a towering, sparkling purple birthday cake. It glows. It hums. It even does a little twirl on its plate.`,
+        `Mrs Crumble cuts it into 8 slices.`
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Bramble eats a quarter of the cake. Then Gribble gobbles up half of the slices that are left. How many slices are left now?`,
+        vis: V.big("🍰🍰🍰🍰<br>🍰🍰🍰🍰"),
+        options:["3","2","4","6","1","5"], answer:"3",
+        hints:[`A quarter of 8 slices: split 8 into 4 equal groups. How many in one group?`,`Bramble eats 2, so 6 slices are left. Now Gribble eats half of those 6.`,`Half of 6 is 3. So 6 take away 3 is…`],
+        win:[`Three slices left — just enough for you, Miss Whisper and Sir Clank (who has no idea how to eat cake through his helmet).`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   STORY 2 — S.O.S. FROM PLANET ZORB
+   ================================================================ */
+const SPACE = {
+  id:"space", theme:"space", start:"intro", length:"medium", mins:"15",
+  title:"S.O.S. from Planet Zorb",
+  cover:"🚀👽🪐", coverBg:"#dce9ff",
+  blurb:"A baby alien is lost on a frozen moon. Fuel up your rocket, decode alien messages and bring Zib home.",
+  helper:{name:"BLIP the robot", icon:"🤖"},
+  runner:"🚀", goal:"🪐",
+  ranks:["Admiral of the Galaxy","Star Captain","Space Cadet"],
+  bag: st => {
+    const out = [];
+    if (st.items.has("zib")) out.push("👽 Zib");
+    if (st.items.has("crystal")) out.push("💎 Power crystal");
+    if (!out.length) out.push("🎒 Empty for now");
+    return out;
+  },
+  badges:{asteroids:"☄️ Asteroid Ace", station:"🛒 Space Shopper", icecave:"🧊 Ice Explorer", vents:"♨️ Vent Dodger"},
+  ending: st => [
+    `That night, as you lie in bed, you look up at the stars. One of them twinkles three times — blink, blink, blink — like a little green alien waving with all three eyes.`,
+    say("BLIP","🤖",`Goodnight, Captain. Mission complete. Beep.`),
+    `And far, far away on Planet Zorb, Zib is telling the whole family about the bravest captain in the galaxy.`
+  ],
+  scenes:{
+    intro:{ name:"Mission Control", art:"🚀🌍",
+      story:[
+        `BEEP-BEEP-BEEP! The alarm in Mission Control is flashing red. You are the youngest space captain in the world, and your rocket, the <b>Comet</b>, is standing on the launch pad.`,
+        `Your co-pilot rolls up beside you. It's BLIP, a robot shaped like a teapot on wheels.`,
+        say("BLIP","🤖",`CAPTAIN! An S.O.S. signal from deep space! Someone needs rescuing! But our fuel tank is not full.`),
+        `The fuel gauge says 23. To reach deep space, the Comet needs 50. Fuel comes in cans, and each can holds 9.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`The tank has 23 fuel. It needs 50. Each can holds 9. How many cans must you pour in to fill it exactly?`,
+        vis: V.big("⛽ 23 → 50<br>🛢️ = 9 each"),
+        options:["3","2","4","27","5","6"], answer:"3",
+        hints:[`First, how much MORE fuel do you need? Work out 50 take away 23.`,`You need 27 more. Now, how many 9s make 27? Count in nines: 9, 18…`,`9, 18, 27 — how many nines was that?`],
+        win:[
+          `Glug, glug, glug — three cans fill the tank right up to 50!`,
+          say("BLIP","🤖",`Fuel: FULL. Three… two… one… BLAST OFF!`),
+          `The Comet roars into the sky, up through the clouds, and out into the glittering blackness of space.`
+        ]},
+      after:[{to:"message", label:"Listen to the S.O.S. ➜"}]
+    },
+
+    message:{ name:"The Alien Message", art:"📡👽",
+      story:[
+        `The S.O.S. signal crackles through the speakers. It isn't in words — it's in strange alien symbols.`,
+        say("BLIP","🤖",`My computer brain has found part of the alien alphabet! But you will have to read it, Captain. I am rubbish at spelling.`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Use the alien alphabet key. Which planet is the message coming from?`,
+        vis: V.code("🔷 ⚪ 🔺 🟥") + V.symkey([["🔷","Z"],["⚪","O"],["🔺","R"],["🟥","B"],["🌟","I"],["💜","A"],["🟢","L"],["🔶","G"]]),
+        options:["ZORB","ZROB","BROZ","ZOLB","ZIRB","ZORA"], answer:"ZORB",
+        hints:[`Take the symbols one at a time, from left to right. Find 🔷 in the key.`,`🔷 is Z and ⚪ is O. Now find 🔺 and 🟥.`,`Z… O… R… and 🟥 is B.`],
+        win:[
+          `"ZORB! The message is coming from Planet Zorb!"`,
+          say("BLIP","🤖",`Planet Zorb has a frozen ice moon. The signal is coming from there! We can fly straight through the Asteroid Field — or go the long way, past Space Station Seven.`)
+        ]},
+      after:[
+        {to:"asteroids", label:"Fly through the Asteroid Field ☄️", sub:"Fast but dangerous"},
+        {to:"station", label:"Stop at Space Station Seven 🛒", sub:"Pick up supplies"}
+      ]
+    },
+
+    asteroids:{ name:"The Asteroid Field", art:"☄️🪨☄️",
+      story:[
+        `Great tumbling space rocks spin all around you, some as big as houses.`,
+        say("BLIP","🤖",`I have plotted a safe path, Captain. Steer EXACTLY as I say: RIGHT 1, UP 4, RIGHT 2, DOWN 2.`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at the 🚀. Follow BLIP's directions. Where do you end up?`,
+        grid:["🛸 . . . 🪐","☄️ . 🌑 . .","⭐ . . 🛰️ .",". . 👾 . .","🚀 . . . 🌟"],
+        start:"🚀", moves:[["R",1],["U",4],["R",2],["D",2]],
+        options:["🛰️ Satellite","🪐 Planet","☄️ Comet","🌑 Moon rock","👾 Space slug","🛸 UFO"], answer:"🛰️ Satellite",
+        hints:[`One step at a time! Right 1 first, then go all the way up 4.`,`You should be on the top row now. Go right 2, then down 2.`,`Down 2 from the top row puts you on the middle row. What's there?`],
+        win:[`You glide up beside an old satellite. Its lights blink at you in a friendly way, and it beams a map onto your screen — but a big cluster of asteroids is still blocking the way!`]},
+      after:[{to:"asteroids2", label:"Fire the laser! ⚡"}]
+    },
+
+    asteroids2:{ name:"Laser Time", art:"⚡☄️☄️",
+      story:[ say("BLIP","🤖",`Activating laser! ZAP-ZAP-ZAP!`) ],
+      puzzle:{ tag:"Fractions",
+        q:`There are 40 asteroids. Your laser zaps a quarter of them into dust. Then half of the ones that are left drift away. How many asteroids are still in front of you?`,
+        vis: V.big("☄️ × 40"),
+        options:["15","10","20","5","25","30"], answer:"15",
+        hints:[`Step one: what is a quarter of 40? Split 40 into 4 equal groups.`,`A quarter of 40 is 10, so 30 are left. Now half of those 30 drift away.`,`Half of 30 is 15. So how many are still in front of you?`],
+        win:[`Only fifteen — few enough to fly around! You swoop and swerve between them and zoom out the other side. Ahead, glittering white, is the ice moon of Planet Zorb!`]},
+      after:[{to:"icemoon", label:"Land on the ice moon ➜"}]
+    },
+
+    station:{ name:"Space Station Seven", art:"🛰️🛒",
+      story:[
+        `Space Station Seven is a giant spinning wheel full of shops, where space travellers stop for snacks and spare parts.`,
+        `The shopkeeper is a jelly-like alien with eleven arms.`,
+        say("Glorp the Shopkeeper","🟢",`Welcome, Captain! A spare bolt costs 7 star-coins. A battery costs 15. What'll it be?`),
+        `You buy ONE battery and TWO bolts, and you hand over 40 star-coins.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`One battery costs 15. Two bolts cost 7 each. You pay with 40 star-coins. How much change do you get?`,
+        vis: V.big("🔋 15  +  🔩 7  +  🔩 7<br>paid: 🪙 40"),
+        options:["11","18","29","25","9","21"], answer:"11",
+        hints:[`First add up what you're buying: 15, plus 7, plus 7.`,`15 + 7 + 7 = 29. Now how much is 40 take away 29?`,`Count up from 29: one more makes 30, then ten more makes 40.`],
+        win:[
+          `Glorp counts out eleven star-coins with eleven hands — one coin per hand. "Pleasure doing business!"`,
+          `But as you head back to the Comet, a robot guard rolls in front of the airlock.`,
+          say("Station Guard","🚨",`BEEP. All visitors must answer the Space Riddle before leaving. BEEP.`)
+        ]},
+      after:[{to:"station2", label:"Hear the Space Riddle ➜"}]
+    },
+
+    station2:{ name:"The Space Riddle", art:"🚨❓",
+      story:[ say("Station Guard","🚨",`Ready? BEEP.`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"I have a long, shining tail, but I am not an animal. I fly across the sky, but I have no wings. I am made of ice and dust." What am I?`,
+        vis: V.big("✨〰️〰️❓"),
+        options:["☄️ A comet","🚀 A rocket","🪁 A kite","🌑 An asteroid","🐦 A bird","❄️ A snowball"], answer:"☄️ A comet",
+        hints:[`It has a tail but it isn't an animal — so it's not a bird. It's made of ice and dust…`,`It zooms through space, and its tail glows when it gets close to the Sun. Your rocket has the same name!`],
+        win:[`"A comet — just like your rocket!" The guard beeps happily and opens the airlock. A few hours later, the white ice moon of Planet Zorb glitters in front of you.`]},
+      after:[{to:"icemoon", label:"Land on the ice moon ➜"}]
+    },
+
+    icemoon:{ name:"The Ice Moon", art:"🌕❄️",
+      story:[
+        `BUMP. The Comet lands on the ice moon in a puff of sparkly snow. Outside, everything is white and blue and very, very cold.`,
+        say("BLIP","🤖",`Outside temperature: MINUS 8 degrees. Brrr. Your space suit has a heater that warms you up by 15 degrees.`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`It's −8 degrees outside. Your suit's heater warms you up by 15 degrees. What temperature is it inside your suit?`,
+        vis: V.hline(-8,8) + V.legend("🥶 colder ← 0 → warmer 🥵"),
+        options:["7","−7","23","8","−23","6"], answer:"7",
+        hints:[`Put your finger on −8. Count UP (to the right) 15 steps.`,`Counting up 8 steps from −8 gets you to 0. How many more steps do you still need to make 15?`,`You need 7 more steps after 0.`],
+        win:[
+          `Seven degrees — cosy! You bounce out across the moon in big, floaty steps.`,
+          `Then you hear it: a tiny, sad sound, like a squeaky toy crying. Behind a snowdrift sits a small green alien with <b>three</b> big blinking eyes and a little pink antenna that droops sadly.`
+        ]},
+      after:[{to:"zib", label:"Say hello ➜"}]
+    },
+
+    zib:{ name:"Zib", art:"👽💧",
+      enter: st => st.items.add("zib"),
+      story:[
+        say("Zib","👽",`Hello! I'm Zib, and I'm FOUR years old! I went exploring and now I can't find my family's space-pod!`),
+        note(`Zib is 4 years old.`),
+        `In the valley below, six round space-pods sit in a row. Zib wipes all three eyes and thinks hard.`,
+        say("Zib","👽",`I remember some things about our pod…`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which pod is Zib's?<ul><li>Our pod has a flag.</li><li>Our pod's lights are ON.</li><li>Our pod is NOT red.</li><li>Our pod is NOT next to the green pod.</li></ul>`,
+        vis: V.row([["1","🔴","🚩","💡"],["2","🟢","➖","💡"],["3","🔵","🚩","💡"],["4","🟡","🚩","⚫"],["5","🟣","➖","⚫"],["6","🟠","🚩","💡"]]) + V.legend("🚩 flag · ➖ no flag · 💡 lights on · ⚫ lights off"),
+        options:["🔴 Red","🟢 Green","🔵 Blue","🟡 Yellow","🟣 Purple","🟠 Orange"], answer:"🟠 Orange",
+        hints:[`Cross out every pod without a flag first.`,`Now cross out pods with their lights off — and the red one. Which pods are left?`,`Blue and orange are left. Which one is right next to the green pod?`],
+        win:[
+          `The orange pod's door slides open, and out tumble Zib's mum, dad and granny, waving their antennas. "ZIB!"`,
+          say("Zib's Dad","👽",`Thank you, Captain! But our ship's power crystal cracked in the cold. Without a new one, we can't fly home. There are crystals deep in the Ice Caves… and some near the Hot Vents.`)
+        ]},
+      after:[
+        {to:"icecave", label:"Explore the Ice Caves 🧊", sub:"Glowing blue tunnels"},
+        {to:"vents", label:"Brave the Hot Vents ♨️", sub:"Watch out for steam!"}
+      ]
+    },
+
+    icecave:{ name:"The Ice Caves", art:"🧊💎",
+      story:[
+        `Inside the Ice Caves, everything glows blue. At the end of a long tunnel, a power crystal is frozen behind a wall of ice.`,
+        say("BLIP","🤖",`To melt the wall, I must know exactly how many ice blocks are in it. Count carefully, Captain!`),
+        `The wall is built like a pyramid. The bottom row has 9 blocks. Each row going up has 2 fewer blocks than the row below. The top row has just 1.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`How many ice blocks are in the wall altogether?`,
+        vis: `<div class="vbig" style="font-size:20px;letter-spacing:1px;line-height:1.25">🧊<br>🧊🧊🧊<br>🧊🧊🧊🧊🧊<br>🧊🧊🧊🧊🧊🧊🧊<br>🧊🧊🧊🧊🧊🧊🧊🧊🧊</div>`,
+        options:["25","20","24","15","9","30"], answer:"25",
+        hints:[`Work out every row first: 9 on the bottom, then 7, then…`,`The rows are 9, 7, 5, 3 and 1. Now add them up!`,`9 + 7 = 16. 16 + 5 = 21. Keep going…`],
+        win:[`Twenty-five! BLIP's heat-ray warms exactly 25 blocks, and the wall melts into a big puddle. You lift out the glowing crystal. 💎`]},
+      onWin: st => st.items.add("crystal"),
+      after:[{to:"shipdoor", label:"Run back to Zib's family ➜"}]
+    },
+
+    vents:{ name:"The Hot Vents", art:"♨️💎",
+      story:[
+        `On the other side of the moon, hot steam whooshes out of holes in the ground. Zorbian scientists have painted a number beside each vent.`,
+        say("BLIP","🤖",`Only ONE vent is safe to walk past. The numbers follow a pattern. The safe vent is the next number!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The vents are numbered 100, 90, 81, 73… What number is on the safe vent?`,
+        vis: V.big("♨️100 → ♨️90 → ♨️81 → ♨️73 → ❓"),
+        options:["66","63","65","70","64","60"], answer:"66",
+        hints:[`How much smaller does each number get? 100 to 90 is take away 10.`,`90 to 81 is take away 9. 81 to 73 is take away 8. What's the next jump?`,`Take away 7 from 73…`],
+        win:[`Vent 66 is silent and still. You tiptoe past it and find a power crystal glinting in the warm rocks. 💎`]},
+      onWin: st => st.items.add("crystal"),
+      after:[{to:"shipdoor", label:"Run back to Zib's family ➜"}]
+    },
+
+    shipdoor:{ name:"The Secret Door Code", art:"🛸🔢",
+      story:[
+        `You hurry back to Zib's family. Their silver spaceship is locked tight, with a keypad on the door.`,
+        say("Zib's Dad","👽",`Oh no — I've forgotten the door code! I only remember that we made it from Zib, so we'd never forget it. The code is Zib's AGE multiplied by the number of EYES Zib has!`)
+      ],
+      puzzle:{ tag:"Combine clues",
+        q:`Zib's age × the number of eyes Zib has = ?`,
+        vis: V.big("🎂 × 👀 = ❓"),
+        options:["12","7","43","34","9","16"], answer:"12",
+        hints:[`Check your notebook 📒 for Zib's age.`,`Zib is 4. How many eyes did Zib blink at you when you first met?`,`Zib has 3 eyes. What is 4 × 3?`],
+        win:[
+          `BEEP-BOOP — the door hisses open! Zib's dad slots in the new crystal, and the whole ship hums with light.`,
+          say("Zib","👽",`Thank you, Captain! You're my best friend in the WHOLE galaxy!`),
+          `Zib gives you a hug with all four arms.`
+        ]},
+      onWin: st => st.items.delete("crystal"),
+      after:[{to:"home", label:"Wave goodbye ➜"}]
+    },
+
+    home:{ name:"Heading Home", art:"🚀🌍",
+      story:[
+        `Zib's ship zooms away, its lights twinkling like a shooting star. Now it's time for you to go home too.`,
+        say("BLIP","🤖",`Fuel check! We have 70 fuel. The trip home passes 6 planets, and we use 8 fuel for every planet we pass.`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`You have 70 fuel. You use 8 fuel for each of 6 planets. How much fuel will be left when you get home?`,
+        vis: V.big("⛽ 70<br>🪐🪐🪐🪐🪐🪐 × 8 each"),
+        options:["22","48","62","12","14","32"], answer:"22",
+        hints:[`First, how much fuel do 6 planets use? That's 6 lots of 8.`,`6 × 8 = 48. Now take 48 away from 70.`,`70 take away 40 is 30. Then take away 8 more…`],
+        win:[`Twenty-two fuel left — plenty! The Comet glides home past six planets, and there's Earth: blue and green and beautiful.`]},
+      after:[{to:"report", label:"Land at Mission Control ➜"}]
+    },
+
+    report:{ name:"Mission Report", art:"🏅📋",
+      story:[
+        `Back at Mission Control, everyone is cheering. The Chief of Space, a tall lady with a very shiny badge, shakes your hand.`,
+        say("The Chief of Space","👩‍🚀",`Well done, Captain! I must write this in the Big Book of Missions. Which planet did you rescue Zib from?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What was the name of the planet?`,
+        vis: V.big("🪐 ❓"),
+        options:["Zorb","Zorg","Borz","Zarb","Zork","Blorb"], answer:"Zorb",
+        hints:[`Think back to the alien message you decoded…`,`It starts with Z and it rhymes with "orb".`],
+        win:[`"Planet Zorb!" The Chief writes it in the Big Book of Missions in shining gold ink.`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   STORY 3 — THE TREASURE OF SKULL ROCK
+   ================================================================ */
+const PIRATE = {
+  id:"pirate", theme:"pirate", start:"intro", length:"medium", mins:"15",
+  title:"The Treasure of Skull Rock",
+  cover:"🏴‍☠️🗺️💰", coverBg:"#d6f3ef",
+  blurb:"Sail with Captain Barnacle Bess to find long-lost treasure. Crack pirate codes, dodge sharks and find where to dig.",
+  helper:{name:"Polly the parrot", icon:"🦜"},
+  runner:"⛵", goal:"💰",
+  ranks:["Pirate Captain","First Mate","Brave Deckhand"],
+  bag: st => {
+    const out = [`🗺️ Map pieces: ${st.notes.filter(n=>n.startsWith("Map piece")).length}/3`];
+    if (st.items.has("pearls")) out.push("⚪ 10 pearls");
+    if (st.items.has("coins")) out.push("🪙 6 gold coins");
+    return out;
+  },
+  badges:{reef:"🪸 Reef Navigator", lagoon:"🧜 Friend of Mermaids", rope:"🪢 Rope Swinger", stones:"🪨 Stone Hopper"},
+  ending: st => [
+    `That night, the Salty Sardine sails home under a sky full of stars. The crew sings sea shanties, Polly squawks along (very badly), and Captain Bess dances a jig on her wooden leg.`,
+    say("Captain Barnacle Bess","🏴‍☠️",`You've got a sharp mind and a brave heart, matey. There'll always be a place for you on my ship.`),
+    st.items.has("pearls")
+      ? `You fall asleep in your swinging hammock, holding Merla's shining pearls and six gold coins, dreaming of your next adventure.`
+      : `You fall asleep in your swinging hammock, with six gold coins tucked under your pillow, dreaming of your next adventure.`
+  ],
+  scenes:{
+    intro:{ name:"All Aboard!", art:"🏴‍☠️⛵",
+      story:[
+        `Ahoy! You're the newest crew member aboard the <b>Salty Sardine</b>, the fastest (and smelliest) pirate ship on the Seven Seas.`,
+        `Captain Barnacle Bess stomps across the deck, her wooden leg going TOCK, TOCK, TOCK. On her shoulder sits Polly, a parrot who is much cleverer than she looks.`,
+        say("Captain Barnacle Bess","🏴‍☠️",`Listen up, crew! I've found a piece of an old treasure map. It's torn — but this piece tells us where to START.`),
+        note(`Map piece 1: "Start at the palm tree 🌴."`),
+        say("Captain Barnacle Bess","🏴‍☠️",`Now — there are 24 pirates on this ship. Split yourselves into 3 equal teams!`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`24 pirates split into 3 equal teams. One whole team goes ashore to fetch water, and half of another team goes ashore to fetch coconuts. How many pirates go ashore altogether?`,
+        vis: V.big("🏴‍☠️ × 24  →  3 teams"),
+        options:["12","8","16","4","10","20"], answer:"12",
+        hints:[`First, how many pirates are in each team? Share 24 into 3 equal groups.`,`Each team has 8 pirates. One whole team is 8. Half of another team is…?`,`8 + 4 = ?`],
+        win:[
+          `Twelve pirates row ashore, and twelve stay to scrub the deck.`,
+          say("Captain Barnacle Bess","🏴‍☠️",`Smart thinking, matey! Now, come and look at this…`)
+        ]},
+      after:[{to:"logbook", label:"Follow the Captain ➜"}]
+    },
+
+    logbook:{ name:"The Captain's Logbook", art:"📜🔐",
+      story:[
+        `Bess opens an old, salt-stained logbook. It belonged to the pirate who buried the treasure long ago — Old One-Sock Jack. The last page has a secret message.`,
+        say("Polly","🦜",`SQUAWK! Jack always used the same code! He moved every letter one step FORWARD in the alphabet. A became B, and B became C!`),
+        `So to read it, you have to move every letter one step BACKWARDS.`
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Move each letter one step BACK in the alphabet. What does the message say?`,
+        vis: V.code("T L V M M") + V.strip(),
+        options:["SKULL","SHELL","SKILL","SMELL","SPELL","STALL"], answer:"SKULL",
+        hints:[`Find T in the alphabet. Which letter comes just BEFORE it?`,`T becomes S. L becomes K. Now do V and M.`,`S, K, U… and M becomes L.`],
+        win:[
+          say("Captain Barnacle Bess","🏴‍☠️",`SKULL! Skull Rock! An island shaped like a giant skull. Hoist the sails, crew!`),
+          `There are two ways to get there: straight through the Narrow Reef, or the long way round through Mermaid Lagoon.`
+        ]},
+      after:[
+        {to:"reef", label:"Sail through the Narrow Reef 🪸", sub:"Quick — but full of sharp rocks"},
+        {to:"lagoon", label:"Sail round by Mermaid Lagoon 🧜", sub:"Slow and peaceful"}
+      ]
+    },
+
+    reef:{ name:"The Reef Gate", art:"🪸🔴",
+      story:[
+        `At the entrance to the Narrow Reef, a row of red buoys bobs on the waves. Each one has a number painted on it. A chain stretches across the water, blocking the way.`,
+        say("Polly","🦜",`SQUAWK! The numbers make a pattern! Tap the buoy with the NEXT number and the chain will drop!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The buoys are numbered 2, 5, 11, 23… What number comes next?`,
+        vis: V.big("🔴2 → 🔴5 → 🔴11 → 🔴23 → ❓"),
+        options:["47","46","35","44","29","48"], answer:"47",
+        hints:[`What could you do to 2 to get 5? Try DOUBLING it first, then see what's missing.`,`Double 2 is 4, add 1 is 5. Double 5 is 10, add 1 is 11. Does it work for 11 → 23?`,`Double 23, then add 1…`],
+        win:[`Forty-seven! Polly taps buoy 47 with her beak. CLANK — the chain sinks into the sea, and the way into the reef is open.`]},
+      after:[{to:"reef2", label:"Steer into the reef ➜"}]
+    },
+
+    reef2:{ name:"The Narrow Reef", art:"🪸🦈",
+      story:[
+        `Sharp rocks hide just under the waves. One wrong turn and — CRUNCH!`,
+        say("Polly","🦜",`I'll fly up high and shout directions! RIGHT 2, UP 2, LEFT 1, UP 2, LEFT 1!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at the ⛵. Follow Polly's directions. Where do you end up?`,
+        grid:["💀 . 🐙 . 🪨","🪨 . 🪨 . .",". . . 🪨 🐢","🦈 🪨 . . .","⛵ . . 🪨 🐬"],
+        start:"⛵", moves:[["R",2],["U",2],["L",1],["U",2],["L",1]],
+        options:["💀 Skull Rock","🐙 Octopus","🐢 Turtle","🦈 Shark","🐬 Dolphin","🪨 A rock (CRUNCH!)"], answer:"💀 Skull Rock",
+        hints:[`Go one direction at a time. Right 2, then up 2 — where are you?`,`Now left 1, then up 2. You should be on the top row.`,`One last step: LEFT 1. What's in the top-left corner?`],
+        win:[
+          `You steer the Salty Sardine safely between the rocks, and there it is: Skull Rock, a grey island with two dark caves for eyes!`,
+          `Bobbing in the water nearby is a glass bottle. Inside is a scrap of paper…`,
+          note(`Map piece 2: "Walk 3 squares EAST ➡️."`)
+        ]},
+      after:[{to:"dive", label:"Drop anchor at Skull Rock ⚓"}]
+    },
+
+    lagoon:{ name:"Mermaid Lagoon", art:"🧜🐚",
+      story:[
+        `The water in Mermaid Lagoon is so clear you can see starfish on the sand far below.`,
+        `A mermaid called Merla pops up beside the ship, holding a big clam shell full of pearls.`,
+        say("Merla the Mermaid","🧜",`Hello, pirates! I have 30 pearls. I'll give one third to my sister, and then HALF of what's left to you — if you can tell me how many you'll get!`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Merla has 30 pearls. She gives a third to her sister, then half of what's left to you. How many pearls do you get?`,
+        vis: V.big("⚪ × 30"),
+        options:["10","15","5","20","7","12"], answer:"10",
+        hints:[`First, find one third of 30. Share 30 into 3 equal groups.`,`One third of 30 is 10, so 20 pearls are left. Half of those 20 are for you.`,`Half of 20 is…?`],
+        win:[`"Ten!" Merla counts ten pearls into your hand. They shine like little moons. Then she flicks her tail. "One more question before you go…"`]},
+      onWin: st => st.items.add("pearls"),
+      after:[{to:"lagoon2", label:"Hear Merla's riddle ➜"}]
+    },
+
+    lagoon2:{ name:"Merla's Riddle", art:"🧜❓",
+      story:[ say("Merla the Mermaid","🧜",`Fishermen use me every day. Listen!`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"I am made of holes, all tied together with string. And yet I can still catch a fish." What am I?`,
+        vis: V.big("🐟 ❓"),
+        options:["🎣 A fishing net","🧽 A sponge","🧀 Swiss cheese","🕸️ A spider's web","🧺 A basket","🪝 A hook"], answer:"🎣 A fishing net",
+        hints:[`It's mostly holes, but the holes are held together with string…`,`A spider's web catches flies, not fish. What do fishermen throw over the side of a boat?`],
+        win:[
+          `"A fishing net! Clever pirate," laughs Merla. She dives down and comes back with a soggy scrap of paper. "I found this in a bottle years ago. I think it's yours."`,
+          note(`Map piece 2: "Walk 3 squares EAST ➡️."`),
+          `Then she points the way to Skull Rock.`
+        ]},
+      after:[{to:"dive", label:"Sail on to Skull Rock ⚓"}]
+    },
+
+    dive:{ name:"Skull Rock", art:"💀🌊",
+      story:[
+        `The Salty Sardine drops anchor beside Skull Rock. But the entrance to the treasure cave is hidden UNDER the water!`,
+        `You stand on the side of the ship, 3 metres above the sea. Polly says the cave entrance is 10 metres below where you're standing.`,
+        say("Captain Barnacle Bess","🏴‍☠️",`Sea level is zero. Above the sea is plus. Below the sea is minus. Take a deep breath, matey!`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`You start 3 metres ABOVE sea level and dive 10 metres DOWN. Where are you now?`,
+        vis: V.vline(3,-10,i=>i===0?"0 🌊 sea level":fmtSigned(i)+" m"),
+        options:["−7 m","7 m","13 m","−13 m","−10 m","−3 m"], answer:"−7 m",
+        hints:[`Start at +3. Count down 3 steps to reach sea level, 0.`,`That used 3 of your 10 metres. How many more metres do you still go down, below 0?`,`10 − 3 = 7. So you're 7 metres BELOW the sea…`],
+        win:[`SPLASH! At minus 7 metres you find an underwater tunnel. You swim up through it and pop out, gasping, inside a huge dripping cave. Polly flaps in after you.`]},
+      after:[{to:"tunnels", label:"Light a lantern 🏮"}]
+    },
+
+    tunnels:{ name:"Six Tunnels", art:"🕳️🏮",
+      story:[
+        `Inside the cave, six dark tunnels lead off in different directions. Each one has a number carved above it.`,
+        say("Polly","🦜",`SQUAWK! Old One-Sock Jack wrote about this in his logbook! "The treasure tunnel has NO bats, it is DRY, and NO crab lives there."`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which tunnel leads to the treasure?<ul><li>No bats.</li><li>Dry — no water.</li><li>No crab.</li></ul>`,
+        vis: V.cards([{n:"Tunnel 1",icon:"🦇"},{n:"Tunnel 2",icon:"💧"},{n:"Tunnel 3",icon:"🦀"},{n:"Tunnel 4",icon:"🦇💧"},{n:"Tunnel 5",icon:"⚓"},{n:"Tunnel 6",icon:"🦀⚓"}]) + V.legend("🦇 bats · 💧 wet · 🦀 crab · ⚓ anchor carving"),
+        options:["Tunnel 1","Tunnel 2","Tunnel 3","Tunnel 4","Tunnel 5","Tunnel 6"], answer:"Tunnel 5",
+        hints:[`Cross out every tunnel with bats 🦇 first.`,`Now cross out the wet ones 💧. Which are left?`,`Tunnels 3, 5 and 6 are left. Which one has no crab?`],
+        win:[
+          `Tunnel 5! You creep inside, holding up your lantern. Scratched into the wall are some words…`,
+          note(`Map piece 3: "Then walk 2 squares SOUTH ⬇️ — and DIG!"`),
+          `At the end of the tunnel, the path is blocked by a deep underground river. You could swing across on an old rope — or hop across the stepping stones.`
+        ]},
+      after:[
+        {to:"rope", label:"Swing across on the rope 🪢", sub:"Hold on tight!"},
+        {to:"stones", label:"Hop across the stepping stones 🪨", sub:"Some of them wobble…"}
+      ]
+    },
+
+    rope:{ name:"The Rope Swing", art:"🪢🌊",
+      story:[ say("Polly","🦜",`The river is 20 steps wide. The rope will swing you three quarters of the way across. Then you'll have to JUMP the rest!`) ],
+      puzzle:{ tag:"Fractions",
+        q:`The river is 20 steps wide. The rope carries you three quarters of the way. How many steps must you jump?`,
+        vis: V.big("👣 × 20"),
+        options:["5","15","10","4","3","20"], answer:"5",
+        hints:[`First find ONE quarter of 20. Share 20 into 4 equal groups.`,`One quarter is 5, so three quarters is 15. The rope carries you 15 steps.`,`The river is 20 steps wide. You've done 15. How many are left?`],
+        win:[`Five steps — you can jump that! WHOOOSH… and LEAP! You land safely on the other side and climb a long staircase carved into the rock.`]},
+      after:[{to:"dig", label:"Climb up into the sunshine ☀️"}]
+    },
+
+    stones:{ name:"The Stepping Stones", art:"🪨🌊",
+      story:[ say("Polly","🦜",`Jack's logbook says: "Only step on a stone in the 3 times table. The others will tip you in!"`) ],
+      puzzle:{ tag:"Times tables",
+        q:`Which stone is safe? It must be in the 3 times table.`,
+        vis: V.big("🪨14  🪨20  🪨22<br>🪨27  🪨25  🪨31"),
+        options:["14","20","22","27","25","31"], answer:"27",
+        hints:[`Count in threes: 3, 6, 9, 12…`,`Keep going: 15, 18, 21, 24… which number comes next?`,`27 is 9 lots of 3!`],
+        win:[`Stone 27 doesn't even wobble! You hop across and climb a long staircase carved into the rock.`]},
+      after:[{to:"dig", label:"Climb up into the sunshine ☀️"}]
+    },
+
+    dig:{ name:"X Marks the Spot", art:"🏝️⛏️",
+      story:[
+        `You climb out into the sunshine at the very top of Skull Rock. There's a single palm tree, a little hut, some flowers — and lots of sand.`,
+        say("Captain Barnacle Bess","🏴‍☠️",`Right, matey. Read out ALL THREE map pieces from your notebook. Then show me where to dig!`),
+        say("Polly","🦜",`Remember! NORTH is up. SOUTH is down. EAST is right. WEST is left!`)
+      ],
+      puzzle:{ tag:"Combine clues", type:"grid", hideDirs:true,
+        q:`Use all three map pieces in your notebook 📒. Where should you dig?`,
+        grid:["🌊 🌊 🌊 🌊 🌊 🌊","🌊 🌴 . . . 🌊","🌊 🦀 . 🌺 . 🌊","🌊 . 🛖 . 🐚 🌊","🌊 🥥 . 🪨 . 🌊","🌊 🌊 🌊 🌊 🌊 🌊"],
+        start:"🌴", moves:[["R",3],["D",2]], cell:"#f3dea4",
+        extra: `<div class="compass">⬆️ North · ⬇️ South · ➡️ East · ⬅️ West</div>`,
+        options:["🐚 Big shell","🌺 Flower","🛖 Hut","🦀 Crab","🥥 Coconut","🪨 Rock"], answer:"🐚 Big shell",
+        hints:[`Map piece 1 tells you where to start. Put your finger on the palm tree 🌴.`,`Map piece 2: 3 squares EAST. East is to the RIGHT.`,`Map piece 3: 2 squares SOUTH. South is DOWN. What's there?`],
+        win:[`You dig under the big shell. And dig. And dig… CLUNK! Your spade hits wood. It's a treasure chest!`]},
+      after:[{to:"share", label:"Open the chest! 💰"}]
+    },
+
+    share:{ name:"Sharing the Treasure", art:"💰✨",
+      story:[
+        `Together you heave the chest out of the sand and lift the lid. Gold coins! Glittering, jingling, shining gold!`,
+        say("Captain Barnacle Bess","🏴‍☠️",`There are 36 coins. As Captain, I'll take half. The rest gets shared EQUALLY between you, Polly and Cook.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`36 coins. Captain Bess takes half. The rest is shared equally between 3: you, Polly and Cook. How many coins do you get?`,
+        vis: V.big("🪙 × 36"),
+        options:["6","9","12","18","3","4"], answer:"6",
+        hints:[`First, what is half of 36? That's Captain Bess's share.`,`Bess takes 18, so 18 coins are left. Now share 18 between 3.`,`18 shared into 3 equal groups… count in sixes: 6, 12, 18.`],
+        win:[`Six coins each! Polly immediately hides hers in her feathers.`]},
+      onWin: st => st.items.add("coins"),
+      after:[{to:"oath", label:"Sail back to the ship ➜"}]
+    },
+
+    oath:{ name:"The Pirate Oath", art:"🏴‍☠️🤚",
+      story:[
+        `Back on board, Captain Bess makes you an official pirate. You put your hand on your heart for the Pirate Oath.`,
+        say("Captain Barnacle Bess","🏴‍☠️",`Repeat after me: "I promise to be brave, to share my treasure, and to be loyal to my ship…" Well? Which ship is that, matey?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What is the name of the pirate ship?`,
+        vis: V.big("⛵ ❓"),
+        options:["The Salty Sardine","The Soggy Sardine","The Salty Seagull","The Sandy Sardine","The Silver Shark","The Salty Sausage"], answer:"The Salty Sardine",
+        hints:[`Think back to the very beginning of the adventure…`,`It's named after a small, salty fish!`],
+        win:[`"The Salty Sardine!" The whole crew cheers so loudly that a whale nearby leaps right out of the water.`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   STORY 4 — THE TIME-HOPPER'S GOLDEN GEARS
+   ================================================================ */
+const DINO = {
+  id:"dino", theme:"dino", start:"intro", length:"medium", mins:"15",
+  title:"The Time-Hopper's Golden Gears",
+  cover:"🦕🌋⏳", coverBg:"#fde6cf",
+  blurb:"Your time machine crash-lands among the dinosaurs! Track footprints, read cave codes and find three golden gears to get home.",
+  helper:{name:"Professor Pebble", icon:"👩‍🔬"},
+  runner:"🦕", goal:"⏳",
+  ranks:["Chief Time Explorer","Expert Dino Tracker","Junior Explorer"],
+  bag: st => {
+    const out = [`⚙️ Gears: ${st.n.gear||0}/3`];
+    if (st.items.has("twig")) out.push("🦕 Twig");
+    if (st.items.has("fossil")) out.push("🐚 Fossil");
+    return out;
+  },
+  badges:{river:"🌊 River Rider", ferns:"🌿 Jungle Tracker", volcano:"🌋 Lava Leaper", trex:"🦖 T-Rex Tamer"},
+  ending: st => [
+    `You climb into the Time-Hopper and wave until Twig is just a tiny purple dot beside her mum. Then — WHIRR… CLUNK… FLASH! — you're back in Professor Pebble's laboratory.`,
+    say("Professor Pebble","👩‍🔬", st.path.includes("trex")
+      ? `Welcome home, explorer! You fixed my machine, you helped a T-REX, and you found Twig's mum. I'm SO proud of you!`
+      : `Welcome home, explorer! You fixed my machine, you leapt across a VOLCANO, and you found Twig's mum. I'm SO proud of you!`),
+    st.items.has("fossil")
+      ? `You hand her the spiral fossil from the jungle. "It's millions of years old!" she gasps, and puts it in a glass case with your name on it.`
+      : `She gives you a gold medal shaped like a dinosaur footprint.`,
+    `And sometimes, late at night, you're sure you can hear a happy little squeak echoing all the way across time.`
+  ],
+  scenes:{
+    intro:{ name:"Crash Landing", art:"⏳💥🌴",
+      story:[
+        `WHIRR… CLUNK… BANG! Your time machine, the <b>Time-Hopper</b>, crash-lands in a jungle full of giant ferns. Steam pours out of it. Three golden gears pop out and go flying into the trees.`,
+        `Your walkie-talkie crackles. It's Professor Pebble, the scientist who built the Time-Hopper, back home in her laboratory.`,
+        say("Professor Pebble","👩‍🔬",`Are you all right?! Quick — check the time dial. I need to know how far back in time you've gone!`),
+        `The dial shows what happened: the Time-Hopper went BACK 80 million years, then FORWARD 20 million years, then BACK another 6 million years. Going back counts as minus.`
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`Today is 0. Go back 80, forward 20, then back 6 (in millions of years). Where does the dial stop?`,
+        vis: V.big("0 ⏪ 80 ⏩ 20 ⏪ 6"),
+        options:["−66","−106","−54","66","−94","−60"], answer:"−66",
+        hints:[`Going back 80 takes you to −80. Going forward 20 brings you closer to 0. Where are you now?`,`−80 forward 20 is −60. Now go back 6 more.`,`Going further back makes the minus number bigger: −60, −61, −62…`],
+        win:[
+          say("Professor Pebble","👩‍🔬",`Minus 66 million years! That's the time of the DINOSAURS! The Time-Hopper can't fly without its three golden gears. You'll have to find them.`),
+          `Just then, something next to the Time-Hopper goes CRACK. A big egg is hatching! Out wobbles a baby Diplodocus. She is small and <b>purple</b>, with a long neck, a <b>stripy tail</b>, and <b>four</b> pale spots on her back.`,
+          `She looks up at you and squeaks happily. You name her Twig.`
+        ]},
+      onWin: st => st.items.add("twig"),
+      after:[{to:"footprints", label:"Look for the gears ➜"}]
+    },
+
+    footprints:{ name:"Mysterious Footprints", art:"👣🔍",
+      story:[
+        `Twig sniffs the mud and squeaks. There are footprints here, leading off into the ferns — and far away, something golden is glinting. A dinosaur has run off with one of your gears!`,
+        say("Professor Pebble","👩‍🔬",`Let's work out who made those prints. Use my Dino Guide!`),
+        `The footprints are small. Each one has three toes. And the prints go left, right, left, right — so this dinosaur walks on two legs.`
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which dinosaur made the footprints?<ul><li>Walks on 2 legs.</li><li>3 toes.</li><li>Small.</li></ul>`,
+        vis: V.table(["Dinosaur","Legs","Toes","Size"],[
+          ["🦖 T-Rex","2","3","huge"],["Velociraptor","2","2","small"],["Compy","2","3","small"],
+          ["Triceratops","4","4","big"],["Stegosaurus","4","3","big"],["Parasaurolophus","2","3","big"]]) + V.legend("From Professor Pebble's Dino Guide"),
+        options:["🦖 T-Rex","Velociraptor","Compy","Triceratops","Stegosaurus","Parasaurolophus"], answer:"Compy",
+        hints:[`Cross out the dinosaurs that walk on 4 legs.`,`Now cross out any that don't have 3 toes.`,`Two are left. One is big and one is small. The footprints are small!`],
+        win:[
+          `A Compy! You follow the tracks to a cosy nest under a fern. A little Compy is guarding the golden gear, surrounded by her babies. You count them: one, two, three, four, five.`,
+          note(`The Compy has 5 babies.`)
+        ]},
+      after:[{to:"compy", label:"Talk to the Compy ➜"}]
+    },
+
+    compy:{ name:"The Compy's Bargain", art:"🦎🍓⚙️",
+      story:[
+        say("Professor Pebble","👩‍🔬",`Compys LOVE berries. Offer her a swap!`),
+        `Twig shakes a bush with her nose, and berries rain down. The Compy chirps and points with her tiny claws. She wants 3 berries for each baby — plus 2 for herself.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`The Compy wants 3 berries for each of her 5 babies, plus 2 berries for herself. How many berries does she want?`,
+        vis: V.big("🐣🐣🐣🐣🐣 × 🍓🍓🍓<br>+ 🍓🍓 for Mum"),
+        options:["17","15","10","8","13","20"], answer:"17",
+        hints:[`First: 3 berries for each of 5 babies. That's 5 lots of 3.`,`Count in threes five times: 3, 6, 9, 12, 15. Now add the 2 for Mum.`,`15 + 2 = ?`],
+        win:[
+          `Seventeen juicy berries! The Compy chirps happily and nudges the golden gear towards you. ⚙️ That's ONE gear!`,
+          say("Professor Pebble","👩‍🔬",`The second gear flew towards the cliffs. You can cross the river — or go through the giant fern jungle.`)
+        ]},
+      onWin: st => st.n.gear = (st.n.gear||0) + 1,
+      after:[
+        {to:"river", label:"Cross the river 🌊", sub:"Hitch a ride on a dinosaur"},
+        {to:"ferns", label:"Go through the fern jungle 🌿", sub:"Easy to get lost…"}
+      ]
+    },
+
+    river:{ name:"The River Crossing", art:"🦕🌊",
+      story:[
+        `At the wide, rushing river, an enormous Diplodocus is having a drink. She lowers her neck like a bridge and lets you and Twig climb onto her back.`,
+        say("Professor Pebble","👩‍🔬",`Ooh, let's measure her! Her neck is 8 metres long. Her body is 6 metres. And her tail is TWICE as long as her neck!`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`Neck: 8 metres. Body: 6 metres. Tail: twice as long as the neck. How long is the Diplodocus altogether?`,
+        vis: V.big("neck 8 + body 6 + tail ❓"),
+        options:["30","22","28","16","24","38"], answer:"30",
+        hints:[`First work out the tail. What is double 8?`,`The tail is 16 metres. Now add neck + body + tail: 8 + 6 + 16.`,`8 + 6 = 14. Then 14 + 16 = ?`],
+        win:[`Thirty metres — as long as three buses in a row! She carries you all the way across the river. But on the other side, the path is blocked…`]},
+      after:[{to:"river2", label:"See what's blocking the path ➜"}]
+    },
+
+    river2:{ name:"The Ticklish Stegosaurus", art:"🦎🔶",
+      story:[
+        `A sleepy Stegosaurus is lying across the path. The pointy plates along its back are all different sizes, and each one has a number on it.`,
+        say("Professor Pebble","👩‍🔬",`It's a famous pattern! Each number is made by adding together the TWO numbers just before it. Tickle the right plate and it might move!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The plates are numbered 1, 1, 2, 3, 5, 8… What number is on the next plate?`,
+        vis: V.big("1 · 1 · 2 · 3 · 5 · 8 · ❓"),
+        options:["13","11","10","16","12","9"], answer:"13",
+        hints:[`Check it works: 1 + 1 = 2. 1 + 2 = 3. 2 + 3 = 5…`,`The two numbers just before the gap are 5 and 8.`,`5 + 8 = ?`],
+        win:[`Thirteen! You tickle plate number 13. The Stegosaurus giggles (who knew dinosaurs were ticklish?), rolls over, and lets you pass.`]},
+      after:[{to:"cave", label:"Walk on to the cliffs ➜"}]
+    },
+
+    ferns:{ name:"The Fern Jungle", art:"🌿🌿🌿",
+      story:[
+        `The ferns here are taller than houses. It would be easy to get lost — but Professor Pebble can see you on her tracker.`,
+        say("Professor Pebble","👩‍🔬",`Listen carefully! RIGHT 1, UP 2, RIGHT 2, UP 2. And don't walk into the ferns!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🧒 (that's you). Follow Professor Pebble's directions. Where do you end up?`,
+        grid:["🌋 🌿 🥚 🦴 🌿","🌿 . 🌿 . 🍓",". . . . 🌿","🥚 . 🌿 🌿 .","🧒 . 🌿 . 🍄"],
+        start:"🧒", moves:[["R",1],["U",2],["R",2],["U",2]],
+        options:["🦴 Giant bone","🥚 Egg","🍓 Berries","🍄 Mushroom","🌋 Volcano","🌿 A fern"], answer:"🦴 Giant bone",
+        hints:[`Right 1 first. Then up 2.`,`Now right 2 along the open path, then up 2 more.`,`You should be on the top row. What's there?`],
+        win:[`A giant bone, as big as a car, marks the edge of the jungle. Twig squeaks — she's found something else, half-buried in the mud.`]},
+      after:[{to:"ferns2", label:"Dig it up ➜"}]
+    },
+
+    ferns2:{ name:"A Stony Surprise", art:"🐚🪨",
+      story:[ say("Professor Pebble","👩‍🔬",`What a find! Here's a riddle about it, explorer.`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"Once I was alive, but now I'm made of stone. Explorers dig me up to learn about the long-ago past." What am I?`,
+        vis: V.big("🪨 ⏳ ❓"),
+        options:["🐚 A fossil","🪨 A rock","💀 A skeleton","🥚 A dinosaur egg","🌋 A volcano","👣 A footprint"], answer:"🐚 A fossil",
+        hints:[`A rock was never alive. A skeleton is bone, not stone…`,`Over millions of years, a shell or bone can slowly TURN into stone. Scientists dig them up…`],
+        win:[`A fossil! It's an ancient shell turned to stone, in a perfect spiral. You put it in your pocket for Professor Pebble — and walk on to the cliffs.`]},
+      onWin: st => st.items.add("fossil"),
+      after:[{to:"cave", label:"Walk on to the cliffs ➜"}]
+    },
+
+    cave:{ name:"The Cave Painting", art:"🪨🖐️",
+      story:[
+        `At the bottom of the cliffs is a cave. On its wall is a message, painted long, long ago — but it looks like nonsense.`,
+        say("Professor Pebble","👩‍🔬",`Ooh, it's a backwards code! Read the whole message from right to left.`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Read the message backwards, from the last letter to the first. What does it say?`,
+        vis: V.code("TSEN EHT NI"),
+        options:["IN THE NEST","IN THE WEST","IN THE NET","ON THE NEST","IN THE TENT","NEST IN THE"], answer:"IN THE NEST",
+        hints:[`Start at the very END of the message and read backwards: I… N…`,`The last word, NI, backwards is IN. EHT backwards is THE.`,`TSEN backwards is N, E, S, T…`],
+        win:[`"IN THE NEST!" You look up. High on a ledge is an enormous nest made of branches — and something golden is glinting inside it.`]},
+      after:[{to:"nest", label:"Climb up to the nest 🧗"}]
+    },
+
+    nest:{ name:"The Pteranodon's Nest", art:"🪶🥚⚙️",
+      story:[
+        `You climb up to the ledge. A mother Pteranodon is sitting on the nest, and she does NOT look pleased to see you.`,
+        say("Professor Pebble","👩‍🔬",`Show her you're friendly! Pteranodons love it when you admire their eggs.`),
+        `There are 12 eggs in the nest.`
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`There are 12 eggs. A third of them are blue. A quarter of them are spotty. The rest are plain. How many eggs are plain?`,
+        vis: V.big("🥚🥚🥚🥚🥚🥚<br>🥚🥚🥚🥚🥚🥚"),
+        options:["5","7","4","3","6","8"], answer:"5",
+        hints:[`Find a third of 12 first: share 12 into 3 groups.`,`4 eggs are blue. Now find a quarter of 12: share 12 into 4 groups.`,`4 blue + 3 spotty = 7. How many of the 12 are left?`],
+        win:[
+          `"Five beautiful plain eggs!" The mother Pteranodon fluffs up her feathers proudly and lets you take the golden gear from the edge of her nest. ⚙️ That's TWO gears!`,
+          say("Professor Pebble","👩‍🔬",`The last gear landed near the volcano. You can take the hot Volcano Path — or the shortcut through the T-Rex's valley…`)
+        ]},
+      onWin: st => st.n.gear = (st.n.gear||0) + 1,
+      after:[
+        {to:"volcano", label:"Take the Volcano Path 🌋", sub:"Hot, hot, hot!"},
+        {to:"trex", label:"Cut through the T-Rex's valley 🦖", sub:"Are you brave enough?"}
+      ]
+    },
+
+    volcano:{ name:"The Volcano Path", art:"🌋🔥",
+      story:[
+        `The Volcano Path is hot and smoky. Some rocks are safe to stand on. Others are bubbling with lava underneath!`,
+        say("Professor Pebble","👩‍🔬",`The safe rocks have numbers that follow a pattern. Each safe rock is DOUBLE the one before!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The safe rocks are numbered 2, 4, 8, 16… What number is on the next safe rock?`,
+        vis: V.big("🪨2 → 🪨4 → 🪨8 → 🪨16 → ❓"),
+        options:["32","18","24","20","30","64"], answer:"32",
+        hints:[`Double means add the number to itself. 2 + 2 = 4. 4 + 4 = 8…`,`8 + 8 = 16. So the next one is 16 + 16…`],
+        win:[`Thirty-two! You leap from rock to rock, with Twig hopping behind you — and there, wedged in a crack and glowing in the heat, is the third golden gear! ⚙️`]},
+      onWin: st => st.n.gear = (st.n.gear||0) + 1,
+      after:[{to:"restart", label:"Race back to the Time-Hopper ➜"}]
+    },
+
+    trex:{ name:"The T-Rex", art:"🦖😢",
+      story:[
+        `In the middle of the valley sits a huge T-Rex. He's crying great big dinosaur tears — because the golden gear is stuck in his foot like a splinter!`,
+        say("T-Rex","🦖",`OWWW! I'll let you pull it out if you can answer my number riddle. And if you can't… I'll be VERY grumpy.`)
+      ],
+      puzzle:{ tag:"Number riddle",
+        q:`"I'm a number. When you count in 5s, you say me. When you count in 2s, you say me too. I'm bigger than 22 but smaller than 38." What number am I?`,
+        vis: V.big("🦖 ❓"),
+        options:["30","25","35","32","20","28"], answer:"30",
+        hints:[`Count in 5s and find the numbers between 22 and 38: 25, 30, 35.`,`Which of 25, 30 and 35 do you ALSO say when you count in 2s? (2, 4, 6, 8, 10…)`],
+        win:[
+          `"THIRTY!"`,
+          say("T-Rex","🦖",`Hmph. Correct.`),
+          `He holds out his foot. You give the gear a mighty tug — POP! "Ahhhh, that's better," sighs the T-Rex. ⚙️ That's all THREE gears!`
+        ]},
+      onWin: st => st.n.gear = (st.n.gear||0) + 1,
+      after:[{to:"restart", label:"Race back to the Time-Hopper ➜"}]
+    },
+
+    restart:{ name:"Fixing the Time-Hopper", art:"⏳⚙️⚙️⚙️",
+      story:[
+        `You click all three golden gears into place. The control panel lights up… but a message flashes on the screen: ENTER SECRET CODE.`,
+        say("Professor Pebble","👩‍🔬",`The Time-Hopper makes its own codes from things it has seen! It says the code is two numbers side by side: first, the number of spots on Twig's back. Then, the number of babies the Compy has.`)
+      ],
+      puzzle:{ tag:"Combine clues",
+        q:`Type the code: Twig's spots, then the Compy's babies.`,
+        vis: V.big("🦕 spots · 🐣 babies<br>❓ ❓"),
+        options:["45","54","9","20","44","55"], answer:"45",
+        hints:[`Check your notebook 📒 for how many babies the Compy has.`,`How many spots does Twig have on her back? Think back to when she hatched…`,`Twig has 4 spots and the Compy has 5 babies. Put them side by side!`],
+        win:[
+          `4… 5… BEEP! The Time-Hopper hums back to life.`,
+          say("Professor Pebble","👩‍🔬",`You did it!`),
+          `But Twig looks up at you with big sad eyes. She can't come to your time — she belongs here, with the dinosaurs. You need to find her family.`
+        ]},
+      after:[{to:"mum", label:"Find Twig's family 💜"}]
+    },
+
+    mum:{ name:"Finding Twig's Mum", art:"🦕🦕🦕",
+      story:[
+        `Down by the lake, six Diplodocus are munching leaves from the treetops. One of them must be Twig's mum.`,
+        say("Professor Pebble","👩‍🔬",`A baby Diplodocus is always the SAME COLOUR as its mum, with the SAME NUMBER of spots. And Twig's mum has a stripy tail, just like Twig.`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which one is Twig's mum?<ul><li>Same colour as Twig.</li><li>Same number of spots as Twig.</li><li>A stripy tail.</li></ul>`,
+        vis: V.cards([
+          {n:"1",icon:"🟢",lines:["●●●●","〰️ stripy"]},
+          {n:"2",icon:"🟣",lines:["●●●","〰️ stripy"]},
+          {n:"3",icon:"🟣",lines:["●●●●","➖ plain"]},
+          {n:"4",icon:"🟣",lines:["●●●●","〰️ stripy"]},
+          {n:"5",icon:"🟣",lines:["●●●●●","〰️ stripy"]},
+          {n:"6",icon:"🔵",lines:["●●●●","〰️ stripy"]}
+        ]) + V.legend("colour · ● spots · tail"),
+        options:["🦕 1","🦕 2","🦕 3","🦕 4","🦕 5","🦕 6"], answer:"🦕 4",
+        hints:[`What colour is Twig? Cross out the dinosaurs that are a different colour.`,`Now count spots. Twig has 4. Which purple ones have 4 spots?`,`Two purple ones have 4 spots. Which of them has a stripy tail?`],
+        win:[`Number 4! Twig's mum lowers her long neck and nuzzles Twig, and Twig squeaks the happiest squeak you have ever heard. Then her mum gently nudges you too, as if to say thank you.`]},
+      onWin: st => st.items.delete("twig"),
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+
+V.za = () => `<div class="vkey">${AL.map((l,i)=>`<span><b>${l}</b><i>${26-i}</i></span>`).join("")}</div>`;
+V.morse = pairs => `<div class="vkey sym morse">${pairs.map(([s,l])=>`<span><b>${s}</b><i>${l}</i></span>`).join("")}</div>`;
+
+/* ================================================================
+   SHORT 1 — THE GREAT PENGUIN ESCAPE
+   ================================================================ */
+const ZOO = {
+  id:"zoo", theme:"zoo", start:"intro", length:"short", mins:"7",
+  title:"The Great Penguin Escape",
+  cover:"🐧🐧🏃", coverBg:"#fde2ee",
+  blurb:"Four penguins have waddled out of their pool, and the zoo opens soon! Track them down before the visitors arrive.",
+  helper:{name:"Ellie the elephant", icon:"🐘"},
+  runner:"🐧", goal:"🏠",
+  ranks:["Head Zookeeper","Senior Zookeeper","Junior Zookeeper"],
+  bag: st => [`🐧 Penguins found: ${st.n.peng||0}/4`, `🐟 Fish: ${st.n.fish==null?20:st.n.fish}`],
+  badges:{reptiles:"🦎 Reptile House Hero", kiosk:"🍦 Ice-Cream Detective"},
+  ending: st => [
+    `At lunchtime, the Head Zookeeper pins a shiny badge with a penguin on it to your uniform.`,
+    say("Ellie the elephant","🐘",`Best zookeeper EVER! I'm going to trumpet about this all week.`),
+    `And from that day on, whenever you walk past the penguin pool, four penguins waddle over to say hello — especially at feeding time.`
+  ],
+  scenes:{
+    intro:{ name:"The Empty Pool", art:"🐧❓🕖",
+      story:[
+        `You're the youngest zookeeper at Sunnyside Zoo, and today you have the most important job of all: feeding the penguins.`,
+        `But when you arrive with your bucket of 20 fish, the penguin pool is empty! The gate is open, and four sets of wet, flappy footprints lead away.`,
+        say("Ellie the elephant","🐘",`Oh my trunk! Waddles, Snowy, Pebbles and Flipper have escaped! If the visitors see penguins wandering about, there'll be chaos!`),
+        `The big clock above the zoo gates says quarter to eight.`
+      ],
+      puzzle:{ tag:"Time",
+        q:`The zoo opens at 9 o'clock. It's quarter to eight (7:45) now. How many minutes do you have to find the penguins?`,
+        vis: V.big("🕖 7:45 ➜ 🕘 9:00"),
+        options:["75","15","105","45","85","65"], answer:"75",
+        hints:[`From 7:45 to 8 o'clock is 15 minutes.`,`From 8 o'clock to 9 o'clock is a whole hour — 60 minutes. Add the 15 on.`,`60 + 15 = ?`],
+        win:[`Seventy-five minutes. Not long! Ellie lifts her trunk and sniffs the air.`, say("Ellie the elephant","🐘",`I smell fishy footprints. They went towards the water enclosures!`)]},
+      after:[{to:"enclosures", label:"Follow the footprints 👣"}]
+    },
+    enclosures:{ name:"Wet Footprints", art:"👣💧",
+      story:[
+        `The footprints lead past six enclosures in a row. Ellie screws up her eyes, trying to remember what she saw last night.`,
+        say("Ellie the elephant","🐘",`I saw them sneak into an enclosure with water AND fish in it. And it was right next to the crocodiles!`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which enclosure did the penguins go into?<ul><li>It has water 💧.</li><li>It has fish 🐟.</li><li>It's right next to the crocodiles 🐊.</li></ul>`,
+        vis: V.row([["1","🦁","➖","➖"],["2","🦭","💧","🐟"],["3","🦒","➖","➖"],["4","🐊","💧","➖"],["5","🦦","💧","🐟"],["6","🐻‍❄️","💧","🐟"]]) + V.legend("💧 water · 🐟 fish · ➖ none"),
+        options:["🦁 Lions","🦭 Seals","🦒 Giraffes","🐊 Crocodiles","🦦 Otters","🐻‍❄️ Polar bears"], answer:"🦦 Otters",
+        hints:[`Cross out the enclosures with no water.`,`Now cross out any without fish. Which three are left?`,`Seals, otters and polar bears are left. Which one is right next to the crocodiles?`],
+        win:[`The otters! And there, floating on their backs with the otters, are Waddles and Snowy, having a lovely time.`]},
+      after:[{to:"otters", label:"Ask for the penguins back ➜"}]
+    },
+    otters:{ name:"The Otters' Deal", art:"🦦🐧🐟",
+      story:[
+        say("Olive the otter","🦦",`Your penguins? They're our GUESTS! We'll only give them back for some of your fish. We want HALF of your bucket… and then 3 more.`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`You have 20 fish. You give the otters half of them, and then 3 more. How many fish are left in your bucket?`,
+        vis: V.big("🪣 🐟 × 20"),
+        options:["7","13","10","3","17","8"], answer:"7",
+        hints:[`Half of 20 is 10. The otters get those 10 first.`,`Then they get 3 more, so they get 13 altogether.`,`20 take away 13 is…?`],
+        win:[
+          `Seven fish left. The otters munch happily, and Waddles and Snowy hop out of the water, dripping. Two penguins found! 🐧🐧`,
+          say("Ellie the elephant","🐘",`Two more to go! I can hear a fuss in the Reptile House… but there's ALSO a crowd at the ice-cream kiosk!`)
+        ]},
+      onWin: st => { st.n.peng = 2; st.n.fish = 7; },
+      after:[
+        {to:"reptiles", label:"Check the Reptile House 🦎", sub:"Something is squawking in there"},
+        {to:"kiosk", label:"Check the ice-cream kiosk 🍦", sub:"A crowd is gathering"}
+      ]
+    },
+    reptiles:{ name:"The Reptile House", art:"🦎⚖️🐧",
+      story:[
+        `Inside the warm Reptile House, Pebbles the penguin is sitting on the giant weighing scales and refusing to budge.`,
+        say("Ellie the elephant","🐘",`The keeper says these are magic scales. They'll only let Pebbles go if you can work out what a penguin weighs… in buckets!`),
+        `A sign on the scales says: <b>2 penguins weigh the same as 1 seal. 1 seal weighs the same as 6 buckets.</b>`
+      ],
+      puzzle:{ tag:"Balance",
+        q:`2 penguins = 1 seal. 1 seal = 6 buckets. How many buckets weigh the same as 1 penguin?`,
+        vis: V.big("🐧🐧 ⚖️ 🦭<br>🦭 ⚖️ 🪣🪣🪣🪣🪣🪣"),
+        options:["3","6","12","2","4","8"], answer:"3",
+        hints:[`A seal weighs 6 buckets — so 2 penguins weigh 6 buckets too.`,`Now share those 6 buckets between the 2 penguins.`,`6 shared between 2 is…?`],
+        win:[`Three buckets! The scales go DING and Pebbles hops off. And who's that hiding behind a cactus, pretending to be a lizard? Flipper! That's all four penguins! 🐧🐧🐧🐧`]},
+      onWin: st => st.n.peng = 4,
+      after:[{to:"lineup", label:"Hurry back to the pool ➜"}]
+    },
+    kiosk:{ name:"The Ice-Cream Kiosk", art:"🍦🐧🐧",
+      story:[
+        `At the ice-cream kiosk, Pebbles and Flipper have their beaks stuck in the freezer. They've eaten three ice lollies!`,
+        say("Mr Scoop","🍨",`Somebody has to pay for those! Ice lollies are 40p each.`),
+        `You have a £2 coin in your pocket. £2 is the same as 200p.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`3 ice lollies cost 40p each. You pay with £2 (200p). How much change do you get?`,
+        vis: V.big("🍭 40p × 3<br>🪙 £2 = 200p"),
+        options:["80p","£1.20","40p","60p","£1.60","20p"], answer:"80p",
+        hints:[`First, how much do 3 lollies cost? 40p + 40p + 40p.`,`3 lollies cost 120p. Now take 120p away from 200p.`,`200 − 100 = 100. Then take away 20 more…`],
+        win:[`80p change! Mr Scoop winks, and you scoop up two sticky, happy penguins. That's all four! 🐧🐧🐧🐧`]},
+      onWin: st => st.n.peng = 4,
+      after:[{to:"lineup", label:"Hurry back to the pool ➜"}]
+    },
+    lineup:{ name:"Line Up, Penguins!", art:"🐧🐧🐧🐧",
+      story:[
+        `You march the penguins back to their pool with five minutes to spare. But there's one more rule: penguins must go back in from the TALLEST to the shortest.`,
+        say("Ellie the elephant","🐘",`I know them all! Snowy is taller than Pebbles. Waddles is taller than Snowy. And Flipper is shorter than Pebbles.`)
+      ],
+      puzzle:{ tag:"Ordering",
+        q:`Who is the tallest penguin?`,
+        vis: V.clues(["📏 Snowy is taller than Pebbles.","📏 Waddles is taller than Snowy.","📏 Flipper is shorter than Pebbles."]),
+        options:["Waddles","Snowy","Pebbles","Flipper","They're all the same","You can't tell"], answer:"Waddles",
+        hints:[`Imagine them in a line with the tallest at the top. The first clue puts Snowy above Pebbles.`,`Waddles is taller than Snowy, so Waddles goes above Snowy.`,`Flipper goes right at the bottom. Who's at the top?`],
+        win:[`Waddles! In they go: Waddles, Snowy, Pebbles, Flipper — SPLASH, SPLASH, SPLASH, SPLASH. The gates open at 9 o'clock exactly, and not one visitor knows what happened.`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   SHORT 2 — THE LIGHTHOUSE GHOST
+   ================================================================ */
+const LIGHT = {
+  id:"lighthouse", theme:"lighthouse", start:"intro", length:"short", mins:"7",
+  title:"The Lighthouse Ghost",
+  cover:"⛈️🔦👻", coverBg:"#fdf0d2",
+  blurb:"On a stormy night the lighthouse lamp goes out — and a ship is heading for the rocks! A friendly ghost might be able to help.",
+  helper:{name:"Granny Mae", icon:"👵"},
+  runner:"🔦", goal:"💡",
+  ranks:["Keeper of the Light","Lighthouse Hero","Brave Helper"],
+  bag: st => st.items.has("matches") ? ["🔦 Torch","🔥 Matches"] : ["🔦 Torch"],
+  badges:{kitchen:"🔥 Match Finder", wisp:"👻 Ghost Whisperer"},
+  ending: st => [
+    `The storm blows itself out, and the sun comes up over a calm, sparkling sea.`,
+    say("Granny Mae","👵",`You saved that ship tonight, my brave one. I'm so proud of you.`),
+    `And as you yawn your way down the 96 steps to bed, a chilly little breeze ruffles your hair, and something taps on the window: dot, dot, dash… A ghostly thank-you from Captain Wisp.`
+  ],
+  scenes:{
+    intro:{ name:"A Stormy Night", art:"⛈️🌊",
+      story:[
+        `Rain is lashing against the windows of Granny Mae's lighthouse, and the wind is howling like a wolf. You're staying with Granny for the weekend.`,
+        `Suddenly — CLICK — every light goes out. Even the great lamp at the top of the lighthouse!`,
+        say("Granny Mae","👵",`Oh no! Without the lamp, the ships won't be able to see the rocks!`),
+        `Then a cold breeze blows through the room, and a glowing figure floats out of the wall: an old sea captain with a see-through beard. He taps on the window with one finger. Tap… tap-tap… tap.`,
+        say("Granny Mae","👵",`That's Captain Wisp, the lighthouse ghost! He only talks in Morse code — dots and dashes. Quick, here's my code book!`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Each letter is made of dots ( · ) and dashes ( — ). What word is Captain Wisp tapping?`,
+        vis: V.code("·—·· &nbsp;/&nbsp; ·— &nbsp;/&nbsp; —— &nbsp;/&nbsp; ·——·") + V.morse([["·—","A"],["—···","B"],["—·—·","C"],["·—··","L"],["——","M"],["·——·","P"],["···","S"],["··—","U"]]),
+        options:["LAMP","PALM","LAMB","CAMP","PLUM","SLAM"], answer:"LAMP",
+        hints:[`Take one group at a time. The first group is ·—·· — find it in the code book.`,`·—·· is L and ·— is A. Now find —— and ·——·.`,`L, A, M… and ·——· is P.`],
+        win:[`"LAMP!" Captain Wisp nods and points up. Someone needs to relight the lamp at the very top of the tower — and he can't do it himself, because ghost hands go straight through everything.`]},
+      after:[{to:"stairs", label:"Climb the lighthouse stairs ➜"}]
+    },
+    stairs:{ name:"The Spiral Stairs", art:"🌀🦶",
+      story:[
+        `The lighthouse has 96 steps, winding round and round and round. Granny Mae isn't as quick as she used to be.`,
+        say("Granny Mae","👵",`I'll climb a quarter of the way, then have a little rest. Then I'll climb half of what's left, and rest again.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`There are 96 steps. Granny climbs a quarter of them. Then she climbs half of the steps that are left. How many steps does she still have to climb?`,
+        vis: V.big("🪜 × 96"),
+        options:["36","48","24","72","12","60"], answer:"36",
+        hints:[`For a quarter, halve 96 and then halve it again: 96 → 48 → ?`,`She climbs 24, so 72 are left. Now she climbs half of those 72.`,`Half of 72 is 36. So how many are still left?`],
+        win:[
+          `Thirty-six more steps — puff, puff — and you're at the top! The great lamp is cold and dark. To light it, you need a flame.`,
+          say("Granny Mae","👵",`The matches are in one of the drawers in the keeper's kitchen up here. Or perhaps Captain Wisp knows another way…`)
+        ]},
+      after:[
+        {to:"kitchen", label:"Search the kitchen drawers 🗄️", sub:"Granny left herself a note"},
+        {to:"wisp", label:"Ask Captain Wisp 👻", sub:"He's tapping on the glass again"}
+      ]
+    },
+    kitchen:{ name:"The Kitchen Drawers", art:"🗄️🔥",
+      story:[
+        `In the tiny keeper's kitchen at the top of the tower, there are six drawers, numbered 1 to 6. Stuck to the kettle is a note in Granny's wobbly handwriting.`
+      ],
+      puzzle:{ tag:"Logic",
+        q:`Which drawer are the matches in?<ul><li>It's an even number.</li><li>It's bigger than 3.</li><li>It's NOT drawer 6.</li></ul>`,
+        vis: V.row([["1","🗄️"],["2","🗄️"],["3","🗄️"],["4","🗄️"],["5","🗄️"],["6","🗄️"]]),
+        options:["Drawer 1","Drawer 2","Drawer 3","Drawer 4","Drawer 5","Drawer 6"], answer:"Drawer 4",
+        hints:[`Even numbers are the ones you say when you count in 2s: 2, 4, 6.`,`Which of 2, 4 and 6 are bigger than 3?`,`4 and 6 are bigger than 3 — but it's not 6!`],
+        win:[`Drawer 4! Inside is a box of long, extra-strong lighthouse matches. You strike one — FFFT — and light the great lamp.`]},
+      onWin: st => st.items.add("matches"),
+      after:[{to:"flash", label:"Watch the lamp ➜"}]
+    },
+    wisp:{ name:"Captain Wisp's Riddle", art:"👻⚓",
+      story:[
+        `Captain Wisp breathes on the window until it mists over. Then he writes in the mist with his finger.`,
+        say("Captain Wisp","👻",`Answer my riddle, and I'll show you my secret switch.`)
+      ],
+      puzzle:{ tag:"Riddle",
+        q:`"I race across the sea faster than any ship, but I never get wet. Sailors follow me home at night." What am I?`,
+        vis: V.big("🌊 ⛵ ❓"),
+        options:["💡 Light","🐬 A dolphin","🌬️ The wind","⭐ A star","🌊 A wave","🐦 A seagull"], answer:"💡 Light",
+        hints:[`It never gets wet… so it can't be a dolphin or a wave.`,`Sailors follow it home at night — just like the beam from a lighthouse!`],
+        win:[`Light! Captain Wisp smiles and points to a brass lever hidden behind a painting. You pull it — CLUNK — and the great lamp rumbles into life.`]},
+      after:[{to:"flash", label:"Watch the lamp ➜"}]
+    },
+    flash:{ name:"Flash! Flash! Flash!", art:"💡✨",
+      story:[
+        `The lamp blazes out across the waves. But a lighthouse doesn't just shine — it FLASHES, so sailors can tell which lighthouse it is.`,
+        say("Granny Mae","👵",`Our lighthouse flashes once every 5 seconds. The coastguard is on the radio — they need to know how many flashes that is in one minute.`),
+        `One minute is 60 seconds.`
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`The lamp flashes once every 5 seconds. How many times does it flash in 1 minute (60 seconds)?`,
+        vis: V.big("💡 every 5 seconds<br>⏱️ 60 seconds"),
+        options:["12","5","60","10","15","6"], answer:"12",
+        hints:[`Count in 5s until you reach 60: 5, 10, 15…`,`How many 5s did it take to get to 60? Count them on your fingers.`,`5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60…`],
+        win:[`Twelve flashes a minute! Out at sea, through the rain, a ship's horn sounds: PAAAARP! They've seen the light. But they still need help getting into the harbour.`]},
+      after:[{to:"harbour", label:"Grab the radio 📻"}]
+    },
+    harbour:{ name:"Guide the Ship Home", art:"🚢⚓",
+      story:[
+        say("Granny Mae","👵",`Listen carefully, Captain! Sail RIGHT 2, then UP 4, then RIGHT 1!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at the 🚢. Follow Granny's directions. Where does the ship end up?`,
+        grid:["🏝️ . . ⚓ 🪨",". 🪨 . 🪨 .","🛟 . . . 🐋","🦭 🪨 . 🪨 .","🚢 . . . 🪨"],
+        start:"🚢", moves:[["R",2],["U",4],["R",1]],
+        options:["⚓ The harbour","🐋 A whale","🦭 A seal","🪨 Rocks (CRASH!)","🛟 A lifebuoy","🏝️ An island"], answer:"⚓ The harbour",
+        hints:[`Right 2 first, along the bottom row.`,`Now go up 4 — all the way to the top row.`,`One last step: right 1. What's there?`],
+        win:[`The harbour! The ship glides safely in, and the sailors cheer so loudly you can hear them from the top of the lighthouse.`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   LONG 1 — THE LOST CITY UNDER THE SEA
+   ================================================================ */
+const SEA = {
+  id:"sea", theme:"sea", start:"dock", length:"long", mins:"30",
+  title:"The Lost City Under the Sea",
+  cover:"🐬🔱🐚", coverBg:"#ffe4de",
+  blurb:"Dive deep in your little submarine to find three Tide Keys and open the gates of a lost underwater city — before its light goes out for ever.",
+  helper:{name:"Bubbles the dolphin", icon:"🐬"},
+  runner:"🐠", goal:"🔱",
+  ranks:["Admiral of the Deep","Ocean Explorer","Brave Diver"],
+  bag: st => [`🗝️ Tide Keys: ${st.notes.filter(n=>n.includes("Key")).length}/3`, "🐬 Bubbles"],
+  badges:{kelp:"🌿 Kelp Explorer", coral:"🪸 Reef Ranger", whale:"🐋 Whale Whisperer", cave:"✨ Cave Glider", shark:"🦈 Shark Sneaker", current:"🌊 Current Rider"},
+  ending: st => [
+    `At last it's time to go home. The Periwinkle rises up, up, up — from deep, dark blue to bright, sparkling turquoise — and bobs out of the waves into the sunshine.`,
+    say("Bubbles the dolphin","🐬",`You did it, Captain! Coralis will shine for another thousand years!`),
+    `And on dark nights, if you look far out to sea, you might just see a faint glow deep beneath the waves: the Pearl of Light, still shining, thanks to you.`
+  ],
+  scenes:{
+    dock:{ name:"The Periwinkle", art:"⚓🟡🐬",
+      story:[
+        `You are the captain of the <b>Periwinkle</b>, a little round yellow submarine with portholes like big goggly eyes.`,
+        `This morning, a dolphin leapt out of the harbour and squeaked an urgent message.`,
+        say("Bubbles the dolphin","🐬",`Captain! The underwater city of Coralis is in trouble! Its great Pearl of Light is fading. The city gates are locked, and the three Tide Keys that open them have been scattered across the sea. Only a brave captain can find them!`),
+        `Before you dive, you need enough oxygen. The journey down takes 2 hours. Exploring will take 8 hours. The journey back up takes 2 hours. Each oxygen tank lasts 3 hours.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`Down: 2 hours. Exploring: 8 hours. Back up: 2 hours. Each oxygen tank lasts 3 hours. How many tanks do you need?`,
+        vis: V.big("⬇️ 2 + 🔍 8 + ⬆️ 2 hours<br>O₂ tank = 3 hours each"),
+        options:["4","3","5","12","6","2"], answer:"4",
+        hints:[`First add up the whole trip: 2 + 8 + 2.`,`The trip is 12 hours. How many 3s make 12?`,`Count in 3s: 3, 6, 9, 12. How many jumps was that?`],
+        win:[`Four tanks, clicked into place. HISS! The hatch seals shut. "Diving!" you call — and the Periwinkle sinks beneath the waves with a BLOOP.`]},
+      after:[{to:"dive", label:"Dive! Dive! Dive! ⬇️"}]
+    },
+    dive:{ name:"Down, Down, Down", art:"💧⬇️🐟",
+      story:[
+        `Down you go. The water turns from bright blue to deep, dark blue. Fish swim up to the portholes and stare in at you.`,
+        say("Bubbles the dolphin","🐬",`The surface of the sea is zero. Under the water, the depth is a MINUS number. Follow my instructions carefully!`),
+        `First you dive to 40 metres below the surface. Then you rise up 15 metres to dodge a grumpy jellyfish. Then you dive down 30 metres more.`
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`Dive to −40 m. Rise 15 m. Then dive 30 m more. What depth are you at now?`,
+        vis: V.big("−40 ⬆️ 15 ⬇️ 30"),
+        options:["−55 m","−25 m","−85 m","55 m","−45 m","−65 m"], answer:"−55 m",
+        hints:[`Rising 15 from −40 brings you closer to the surface. Where are you now?`,`−40 up 15 is −25. Now dive 30 more — going deeper makes the minus number bigger.`,`25 + 30 = 55. So you're at minus…?`],
+        win:[`Minus 55 metres! Bumping gently on the sand is a glass bottle with a message inside, written in the old Coralis code.`]},
+      after:[{to:"bottle", label:"Open the bottle 🍾"}]
+    },
+    bottle:{ name:"The Message in a Bottle", art:"🍾📜",
+      story:[
+        say("Bubbles the dolphin","🐬",`The Coralis code is the alphabet BACKWARDS! Z is 1, Y is 2, X is 3… all the way to A, which is 26.`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Use the backwards code (Z = 1, A = 26). Where is the first Tide Key hidden?`,
+        vis: V.code("9 · 22 · 22 · 21") + V.za(),
+        options:["REEF","BEEF","REED","REFS","FREE","REEL"], answer:"REEF",
+        hints:[`Find 9 in the key. Which letter sits on top of it?`,`9 is R and 22 is E. Now find 21.`,`R, E, E… and 21 is F.`],
+        win:[
+          `"REEF!" The first key is hidden somewhere on the reef.`,
+          say("Bubbles the dolphin","🐬",`The reef has two parts: the Kelp Forest, where the seaweed is taller than trees — or the Coral Gardens, full of fish. Which way, Captain?`)
+        ]},
+      after:[
+        {to:"kelp", label:"Explore the Kelp Forest 🌿", sub:"Tall, swaying and easy to get lost in"},
+        {to:"coral", label:"Explore the Coral Gardens 🪸", sub:"Bright, busy and full of fish"}
+      ]
+    },
+    kelp:{ name:"The Kelp Forest", art:"🌿🤿🌿",
+      story:[
+        `The kelp sways like a giant green curtain. You put on your diving suit and swim out, with Bubbles beside you.`,
+        say("Bubbles the dolphin","🐬",`Stay close! I'll guide you: RIGHT 1, UP 2, RIGHT 1, UP 2. Don't swim into the kelp!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🤿 (that's you). Follow Bubbles's directions. Where do you end up?`,
+        grid:["🐡 🌿 🐚 . 🦀",". 🌿 . 🌿 .",". . . 🌿 🐙","🌿 . 🌿 . .","🤿 . 🌿 🦑 🪸"],
+        start:"🤿", moves:[["R",1],["U",2],["R",1],["U",2]],
+        options:["🐚 Giant shell","🦀 Crab","🐙 Octopus","🐡 Pufferfish","🦑 Squid","🪸 Coral"], answer:"🐚 Giant shell",
+        hints:[`Right 1, then up 2. Where are you?`,`Now right 1 more, then up 2 to the top row.`,`What's on the top row, in the middle?`],
+        win:[`A giant shell, as big as a bathtub, slowly creaks open…`]},
+      after:[{to:"kelp2", label:"Look inside ➜"}]
+    },
+    kelp2:{ name:"The Seahorse Guards", art:"🐚✨",
+      story:[
+        `Inside the shell, six seahorses stand guard in a row. One of them is holding the Shell Key in its tail.`,
+        say("Bubbles the dolphin","🐬",`I know which one! The seahorse with the key wears a crown, has a curly tail — and is NOT yellow.`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which seahorse has the key?<ul><li>It wears a crown.</li><li>It has a curly tail.</li><li>It is NOT yellow.</li></ul>`,
+        vis: V.row([["1","🟡","🌀","👑"],["2","🟠","|","👑"],["3","🔴","🌀","–"],["4","🟣","🌀","👑"],["5","🟡","🌀","–"],["6","🔵","|","👑"]]) + V.legend("🌀 curly tail · | straight tail · 👑 crown · – no crown"),
+        options:["🟡 1","🟠 2","🔴 3","🟣 4","🟡 5","🔵 6"], answer:"🟣 4",
+        hints:[`Cross out the seahorses with no crown.`,`Now cross out the straight tails. Which are left?`,`1 and 4 are left. One of them is yellow…`],
+        win:[
+          `Seahorse 4 bows and hands you a key made of mother-of-pearl. There's a number engraved on it.`,
+          note(`The Shell Key 🗝️ has the number 6 on it.`),
+          say("Bubbles the dolphin","🐬",`One key! Next, the old shipwreck!`)
+        ]},
+      after:[{to:"wreck", label:"Swim to the shipwreck ➜"}]
+    },
+    coral:{ name:"The Coral Gardens", art:"🪸🐠🐠",
+      story:[
+        `The Coral Gardens burst with colour: pink, orange and purple. A huge school of fish swirls around the Periwinkle.`,
+        say("Bubbles the dolphin","🐬",`The key is hidden under the fish! There are 60 of them. When I whistle, a third will swim left, a quarter will swim right, and the rest will stay where they are.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`60 fish. A third swim left. A quarter swim right. How many stay where they are?`,
+        vis: V.big("🐠 × 60"),
+        options:["25","35","20","15","40","45"], answer:"25",
+        hints:[`A third of 60: share 60 into 3 equal groups.`,`20 swim left. A quarter of 60 is 15, so 15 swim right.`,`20 + 15 = 35 swim away. How many of the 60 are left?`],
+        win:[`Twenty-five fish stay — and as the others swirl away, you spot something glinting. But a little clownfish darts in front of it.`]},
+      after:[{to:"coral2", label:"Talk to the clownfish ➜"}]
+    },
+    coral2:{ name:"The Clownfish's Riddle", art:"🐠❓",
+      story:[ say("Coco the clownfish","🐠",`That's MY sparkly thing! You can have it if you answer my riddle.`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"I'm called a star, but I never shine. I live on the sea floor, and I have five arms." What am I?`,
+        vis: V.big("✋ ❓"),
+        options:["⭐ A starfish","🌟 A star in the sky","🐙 An octopus","🦀 A crab","🦑 A squid","🐚 A shell"], answer:"⭐ A starfish",
+        hints:[`It isn't really a star — it just looks like one.`,`An octopus has 8 arms. Which sea creature has 5?`],
+        win:[
+          `"A starfish!" Coco giggles and swims aside. Underneath is a key made of mother-of-pearl, with a number engraved on it.`,
+          note(`The Shell Key 🗝️ has the number 6 on it.`),
+          say("Bubbles the dolphin","🐬",`One key! Next, the old shipwreck!`)
+        ]},
+      after:[{to:"wreck", label:"Swim to the shipwreck ➜"}]
+    },
+    wreck:{ name:"The Shipwreck", art:"🚢💀",
+      story:[
+        `Lying on its side on the sea floor is an old wooden sailing ship, covered in barnacles. Its cabin door is locked with a strange square of numbers.`,
+        say("Bubbles the dolphin","🐬",`It's a magic square! Every row, every column, and both diagonals add up to 15.`)
+      ],
+      puzzle:{ tag:"Magic square",
+        q:`Every row, column and diagonal adds up to 15. What is the missing number?`,
+        vis: V.grid(["8 1 6","3 5 7","4 9 ❓"],""),
+        options:["2","3","1","4","6","0"], answer:"2",
+        hints:[`Look at the bottom row: 4 + 9 + ? = 15.`,`4 + 9 = 13. How many more do you need to make 15?`,`Check it with the right-hand column: 6 + 7 + ? = 15.`],
+        win:[`2! The door creaks open, and a cloud of sand puffs out. On the captain's desk is a ship's clock that stopped long, long ago.`]},
+      after:[{to:"wreck2", label:"Look at the clock 🕒"}]
+    },
+    wreck2:{ name:"The Captain's Clock", art:"🕒📖",
+      story:[
+        `Next to the clock is the captain's logbook. The last page says: <i>"A terrible storm began. Two and a half hours later, the ship sank."</i>`,
+        `The clock stopped at the very moment the ship sank: quarter past three.`,
+        say("Bubbles the dolphin","🐬",`The second key is locked in that box. The code is the time the storm STARTED!`)
+      ],
+      puzzle:{ tag:"Time",
+        q:`The ship sank at quarter past 3 (3:15). The storm started 2 and a half hours earlier. What time did the storm start?`,
+        vis: V.big("🕒 3:15 ⏪ 2½ hours"),
+        options:["12:45","5:45","1:15","12:15","1:45","5:15"], answer:"12:45",
+        hints:[`Go back 2 hours from 3:15 first.`,`2 hours before 3:15 is 1:15. Now go back half an hour more — that's 30 minutes.`,`1:15 back to 1:00 is 15 minutes. Then 15 more minutes back…`],
+        win:[
+          `12:45! The box clicks open. Inside is a pink, shining key.`,
+          note(`The Coral Key 🗝️ has the number 4 on it.`),
+          say("Bubbles the dolphin","🐬",`The last key belongs to Octavia the octopus, in the deepest garden of all. We can follow the whale song — or take a shortcut through the Glowing Caves.`)
+        ]},
+      after:[
+        {to:"whale", label:"Follow the whale song 🐋", sub:"Slow, deep and musical"},
+        {to:"cave", label:"Shortcut through the Glowing Caves ✨", sub:"Dark and twisty"}
+      ]
+    },
+    whale:{ name:"The Whale Song", art:"🐋🎵",
+      story:[
+        `A gentle, enormous blue whale swims alongside the Periwinkle, singing a deep, booming song. OOOOO… OOOOO…`,
+        say("Bubbles the dolphin","🐬",`She sings in number patterns! Sing back the next number and she'll show us the way.`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The whale sings: 2… 6… 18… What comes next?`,
+        vis: V.big("🎵2 → 🎵6 → 🎵18 → ❓"),
+        options:["54","24","36","72","30","48"], answer:"54",
+        hints:[`2 to 6 — is that adding, or multiplying?`,`2 × 3 = 6. 6 × 3 = 18. The pattern is times 3!`,`18 × 3 is 18 + 18 + 18.`],
+        win:[`54! The whale sings a happy, wobbly note. Then she asks for your help with something.`]},
+      after:[{to:"whale2", label:"Help the whale ➜"}]
+    },
+    whale2:{ name:"The Whale's Scales", art:"⚖️🐢",
+      story:[
+        say("Big Blue the whale","🐋",`My little friends are arguing about who weighs the most. Can you help?`),
+        `Hanging from her fin is a seaweed weighing scale. <b>3 starfish balance 1 crab. 2 crabs balance 1 turtle.</b>`
+      ],
+      puzzle:{ tag:"Balance",
+        q:`3 starfish = 1 crab. 2 crabs = 1 turtle. How many starfish weigh the same as 1 turtle?`,
+        vis: V.big("⭐⭐⭐ ⚖️ 🦀<br>🦀🦀 ⚖️ 🐢"),
+        options:["6","5","3","2","9","8"], answer:"6",
+        hints:[`A turtle weighs the same as 2 crabs.`,`Each crab weighs the same as 3 starfish. So 2 crabs = 3 starfish + 3 starfish.`,`3 + 3 = ?`],
+        win:[`6 starfish! The friends stop arguing at once. The whale lets the Periwinkle ride on her back, all the way down to the deepest garden.`]},
+      after:[{to:"octopus", label:"Arrive at the deepest garden ➜"}]
+    },
+    cave:{ name:"The Glowing Caves", art:"✨🌌",
+      story:[
+        `The Glowing Caves are pitch black… except for jellyfish that glow like fairy lights.`,
+        say("Bubbles the dolphin","🐬",`There are 5 jellyfish, and each one has 6 glowing spots. But when we swim past, half of ALL the spots will switch off!`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`5 jellyfish have 6 glowing spots each. Half of all the spots switch off. How many spots are still glowing?`,
+        vis: V.big("🔆🔆🔆🔆🔆 × 6 spots"),
+        options:["15","30","11","12","25","20"], answer:"15",
+        hints:[`First, how many spots altogether? 5 lots of 6.`,`5 × 6 = 30. Now half of them switch off.`,`Half of 30 is…?`],
+        win:[`Fifteen glowing spots — just enough light to see a twisty tunnel ahead.`]},
+      after:[{to:"cave2", label:"Into the tunnel ➜"}]
+    },
+    cave2:{ name:"The Twisty Tunnel", art:"🕳️🦞",
+      story:[ say("Bubbles the dolphin","🐬",`Follow me! UP 1, RIGHT 3, UP 2, LEFT 1!`) ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🤿 (that's you). Follow Bubbles. Where do you end up?`,
+        grid:["🐠 . 🦐 . 💎",". 🪨 . 🦞 .","🐟 . 🪨 🪨 .",". . . . .","🪨 🤿 . 🪨 🐡"],
+        start:"🤿", moves:[["U",1],["R",3],["U",2],["L",1]],
+        options:["🦞 Lobster","💎 Crystal","🦐 Shrimp","🐠 Stripy fish","🐟 Blue fish","🐡 Pufferfish"], answer:"🦞 Lobster",
+        hints:[`Up 1 first. Then right 3 along that row.`,`You should be on the right-hand edge. Now up 2.`,`Last step: left 1. Who's there?`],
+        win:[`A friendly lobster waves a claw and points to a tunnel that leads straight down to the deepest garden.`]},
+      after:[{to:"octopus", label:"Arrive at the deepest garden ➜"}]
+    },
+    octopus:{ name:"Octavia's Garden", art:"🐙🌺",
+      story:[
+        `In the deepest, darkest part of the sea is a garden of glowing sea-flowers. In the middle sits Octavia, a huge purple octopus with 8 long, curly arms.`,
+        say("Octavia the octopus","🐙",`Visitors! How lovely. I'm VERY busy, though. I'm holding a shell in half of my arms, and a starfish in a quarter of my arms.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Octavia has 8 arms. Half of them hold shells. A quarter of them hold starfish. How many arms are free?`,
+        vis: V.big("🐙 8 arms"),
+        options:["2","4","6","3","1","0"], answer:"2",
+        hints:[`Half of 8 arms hold shells. How many is that?`,`4 arms hold shells. A quarter of 8 is 2, so 2 arms hold starfish.`,`4 + 2 = 6 arms are busy. How many of the 8 are free?`],
+        win:[
+          `Two free arms! Octavia uses one to scratch her head, and the other to hold up a shining white key.`,
+          say("Octavia the octopus","🐙",`This is the Pearl Key. You may have it… if you can answer my riddle.`)
+        ]},
+      after:[{to:"octopus2", label:"Hear Octavia's riddle ➜"}]
+    },
+    octopus2:{ name:"Octavia's Riddle", art:"🐙❓",
+      story:[ say("Octavia the octopus","🐙",`Listen closely, little captain.`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"You can hold me in one hand, but I hold the sound of the whole ocean. Put me to your ear and listen." What am I?`,
+        vis: V.big("👂 🌊 ❓"),
+        options:["🐚 A seashell","📻 A radio","🎧 Headphones","🌊 A wave","📱 A phone","🐟 A fish"], answer:"🐚 A seashell",
+        hints:[`A wave is far too big to hold in one hand…`,`You can find one on the beach. Hold it to your ear and it sounds like the sea!`],
+        win:[
+          `"A seashell!" Octavia claps all eight arms together and hands you the Pearl Key.`,
+          note(`The Pearl Key 🗝️ has the number 9 on it.`),
+          say("Bubbles the dolphin","🐬",`All three keys! To reach the city gates we can swim past a sleeping shark… or ride the super-fast ocean current.`)
+        ]},
+      after:[
+        {to:"shark", label:"Sneak past the sleeping shark 🦈", sub:"Shhhh…"},
+        {to:"current", label:"Ride the ocean current 🌊", sub:"Hold on tight!"}
+      ]
+    },
+    shark:{ name:"The Sleeping Shark", art:"🦈💤",
+      story:[
+        `A great shark is snoozing across the path with its mouth wide open. Its teeth are in neat rows, like a zip.`,
+        say("Bubbles the dolphin","🐬",`Shhh! The shark's tooth fairy wants to know how many teeth are wobbly. Count them very quietly…`),
+        `The shark has 5 rows of teeth, with 12 teeth in each row. A quarter of all the teeth are wobbly.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`5 rows of 12 teeth. A quarter of all the teeth are wobbly. How many teeth are wobbly?`,
+        vis: V.big("🦷 12 × 5 rows"),
+        options:["15","60","12","20","17","30"], answer:"15",
+        hints:[`First, how many teeth altogether? 5 lots of 12: 12, 24, 36…`,`5 × 12 = 60. Now find a quarter of 60.`,`Half of 60 is 30, and half of 30 is…?`],
+        win:[`Fifteen wobbly teeth! You whisper the answer, and the shark smiles in its sleep. You tiptoe — well, tip-fin — past, all the way to the city.`]},
+      after:[{to:"gate", label:"Swim to the city gates ➜"}]
+    },
+    current:{ name:"The Ocean Current", art:"🌊💨",
+      story:[
+        `The current is like an underwater river, rushing along at top speed. The Periwinkle zooms along inside it, with Bubbles surfing beside you. WHEEEE!`,
+        say("Bubbles the dolphin","🐬",`The current carries us 4 kilometres every 10 minutes. The city is 12 kilometres away.`)
+      ],
+      puzzle:{ tag:"Speed",
+        q:`The current carries you 4 km every 10 minutes. The city is 12 km away. How many minutes will it take?`,
+        vis: V.big("💨 4 km = 10 min<br>🔱 12 km = ❓"),
+        options:["30","3","40","48","120","20"], answer:"30",
+        hints:[`How many lots of 4 km make 12 km?`,`3 lots of 4 km. Each lot takes 10 minutes.`,`3 × 10 = ?`],
+        win:[`Thirty minutes later, the current spits you out right in front of a gigantic golden gate.`]},
+      after:[{to:"gate", label:"Look at the gates ➜"}]
+    },
+    gate:{ name:"The Gates of Coralis", art:"🔱🚪",
+      story:[
+        `The gates of Coralis are taller than a castle, carved with fish and waves. There are three keyholes, and above them, words carved in gold.`,
+        say("Bubbles the dolphin","🐬",`It says: "Add up the numbers on the three Tide Keys. Then take away the number of arms on the octopus who guards the deepest garden."`)
+      ],
+      puzzle:{ tag:"Combine clues",
+        q:`(Shell Key + Coral Key + Pearl Key) − Octavia's arms = ?`,
+        vis: V.big("🗝️ + 🗝️ + 🗝️ − 🐙"),
+        options:["11","19","27","3","12","10"], answer:"11",
+        hints:[`Check your notebook 📒 for the three key numbers, and add them up.`,`6 + 4 + 9 = 19. How many arms does Octavia have?`,`Octavia has 8 arms. 19 − 8 = ?`],
+        win:[`11! You turn the three keys — CLICK, CLICK, CLICK — and the great gates swing slowly open.`]},
+      after:[{to:"city", label:"Enter Coralis ✨"}]
+    },
+    city:{ name:"The City of Coralis", art:"🏛️🧜‍♀️",
+      story:[
+        `Coralis is the most beautiful place you have ever seen: towers made of shells, streets paved with pearl, and merpeople swimming everywhere. But it's getting darker. The Pearl of Light at the top of the tallest tower is only flickering.`,
+        say("Queen Marina","👑",`Thank you for coming, Captain. To wake the Pearl, we must light the right lanterns along the Royal Road. Lanterns 1, 4 and 7 are already lit.`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`Lanterns 1, 4 and 7 are lit. If the pattern carries on, which of these lanterns should be lit next?`,
+        vis: V.row([["1","🏮"],["2","⚫"],["3","⚫"],["4","🏮"],["5","⚫"],["6","⚫"],["7","🏮"],["…","❓"]]),
+        options:["10","9","8","11","12","6"], answer:"10",
+        hints:[`How far apart are 1, 4 and 7?`,`They go up in 3s: 1, 4, 7…`,`7 + 3 = ?`],
+        win:[`Lantern 10! As you light it, a ribbon of light races along the Royal Road, up the tallest tower — and the Pearl of Light bursts into a dazzling glow. All of Coralis cheers!`]},
+      after:[{to:"royal", label:"Meet the Queen 👑"}]
+    },
+    royal:{ name:"The Book of Heroes", art:"👑📜",
+      story:[ say("Queen Marina","👑",`Captain, I shall write your name in our Book of Heroes. And I must write the name of your brave little submarine too. What is it called?`) ],
+      puzzle:{ tag:"Memory",
+        q:`What is the name of your submarine?`,
+        vis: V.big("🟡 ❓"),
+        options:["The Periwinkle","The Pennywhistle","The Periscope","The Pinwheel","The Pickled Herring","The Winkle"], answer:"The Periwinkle",
+        hints:[`Think back to the very start of the adventure…`,`It's named after a little sea snail, and it starts with P!`],
+        win:[`"The Periwinkle!" The Queen writes it in her book in shimmering silver ink.`]},
+      after:[{to:"feast", label:"Join the feast 🍰"}]
+    },
+    feast:{ name:"The Great Feast", art:"🍰🧜‍♀️",
+      story:[
+        `Then there's a feast! The Queen brings out 36 sea-cakes made of sweet seaweed, and shares them equally between her 6 mermaid daughters.`,
+        say("Queen Marina","👑",`And each of my daughters shall give our hero a third of her cakes!`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`36 cakes are shared equally between 6 mermaids. Each mermaid gives you a third of her cakes. How many cakes do you get altogether?`,
+        vis: V.big("🍰 × 36 ➗ 🧜‍♀️ × 6"),
+        options:["12","6","2","18","4","10"], answer:"12",
+        hints:[`First, how many cakes does each mermaid get? Share 36 between 6.`,`Each mermaid gets 6. A third of 6 is 2.`,`6 mermaids each give you 2 cakes. 6 × 2 = ?`],
+        win:[`Twelve sea-cakes! (You save a few for Bubbles.)`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   LONG 2 — THE SECRET OF THE SUN CAT PYRAMID
+   ================================================================ */
+const PYRAMID = {
+  id:"pyramid", theme:"desert", start:"camel", length:"long", mins:"30",
+  title:"The Secret of the Sun Cat Pyramid",
+  cover:"🐫🔺🐈‍⬛", coverBg:"#fbe3c8",
+  blurb:"Cross the desert with Aunt Ada and her clever cat Miu to find a hidden pyramid, crack picture codes, and escape before the sand pours in!",
+  helper:{name:"Miu the cat", icon:"🐈‍⬛"},
+  runner:"🐫", goal:"🔺",
+  ranks:["Legendary Archaeologist","Expert Explorer","Junior Archaeologist"],
+  bag: st => {
+    const out = ["🐈‍⬛ Miu","🔦 Torch"];
+    if (st.items.has("scarab")) out.push("🪲 Golden Scarab");
+    return out;
+  },
+  badges:{statues:"🗿 Statue Solver", traps:"🔥 Trap Dodger", river:"🐊 River Rower", rope:"🧗 Rope Climber", stairs:"🪜 Stair Sprinter", chute:"🏜️ Sand Slider"},
+  ending: st => [
+    `On the way home, Miu curls up on your lap and purrs louder than a grumbling camel.`,
+    say("Aunt Ada","👒",`You were brilliant in there. How would you like to be my official assistant on my next expedition?`),
+    `You don't even need to think about it.`
+  ],
+  scenes:{
+    camel:{ name:"Across the Desert", art:"🐫🏜️☀️",
+      story:[
+        `Your Aunt Ada is an archaeologist — someone who digs up treasures from long ago — and today she's taken you on an expedition. With you is Miu, Aunt Ada's sleek black cat, who is cleverer than most people.`,
+        say("Aunt Ada","👒",`This ancient map shows a pyramid nobody has found for three thousand years: the Pyramid of the Sun Cat! It's 36 kilometres away.`),
+        `You set off on camels at 8 o'clock in the morning. Camels walk 4 kilometres every hour.`
+      ],
+      puzzle:{ tag:"Time",
+        q:`The pyramid is 36 km away. Camels walk 4 km every hour. You set off at 8 o'clock in the morning. What time do you arrive?`,
+        vis: V.big("🐫 4 km every hour<br>🔺 36 km away"),
+        options:["5 o'clock","9 o'clock","4 o'clock","6 o'clock","12 o'clock","3 o'clock"], answer:"5 o'clock",
+        hints:[`First, how many hours will it take? How many 4s make 36?`,`9 hours! Now count on 9 hours from 8 o'clock.`,`9, 10, 11, 12, then 1, 2, 3, 4, 5…`],
+        win:[`5 o'clock in the afternoon — and there, rising out of the sand, is a huge golden pyramid. But where's the door?`]},
+      after:[{to:"dunes", label:"Search for the entrance 🔍"}]
+    },
+    dunes:{ name:"The Hidden Entrance", art:"🔺🔍",
+      story:[
+        say("Aunt Ada","👒",`The map says: "From the camel, go NORTH 3, EAST 2, SOUTH 1, then EAST 1." Remember — North is up, South is down, East is right and West is left!`)
+      ],
+      puzzle:{ tag:"Compass map", type:"grid", compass:true,
+        q:`Start at the 🐫. Follow the map. Where is the hidden entrance?`,
+        grid:["🌵 . 🌴 . 🦂",". . . 🐍 .",". 🦴 . 🏺 .",". 🌵 . . 🌴","🐫 . 🦂 . ."],
+        start:"🐫", moves:[["U",3],["R",2],["D",1],["R",1]],
+        options:["🏺 Old jar","🐍 Snake","🦂 Scorpion","🌴 Palm tree","🌵 Cactus","🦴 Bone"], answer:"🏺 Old jar",
+        hints:[`North means up. Go up 3 squares from the camel.`,`Now East 2 — to the right. Then South 1 — down.`,`Last step: East 1, to the right. What's there?`],
+        win:[`Under the old jar, your fingers find a stone handle. You pull — and with a GRRRIND, a secret door slides open in the sand.`]},
+      after:[{to:"entrance", label:"Step inside 🔦"}]
+    },
+    entrance:{ name:"The Picture Wall", art:"🧱👁️🦅",
+      story:[
+        `Inside, the walls are covered in little pictures: birds, snakes, eyes and suns. Long ago, people here wrote with pictures called hieroglyphs.`,
+        say("Aunt Ada","👒",`I can read some of this! It says: "Queen Amunet hid her greatest treasure here. She loved her three cats more than gold." But there's one word I can't read. Here, try my code book.`),
+        note(`Queen Amunet had 3 cats.`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Use the code book. What is the Queen's greatest treasure?`,
+        vis: V.code("🐍 🐞 🦅 ☀️ 🦅 🪲") + V.symkey([["🐍","S"],["🐞","C"],["🦅","A"],["☀️","R"],["🪲","B"],["👁️","E"],["🌙","H"],["🪶","T"]]) + V.legend("(A made-up picture code, just for this story)"),
+        options:["SCARAB","SEARCH","SCARCE","CRABS","SACRAB","SCRABA"], answer:"SCARAB",
+        hints:[`Find each picture in the code book, from left to right.`,`🐍 is S, 🐞 is C, 🦅 is A. Keep going!`,`S, C, A, R, A… and 🪲 is B.`],
+        win:[`"SCARAB!" A scarab is a kind of beetle — and the Queen's treasure is a Golden Scarab! But the next door is shut tight.`]},
+      after:[{to:"door", label:"Examine the door ➜"}]
+    },
+    door:{ name:"The Balancing Door", art:"⚖️🚪",
+      story:[
+        `The next door has a giant set of weighing scales built into it. It will only open when both sides weigh exactly the same.`,
+        `On the left are 3 gold bars and a 4 kilogram weight. On the right is 1 gold bar and an empty jar. Each gold bar weighs 5 kilograms.`,
+        say("Aunt Ada","👒",`We need to fill the jar with sand until the scales balance. But how much sand?`)
+      ],
+      puzzle:{ tag:"Balance",
+        q:`Left: 3 gold bars + 4 kg. Right: 1 gold bar + the jar. Each gold bar weighs 5 kg. How many kg of sand must go in the jar?`,
+        vis: V.big("🟨🟨🟨 + 4kg ⚖️ 🟨 + 🏺"),
+        options:["14","19","9","15","4","10"], answer:"14",
+        hints:[`Work out the left side first: 3 bars of 5 kg, plus 4 kg.`,`The left side is 19 kg. The right side already has a 5 kg bar.`,`19 − 5 = ?`],
+        win:[`14 kg of sand! The scales balance with a soft CLUNK, and the door rumbles open. Two passages lead deeper: the Hall of Statues, or the Corridor of Traps.`]},
+      after:[
+        {to:"statues", label:"The Hall of Statues 🗿", sub:"Talking cats…"},
+        {to:"traps", label:"The Corridor of Traps 🔥", sub:"Watch your step!"}
+      ]
+    },
+    statues:{ name:"The Hall of Statues", art:"🔴🐈🔵🐈🟢🐈",
+      story:[
+        `In a long hall stand three giant cat statues — one painted red, one blue and one green. Behind ONE of them is a secret door.`,
+        say("Miu the cat","🐈‍⬛",`Mrrrow. (Miu means: they can talk — but only ONE of them tells the truth!)`),
+        `The statues' stone mouths creak open.`,
+        say("Red cat","🔴",`The door is behind ME.`),
+        say("Blue cat","🔵",`The door is NOT behind me.`),
+        say("Green cat","🟢",`The door is behind the RED cat.`)
+      ],
+      puzzle:{ tag:"Truth puzzle",
+        q:`Only ONE cat is telling the truth. Where is the secret door?`,
+        vis: V.clues(["🔴 Red: “The door is behind me.”","🔵 Blue: “The door is NOT behind me.”","🟢 Green: “The door is behind the red cat.”"]),
+        options:["🔴 Behind the red cat","🔵 Behind the blue cat","🟢 Behind the green cat","Behind all three","Under the floor","On the ceiling"], answer:"🟢 Behind the green cat",
+        hints:[`Try each one! Pretend the door is behind RED. Then Red is telling the truth… but so are Blue and Green. That's too many!`,`Pretend it's behind BLUE. Then every cat is wrong — nobody tells the truth. That's too few!`,`Pretend it's behind GREEN. Who's telling the truth now? Just one cat?`],
+        win:[`The green cat slides aside with a grinding sound. Behind it is a narrow passage — lined with more cat statues!`]},
+      after:[{to:"statues2", label:"Walk down the passage ➜"}]
+    },
+    statues2:{ name:"The Cat Parade", art:"🐈🐈🐈🐈",
+      story:[
+        `Along the passage stand 7 smaller cat statues. Each one has 4 legs and 1 tail. A sign says: <i>"Say how many legs and tails there are, and you may pass."</i>`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`7 cat statues. Each has 4 legs and 1 tail. How many legs and tails are there altogether?`,
+        vis: V.big("🐈 × 7"),
+        options:["35","28","7","32","40","30"], answer:"35",
+        hints:[`Each statue has 4 legs + 1 tail. That's 5 things per statue.`,`7 statues with 5 things each: 7 lots of 5.`,`Count in 5s, seven times: 5, 10, 15…`],
+        win:[`35! The last statue blinks its jewelled eyes, and the wall behind it slides away.`]},
+      after:[{to:"riddlewall", label:"Go through ➜"}]
+    },
+    traps:{ name:"The Corridor of Traps", art:"🔥🕳️",
+      story:[
+        `The Corridor of Traps has a floor of stone tiles. Some of them shoot out fire if you step on them!`,
+        say("Aunt Ada","👒",`There are directions carved on the wall: "UP 2, LEFT 2, UP 2." Don't step on the fire tiles!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🧒 (that's you). Follow the carving. Where do you end up?`,
+        grid:["🐈 . 🪲 🔥 👁️",". 🔥 . . .",". . . 🔥 🐍","🔥 🕳️ . . .","🏺 . 🧒 🔥 ."],
+        start:"🧒", moves:[["U",2],["L",2],["U",2]],
+        options:["🐈 Cat statue","🪲 Beetle","👁️ Eye carving","🐍 Snake","🏺 Jar","🕳️ Pit"], answer:"🐈 Cat statue",
+        hints:[`Up 2 first. Where are you?`,`Now left 2, all the way to the left-hand edge.`,`Up 2 more to the top. What's in the top-left corner?`],
+        win:[`You reach a cat statue in the corner without a single singe! Miu purrs. But beyond it is a hallway where arrows whizz out of the walls!`]},
+      after:[{to:"traps2", label:"Look at the arrow hallway 🏹"}]
+    },
+    traps2:{ name:"The Arrow Hallway", art:"🏹⏱️",
+      story:[
+        `The arrows shoot out at certain seconds. Aunt Ada times them with her stopwatch: an arrow at 3 seconds… 7 seconds… 11 seconds… 15 seconds…`,
+        say("Aunt Ada","👒",`If we know when the NEXT arrow comes, we can run through right after it!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`Arrows shoot at 3, 7, 11 and 15 seconds. When will the next arrow shoot?`,
+        vis: V.big("🏹3 → 🏹7 → 🏹11 → 🏹15 → ❓"),
+        options:["19","18","21","17","20","23"], answer:"19",
+        hints:[`How many seconds are there between each arrow?`,`They come every 4 seconds: 3, 7, 11, 15…`,`15 + 4 = ?`],
+        win:[`At 19 seconds — WHOOSH — the arrow flies past, and you all dash through to safety!`]},
+      after:[{to:"riddlewall", label:"Keep going ➜"}]
+    },
+    riddlewall:{ name:"The Queen's Riddle", art:"👑🔢",
+      story:[
+        `You come out into a grand hall. Painted on the wall is Queen Amunet herself, wearing a crown shaped like a cat. Under her picture is a riddle.`,
+        say("Aunt Ada","👒",`It says: "I am a number less than 20. You'll find me in the 3 times table AND in the 4 times table."`)
+      ],
+      puzzle:{ tag:"Number riddle",
+        q:`A number less than 20 that is in the 3 times table AND the 4 times table. What is it?`,
+        vis: V.big("3× ❓ 4×"),
+        options:["12","6","16","18","24","9"], answer:"12",
+        hints:[`Say the 4 times table: 4, 8, 12, 16…`,`Which of 4, 8, 12 and 16 are ALSO in the 3 times table (3, 6, 9, 12, 15, 18)?`,`Only one number is in both lists and less than 20.`],
+        win:[`12! The painted Queen seems to smile, and a doorway opens beneath her picture.`]},
+      after:[{to:"treasury", label:"Through the doorway ➜"}]
+    },
+    treasury:{ name:"The Treasury", art:"🏺🏺🏺",
+      story:[
+        `You step into the Treasury. It's full of tall clay jars — 40 of them!`,
+        say("Aunt Ada","👒",`According to my notes, half the jars hold gold, a quarter hold jewels, and the rest hold… honey! People in ancient Egypt loved honey.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`40 jars. Half hold gold. A quarter hold jewels. The rest hold honey. How many jars of honey are there?`,
+        vis: V.big("🏺 × 40"),
+        options:["10","20","15","5","30","25"], answer:"10",
+        hints:[`Half of 40 is 20 jars of gold.`,`A quarter of 40 is 10 jars of jewels.`,`20 + 10 = 30. How many of the 40 are left for honey?`],
+        win:[`Ten jars of honey! Miu sniffs one and sneezes. Behind the jars, a map of the whole pyramid is carved into the wall.`]},
+      after:[{to:"mapwall", label:"Study the map 🗺️"}]
+    },
+    mapwall:{ name:"The Pyramid Map", art:"🗺️🔺",
+      story:[
+        `The map shows every level of the pyramid. Ground level is 0. The levels underground have minus numbers.`,
+        say("Aunt Ada","👒",`We're on level 2. To reach the Scarab Chamber, the map says: go DOWN 3 levels, then UP 1, then DOWN 4.`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`Start on level 2. Go down 3, up 1, then down 4. Which level is the Scarab Chamber on?`,
+        vis: V.vline(3,-6,i=>i===0?"0 (ground)":fmtSigned(i)),
+        options:["−4","4","−6","−2","−5","6"], answer:"−4",
+        hints:[`Level 2, down 3: count 1, 0, minus 1.`,`You're on −1. Up 1 takes you to…?`,`From 0, go down 4 more.`],
+        win:[`Level minus 4 — deep underground! There are two ways down: by boat along an underground river, or by climbing down a long rope.`]},
+      after:[
+        {to:"river", label:"Take the underground river 🛶", sub:"Something is lurking in the water"},
+        {to:"rope", label:"Climb down the rope 🧗", sub:"A long way down…"}
+      ]
+    },
+    river:{ name:"The Underground River", art:"🛶🐊",
+      story:[
+        `A little wooden boat bobs on a dark underground river. As you row along, you spot crocodiles on the banks — 3 groups, with 4 crocodiles in each group.`,
+        say("Miu the cat","🐈‍⬛",`Mrrow! (Miu has counted 5 of them fast asleep.)`)
+      ],
+      puzzle:{ tag:"Maths",
+        q:`3 groups of 4 crocodiles. 5 of them are asleep. How many crocodiles are awake?`,
+        vis: V.big("🐊🐊🐊🐊 × 3"),
+        options:["7","12","17","5","8","9"], answer:"7",
+        hints:[`How many crocodiles altogether? 3 lots of 4.`,`12 crocodiles. 5 of them are asleep.`,`12 − 5 = ?`],
+        win:[`7 crocodiles awake — so you row very, VERY quietly. The river ends at a stone dock with six jars, each painted with a number.`]},
+      after:[{to:"river2", label:"Climb onto the dock ➜"}]
+    },
+    river2:{ name:"The Odd Jar", art:"🏺❓",
+      story:[ say("Aunt Ada","👒",`One of these jars is the odd one out. It's a trick jar — lift it and a door will open!`) ],
+      puzzle:{ tag:"Odd one out",
+        q:`Which number is the odd one out?`,
+        vis: V.big("🏺4 🏺8 🏺15<br>🏺16 🏺20 🏺24"),
+        options:["4","8","15","16","20","24"], answer:"15",
+        hints:[`Look for something most of the numbers share. Are they in a times table?`,`4, 8, 16, 20 and 24 are all in the 4 times table…`,`Which one is NOT in the 4 times table?`],
+        win:[`Jar 15! You lift it — CLICK — and a door opens onto a staircase going down, down, down.`]},
+      after:[{to:"chamberdoor", label:"Go down the stairs ➜"}]
+    },
+    rope:{ name:"The Long Rope", art:"🧗🪢",
+      story:[
+        `A deep shaft drops into darkness. Aunt Ada ties a rope that is 24 metres long to a stone pillar.`,
+        say("Aunt Ada","👒",`We only need two thirds of the rope to reach the bottom.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`The rope is 24 metres long. You need two thirds of it. How many metres is that?`,
+        vis: V.big("🪢 24 m"),
+        options:["16","8","12","18","20","6"], answer:"16",
+        hints:[`First find ONE third of 24. Share 24 into 3 equal groups.`,`One third is 8 metres. You need TWO thirds.`,`8 + 8 = ?`],
+        win:[`16 metres! You climb down hand over hand, with Miu riding on your shoulder. At the bottom, the floor is crawling with creatures…`]},
+      after:[{to:"rope2", label:"Shine your torch 🔦"}]
+    },
+    rope2:{ name:"Creepy Crawlies", art:"🕷️🪲",
+      story:[
+        say("Aunt Ada","👒",`Don't panic! I can see 3 beetles, and some spiders. Altogether, I count 34 legs!`),
+        `Beetles have 6 legs. Spiders have 8 legs.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`3 beetles have 6 legs each. There are also some spiders, with 8 legs each. Altogether there are 34 legs. How many spiders are there?`,
+        vis: V.big("🪲🪲🪲 + 🕷️❓ = 34 legs"),
+        options:["2","3","4","16","5","1"], answer:"2",
+        hints:[`First, how many legs do the 3 beetles have? 3 lots of 6.`,`The beetles have 18 legs. So the spiders have 34 − 18 legs.`,`The spiders have 16 legs. Each spider has 8. How many spiders is that?`],
+        win:[`2 spiders! They scuttle away politely, and you find a staircase going down, down, down.`]},
+      after:[{to:"chamberdoor", label:"Go down the stairs ➜"}]
+    },
+    chamberdoor:{ name:"The Golden Door", art:"🚪🐈🍯",
+      story:[
+        `At the very bottom of the pyramid is a golden door with a cat's face on it. Under the cat's chin is a dial with numbers.`,
+        say("Aunt Ada","👒",`The writing says: "Multiply the number of cats I loved by the number of jars of honey in my Treasury."`)
+      ],
+      puzzle:{ tag:"Combine clues",
+        q:`The Queen's cats × the jars of honey = ?`,
+        vis: V.big("🐈 × 🍯 = ❓"),
+        options:["30","13","40","33","20","310"], answer:"30",
+        hints:[`Check your notebook 📒: how many cats did Queen Amunet have?`,`She had 3 cats. How many jars of honey did you count in the Treasury?`,`10 jars of honey. 3 × 10 = ?`],
+        win:[`30! The golden door swings slowly open…`]},
+      after:[{to:"chamber", label:"Enter the Scarab Chamber ✨"}]
+    },
+    chamber:{ name:"The Golden Scarab", art:"🪲✨",
+      story:[
+        `The chamber glitters with gold. In the middle, inside a glass case, sits the Golden Scarab — a beetle made of solid gold, with wings of deep blue stone.`,
+        `The case has six letter buttons: A, B, C, D, E and F.`,
+        say("Aunt Ada","👒",`The writing says: "Press the letter that looks exactly the same in a mirror."`),
+        `Imagine holding a mirror up to the side of each letter, so it gets flipped from left to right.`
+      ],
+      puzzle:{ tag:"Symmetry",
+        q:`Which letter looks exactly the same when it's flipped left-to-right in a mirror?`,
+        vis: V.big("A B C D E F"),
+        options:["A","B","C","D","E","F"], answer:"A",
+        hints:[`Imagine folding each letter down the middle, from top to bottom. Do both halves match?`,`B, C, D and E all face one way. In a mirror they'd face the other way.`,`Which letter has a pointy top and two matching legs?`],
+        win:[
+          `A! The glass case slides open, and you lift out the Golden Scarab. It's warm, and surprisingly heavy.`,
+          `Then… a rumble. Sand starts pouring in from the ceiling! The pyramid is sealing itself shut!`,
+          say("Aunt Ada","👒",`RUN! Up the Great Stairs — or down the sand chute!`)
+        ]},
+      onWin: st => st.items.add("scarab"),
+      after:[
+        {to:"stairs", label:"Race up the Great Stairs 🪜", sub:"100 steps!"},
+        {to:"chute", label:"Whizz down the sand chute 🏜️", sub:"Hold on to Miu!"}
+      ]
+    },
+    stairs:{ name:"The Great Stairs", art:"🪜💨",
+      story:[ `The Great Stairs go up and up and up: 100 steps to the top! You take them two at a time.` ],
+      puzzle:{ tag:"Maths",
+        q:`There are 100 steps. You jump up 2 steps at a time. How many jumps does it take?`,
+        vis: V.big("🪜 100 steps · 2 at a time"),
+        options:["50","100","25","98","52","200"], answer:"50",
+        hints:[`If you jump 2 steps at a time, you need half as many jumps as there are steps.`,`Half of 100 is…?`],
+        win:[`50 big jumps — and you burst out into the evening sunshine just as the door slams shut behind you!`]},
+      after:[{to:"outside", label:"Catch your breath ➜"}]
+    },
+    chute:{ name:"The Sand Chute", art:"🏜️💨",
+      story:[
+        `You sit down and WHOOSH along a smooth stone chute, with Miu clinging to your jumper. Aunt Ada checks her watch as you slide.`,
+        say("Aunt Ada","👒",`The room fills with sand in 5 minutes. We've used 3 and a half minutes already! How many SECONDS have we got left?`),
+        `1 minute is 60 seconds.`
+      ],
+      puzzle:{ tag:"Time",
+        q:`The sand fills the room in 5 minutes. 3 and a half minutes have passed. How many seconds are left?`,
+        vis: V.big("⏳ 5 min − 3½ min"),
+        options:["90","150","30","60","120","15"], answer:"90",
+        hints:[`How many minutes are left? 5 minutes take away 3 and a half minutes.`,`1 and a half minutes are left. 1 minute is 60 seconds. Half a minute is…?`,`60 seconds + 30 seconds = ?`],
+        win:[`90 seconds — just enough! The chute shoots you out into the desert, and you tumble into a soft sand dune as the pyramid rumbles shut behind you.`]},
+      after:[{to:"outside", label:"Catch your breath ➜"}]
+    },
+    outside:{ name:"Under the Stars", art:"🌙🔥🐫",
+      story:[
+        `That night, round a crackling campfire, Aunt Ada writes in her explorer's diary.`,
+        say("Aunt Ada","👒",`I want to get every detail right. What was the name of the Queen who hid the Golden Scarab?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What was the Queen's name?`,
+        vis: V.big("👑 ❓"),
+        options:["Amunet","Amulet","Annabet","Amaret","Emunet","Amanda"], answer:"Amunet",
+        hints:[`Think back to the picture wall, just inside the pyramid…`,`It starts with "Amu"…`],
+        win:[`"Queen Amunet!" Aunt Ada writes it in her neatest handwriting.`]},
+      after:[{to:"museum", label:"One week later… 🏛️"}]
+    },
+    museum:{ name:"The Museum", art:"🏛️🪲",
+      story:[
+        `A week later, the Golden Scarab goes on show in the city museum, with YOUR name on the label! Crowds of people come to see it.`,
+        say("The Museum Director","🧐",`Our scientists say the Scarab is 100 times older than your Aunt Ada. And she is 40!`)
+      ],
+      puzzle:{ tag:"Big numbers",
+        q:`Aunt Ada is 40 years old. The Scarab is 100 times older. How old is the Scarab?`,
+        vis: V.big("40 × 100 = ❓"),
+        options:["4000","400","140","40000","1400","4100"], answer:"4000",
+        hints:[`To multiply by 10, add one 0 on the end. To multiply by 100, add TWO zeros!`,`40 with two zeros on the end is…?`],
+        win:[`4,000 years old! Aunt Ada pretends to be offended. "I'm not THAT old!"`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+
+/* ================================================================
+   SHORT 3 — SNOWY MOUNTAIN RESCUE
+   ================================================================ */
+const SNOW = {
+  id:"snow", theme:"snow", start:"intro", length:"short", mins:"7",
+  title:"Snowy Mountain Rescue",
+  cover:"🏔️🐶⛷️", coverBg:"#e3ecff",
+  blurb:"A puppy called Biscuit is lost on a freezing mountain. Join the rescue team and bring him home before dark.",
+  helper:{name:"Ranger Rosa", icon:"⛑️"},
+  runner:"⛷️", goal:"🐶",
+  ranks:["Chief Mountain Rescuer","Expert Rescuer","Rescue Trainee"],
+  bag: st => st.items.has("biscuit") ? ["🐶 Biscuit","🛷 Sledge"] : ["🛷 Sledge","🧣 Scarf"],
+  badges:{tracks:"🐾 Track Reader", goat:"🐐 Goat's Friend"},
+  ending: st => [
+    `Back in the warm cabin, Biscuit's owner — a little girl called Hana — throws her arms round him. Biscuit licks her face all over.`,
+    say("Ranger Rosa","⛑️",`That was a proper mountain rescue. You can join my team any time.`),
+    `You sip hot chocolate by the fire while Biscuit falls asleep, snoring, on your feet.`
+  ],
+  scenes:{
+    intro:{ name:"The Cable Car", art:"🚡❄️",
+      story:[
+        `Snow is falling thickly on Mount Frostbite. At the bottom of the mountain, Ranger Rosa blows her whistle.`,
+        say("Ranger Rosa","⛑️",`A puppy called Biscuit chased a rabbit up the mountain and hasn't come back! We need everyone to help search.`),
+        `There are 17 rescuers, including you. The only way up is the cable car, and each car can carry 5 people at a time.`
+      ],
+      puzzle:{ tag:"Sharing",
+        q:`17 rescuers. Each cable car carries 5 people. How many cable car trips are needed so that EVERYONE gets to the top?`,
+        vis: V.big("🧑‍🚒 × 17<br>🚡 = 5 people"),
+        options:["4","3","5","17","12","2"], answer:"4",
+        hints:[`Count in 5s: 5, 10, 15… How many trips is that, and how many people have gone up?`,`3 trips take 15 people. But there are 17 rescuers! Are 2 people still waiting at the bottom?`,`Those 2 people need one more trip. 3 + 1 = ?`],
+        win:[`Four trips! The last car only has 2 people in it, but nobody gets left behind. At the top, the wind is icy.`]},
+      after:[{to:"cold", label:"Check the weather 🌡️"}]
+    },
+    cold:{ name:"Colder and Colder", art:"🌡️🥶",
+      story:[
+        say("Ranger Rosa","⛑️",`At the bottom it was 3 degrees. Every 100 metres you climb, it gets 1 degree colder. We've climbed 700 metres!`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`It was 3 degrees at the bottom. You climb 700 metres, and it gets 1 degree colder every 100 metres. What is the temperature now?`,
+        vis: V.hline(-8,8) + V.legend("🥶 colder ← 0 → warmer"),
+        options:["−4","4","−7","10","−3","−10"], answer:"−4",
+        hints:[`How many lots of 100 metres are in 700 metres? That's how many degrees colder it gets.`,`7 degrees colder. Start at 3 and count DOWN 7 steps.`,`3, 2, 1, 0, −1, −2, −3… one more step.`],
+        win:[
+          `Minus 4 degrees! You wrap your scarf round twice. Then you spot two things in the snow: lots of different animal tracks — and a mountain goat watching you from a rock.`
+        ]},
+      after:[
+        {to:"tracks", label:"Study the tracks 🐾", sub:"Lots of animals came this way"},
+        {to:"goat", label:"Ask the mountain goat 🐐", sub:"He sees everything up here"}
+      ]
+    },
+    tracks:{ name:"Tracks in the Snow", art:"🐾❄️",
+      story:[
+        `Six sets of tracks lead off across the snow.`,
+        say("Ranger Rosa","⛑️",`Biscuit is small, he has four legs, and puppies never walk in a straight line — they zigzag everywhere!`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which tracks are Biscuit's?<ul><li>Small.</li><li>Four legs.</li><li>Zigzag path.</li></ul>`,
+        vis: V.cards([
+          {n:"Tracks 1",icon:"🐾",lines:["big","4 legs","straight"]},
+          {n:"Tracks 2",icon:"🐾",lines:["small","4 legs","hops"]},
+          {n:"Tracks 3",icon:"🐾",lines:["small","4 legs","straight"]},
+          {n:"Tracks 4",icon:"🐾",lines:["tiny","2 legs","zigzag"]},
+          {n:"Tracks 5",icon:"🐾",lines:["small","4 legs","zigzag"]},
+          {n:"Tracks 6",icon:"🐾",lines:["big","4 legs","zigzag"]}
+        ]),
+        options:["Tracks 1","Tracks 2","Tracks 3","Tracks 4","Tracks 5","Tracks 6"], answer:"Tracks 5",
+        hints:[`Cross out the big tracks first.`,`Now cross out any that don't have 4 legs. Which small ones are left?`,`Tracks 2, 3 and 5 are left. Which one zigzags?`],
+        win:[`Tracks 5 zigzag all over the place — definitely a puppy! They lead to a snowy field with lots of hiding places.`]},
+      after:[{to:"field", label:"Follow the zigzags ➜"}]
+    },
+    goat:{ name:"The Mountain Goat", art:"🐐🪨",
+      story:[
+        say("Old Horace the goat","🐐",`A puppy? Mmm, maybe I saw one. Maybe I didn't. Answer my riddle and I'll tell you.`)
+      ],
+      puzzle:{ tag:"Riddle",
+        q:`"I fall from the sky but I never get hurt. Every one of me is a different shape. When the sun comes out, I disappear." What am I?`,
+        vis: V.big("☁️ ⬇️ ❓"),
+        options:["❄️ A snowflake","☁️ A cloud","🪶 A feather","🌧️ A raindrop","🧊 An ice cube","⛄ A snowman"], answer:"❄️ A snowflake",
+        hints:[`It falls from the sky. Lots of things do! But every single one is a different shape…`,`It's white, it's cold, and it's falling all around you right now!`],
+        win:[`"A snowflake!" Horace nods. "Your puppy went that way, towards the snowy field. Mind the snowman — he's grumpy."`]},
+      after:[{to:"field", label:"Head to the snowy field ➜"}]
+    },
+    field:{ name:"The Snowy Field", art:"🌲⛄🌲",
+      story:[
+        `The field is full of hiding places. You can hear a tiny whimper, but you can't see where it's coming from.`,
+        say("Ranger Rosa","⛑️",`My heat-finder says he's this way: RIGHT 3, UP 2, LEFT 1, UP 2!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🧒 (that's you). Follow Rosa's directions. Where is Biscuit hiding?`,
+        grid:["🌲 . ⛄ . 🛷",". 🪨 . 🌲 .","🕳️ 🌲 . . .",". . 🪨 . 🏔️","🧒 . . . 🌲"],
+        start:"🧒", moves:[["R",3],["U",2],["L",1],["U",2]],
+        options:["⛄ Snowman","🛷 Sledge","🕳️ Cave","🪨 Rock","🏔️ Ice cliff","🌲 Tree"], answer:"⛄ Snowman",
+        hints:[`Right 3 along the bottom row, then up 2.`,`Now left 1. Then up 2 to the top row.`,`What's on the top row, in the middle?`],
+        win:[`Behind the snowman, curled up in a tiny shivering ball, is Biscuit! He leaps into your arms and licks your nose. 🐶`]},
+      onWin: st => st.items.add("biscuit"),
+      after:[{to:"sledge", label:"Race home on the sledge 🛷"}]
+    },
+    sledge:{ name:"Sledge Home", art:"🛷💨",
+      story:[
+        `It's getting dark. You tuck Biscuit inside your coat and climb onto the rescue sledge.`,
+        say("Ranger Rosa","⛑️",`The cabin is 54 metres down the hill. This sledge goes 6 metres every second. Hold on!`)
+      ],
+      puzzle:{ tag:"Speed",
+        q:`The sledge goes 6 metres every second. The cabin is 54 metres away. How many seconds will it take?`,
+        vis: V.big("🛷 6 m every second<br>🏠 54 m away"),
+        options:["9","8","6","48","60","7"], answer:"9",
+        hints:[`How many 6s make 54? Count in 6s: 6, 12, 18…`,`6, 12, 18, 24, 30, 36, 42, 48… keep going!`,`54 is 9 lots of 6.`],
+        win:[`WHOOOSH! Nine seconds of snowy speed, and you skid to a stop right outside the cabin door.`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   SHORT 4 — THE FAIRGROUND MYSTERY
+   ================================================================ */
+const FAIR = {
+  id:"fair", theme:"fair", start:"intro", length:"short", mins:"7",
+  title:"The Fairground Mystery",
+  cover:"🎡🎩🐇", coverBg:"#ffe3e3",
+  blurb:"The Great Marvella's magic rabbit has vanished at the fair! Follow the clues from ride to ride and find Hoppy before the big show.",
+  helper:{name:"The Great Marvella", icon:"🎩"},
+  runner:"🎟️", goal:"🐇",
+  ranks:["Master of Mysteries","Fairground Detective","Clever Sleuth"],
+  bag: st => [`🎟️ Tickets: ${st.n.tix==null?20:st.n.tix}`],
+  badges:{mirrors:"🪞 Mirror Master", coconut:"🥥 Coconut Champion"},
+  ending: st => [
+    `That evening, the big top is packed. The Great Marvella waves her wand, says the magic words — and pulls Hoppy out of her hat. The crowd goes wild!`,
+    say("The Great Marvella","🎩",`And a special thank-you to my brilliant assistant, who found Hoppy today!`),
+    `Everyone turns to look at you, and the spotlight swings round. You take a bow.`
+  ],
+  scenes:{
+    intro:{ name:"Roll Up, Roll Up!", art:"🎪🎟️",
+      story:[
+        `The fair has come to town! Music is playing, lights are flashing, and the air smells of candyfloss.`,
+        `But by the big top, a magician in a sparkly cloak is wringing her hands.`,
+        say("The Great Marvella","🎩",`My rabbit, Hoppy, has hopped off! The show starts tonight, and I can't do my trick without him. Please help me find him! Here — take these 20 ride tickets. You'll need them.`),
+        `The Ferris wheel costs 4 tickets a ride. The carousel costs 3.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`You have 20 tickets. You ride the Ferris wheel twice (4 tickets each time) and the carousel once (3 tickets). How many tickets do you have left?`,
+        vis: V.big("🎟️ × 20<br>🎡 4 + 4 · 🎠 3"),
+        options:["9","11","13","5","7","12"], answer:"9",
+        hints:[`Two Ferris wheel rides cost 4 + 4 tickets.`,`That's 8 tickets, plus 3 for the carousel. 8 + 3 = 11 tickets spent.`,`20 take away 11 is…?`],
+        win:[`Nine tickets left. And from the very top of the Ferris wheel, you spot something white and fluffy in one of the other seats!`]},
+      onWin: st => st.n.tix = 9,
+      after:[{to:"wheel", label:"Look closer 🎡"}]
+    },
+    wheel:{ name:"The Ferris Wheel", art:"🎡🐇",
+      story:[
+        `The Ferris wheel has 12 seats, numbered 1 to 12 all the way round, just like the numbers on a clock. You're in seat 2.`,
+        say("The Great Marvella","🎩",`I can see Hoppy from down here! He's in the seat exactly OPPOSITE yours, on the other side of the wheel.`)
+      ],
+      puzzle:{ tag:"Shapes",
+        q:`The wheel has 12 seats, like a clock. You're in seat 2. Which seat is exactly opposite you?`,
+        vis: V.big("🕐 12 seats, like a clock<br>You: seat 2"),
+        options:["8","10","6","12","4","14"], answer:"8",
+        hints:[`On a clock, 12 is opposite 6. That's 6 numbers apart — half of 12.`,`So the opposite seat is always 6 numbers further round.`,`2 + 6 = ?`],
+        win:[`Seat 8! But when the wheel stops, Hoppy hops out of seat 8 and darts off between the stalls. Did he go into the Hall of Mirrors — or towards the coconut shy?`]},
+      after:[
+        {to:"mirrors", label:"Search the Hall of Mirrors 🪞", sub:"Everything is back to front"},
+        {to:"coconut", label:"Search the coconut shy 🥥", sub:"Roll up and throw!"}
+      ]
+    },
+    mirrors:{ name:"The Hall of Mirrors", art:"🪞🪞",
+      story:[
+        `Inside the Hall of Mirrors there are hundreds of yous — tall ones, short ones, wiggly ones. At the end is a door with a sign:`,
+        `<i>"Only a word that is the SAME forwards and backwards will open this door."</i>`
+      ],
+      puzzle:{ tag:"Word puzzle",
+        q:`Which word reads exactly the same forwards and backwards?`,
+        vis: V.big("🪞 ⬅️ ➡️"),
+        options:["LEVEL","LEMON","TIGER","MIRROR","HELLO","ROBOT"], answer:"LEVEL",
+        hints:[`Try reading each word backwards, one letter at a time, from the end.`,`LEMON backwards is NOMEL. That's not the same! Try the others.`,`L-E-V-E-L… backwards: L-E-V-E-L!`],
+        win:[`LEVEL! The door swings open, and you find a trail of nibbled carrot pieces leading to the hat stall.`]},
+      after:[{to:"hats", label:"Follow the carrot trail 🥕"}]
+    },
+    coconut:{ name:"The Coconut Shy", art:"🥥🎯",
+      story:[
+        say("Coconut Stall Keeper","🧔",`Saw a rabbit, did I? Maybe… Win at my coconut shy and I'll tell you where it went!`),
+        `Every coconut you knock down scores 5 points. Every miss loses 2 points. You throw 6 balls: 4 hits and 2 misses.`
+      ],
+      puzzle:{ tag:"Maths",
+        q:`Each hit scores 5 points. Each miss loses 2 points. You get 4 hits and 2 misses. What's your score?`,
+        vis: V.big("🥥 hit = +5 · ❌ miss = −2<br>🥥🥥🥥🥥 ❌❌"),
+        options:["16","20","24","12","18","14"], answer:"16",
+        hints:[`First the hits: 4 hits × 5 points.`,`4 hits = 20 points. Now 2 misses lose 2 points each.`,`20 − 2 − 2 = ?`],
+        win:[`16 points — a winning score! "Your rabbit went to the hat stall," says the keeper, handing you a coconut.`]},
+      after:[{to:"hats", label:"Go to the hat stall 🎩"}]
+    },
+    hats:{ name:"The Hat Stall", art:"🎩🎩🎩",
+      story:[
+        `At the hat stall, six hats sit on a shelf in a row. One of them is twitching… but which?`,
+        say("The Great Marvella","🎩",`Hoppy always hides in a hat with a feather. He never hides in a black hat. And he likes to be snuggled between two hats with stars on.`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which hat is Hoppy in?<ul><li>It has a feather.</li><li>It is NOT black.</li><li>It is between two hats with stars.</li></ul>`,
+        vis: V.row([["1","⚫","–"],["2","🔴","🪶"],["3","🟢","⭐"],["4","🔵","🪶"],["5","🟡","⭐"],["6","⚫","🪶"]]) + V.legend("colour of hat · 🪶 feather · ⭐ star · – plain"),
+        options:["Hat 1","Hat 2","Hat 3","Hat 4","Hat 5","Hat 6"], answer:"Hat 4",
+        hints:[`Which hats have a feather? Cross out the rest.`,`Hats 2, 4 and 6 have feathers. Cross out the black one.`,`Hats 2 and 4 are left. Which one has a star hat on BOTH sides?`],
+        win:[`You lift Hat 4 — and there's Hoppy, nose twitching, munching the last bit of carrot! Marvella hugs him tight.`, say("The Great Marvella","🎩",`One last thing before the show. Help me practise my best trick!`)]},
+      after:[{to:"trick", label:"Watch the magic trick ✨"}]
+    },
+    trick:{ name:"The Magic Number", art:"🎩✨🔢",
+      story:[
+        say("The Great Marvella","🎩",`Think of ANY number — don't tell me! Double it. Add 6. Halve it. Now take away the number you first thought of. I can read your mind… I know your answer!`),
+        `Try it with a number. Then try it again with a different one!`
+      ],
+      puzzle:{ tag:"Number magic",
+        q:`Think of a number. Double it, add 6, halve it, then take away your first number. What's the answer?`,
+        vis: V.big("❓ × 2 + 6 ÷ 2 − ❓"),
+        options:["3","6","0","12","9","It depends on your number"], answer:"3",
+        hints:[`Try it with 1: double it is 2, add 6 is 8, halve it is 4, take away 1 is…?`,`Now try it with 5: double is 10, add 6 is 16, halve is 8, take away 5 is…?`,`You get the same answer every time! Doubling and then halving cancel out — so you're left with half of 6.`],
+        win:[`It's ALWAYS 3, whatever number you start with! "Now THAT," says Marvella with a wink, "is real magic."`]},
+      after:[{to:"end", label:"The end of the story… ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   EASY READER 1 — PIP THE PUP
+   ================================================================ */
+const PIP = {
+  id:"pip", theme:"easy1", start:"intro", length:"easy", mins:"3", easy:true,
+  title:"Pip the Pup",
+  cover:"🐶🔴", coverBg:"#e6f7d9",
+  blurb:"Pip has lost his red ball. Can you help him find it?",
+  helper:{name:"Pip", icon:"🐶"},
+  runner:"🐶", goal:"🔴",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => st.items.has("ball") ? ["🔴 Ball"] : ["🐶 Pip"],
+  badges:{hen:"🐔 Hen Helper", pig:"🐷 Pig Pal"},
+  ending: st => [
+    `Pip and the little dog play with the red ball.`,
+    `They run and run and run.`,
+    `What fun!`
+  ],
+  scenes:{
+    intro:{ name:"Pip the Pup", art:"🐶",
+      story:[ `This is Pip.`, `Pip is a pup.`, `Pip has a ball. The ball is red.`, `Oh no! The ball is lost!` ],
+      puzzle:{ tag:"Colours",
+        q:`What colour is Pip's ball?`,
+        options:["🔴 red","🔵 blue","🟢 green"], answer:"🔴 red",
+        hints:[`Look back at the story. "The ball is…"`,`It is the same colour as a fire engine.`],
+        win:[`Yes! The ball is red.`, `Let's go and find it!`]},
+      after:[
+        {to:"hen", label:"Go to the hen 🐔"},
+        {to:"pig", label:"Go to the pig 🐷"}
+      ]
+    },
+    hen:{ name:"The Hen", art:"🐔",
+      story:[ `Pip runs to the hen.`, `The hen sits on her eggs.`, say("Hen","🐔",`Cluck! Is the ball in my nest?`) ],
+      puzzle:{ tag:"Counting",
+        q:`How many eggs?`,
+        vis: V.big("🥚🥚🥚🥚"),
+        options:["3","4","5"], answer:"4",
+        hints:[`Touch each egg and count.`,`1, 2, 3… one more!`],
+        win:[`4 eggs!`, `But no ball. Pip runs on.`]},
+      after:[{to:"cat", label:"Run on ➜"}]
+    },
+    pig:{ name:"The Pig", art:"🐷",
+      story:[ `Pip runs to the pigs.`, `The pigs are in the mud.`, say("Pig","🐷",`Oink! Is the ball in the mud?`) ],
+      puzzle:{ tag:"Counting",
+        q:`How many pigs?`,
+        vis: V.big("🐷🐷🐷🐷🐷"),
+        options:["4","5","6"], answer:"5",
+        hints:[`Touch each pig and count.`,`1, 2, 3, 4… one more!`],
+        win:[`5 pigs!`, `But no ball. Pip runs on.`]},
+      after:[{to:"cat", label:"Run on ➜"}]
+    },
+    cat:{ name:"The Cat", art:"🐱",
+      story:[ `Pip runs to the cat.`, `The cat sits on a mat.`, `Cat and mat sound the same at the end. They rhyme!` ],
+      puzzle:{ tag:"Rhyme",
+        q:`Which one rhymes with cat?`,
+        options:["🦇 bat","🐶 dog","🚌 bus"], answer:"🦇 bat",
+        hints:[`Say them out loud: cat… bat. Cat… dog. Cat… bus.`,`Which one ends with "at"?`],
+        win:[`Yes! Cat, mat, bat!`, say("Cat","🐱",`I saw a red ball. It went up the hill!`)]},
+      after:[{to:"hill", label:"Run up the hill ⛰️"}]
+    },
+    hill:{ name:"Up the Hill", art:"⛰️",
+      story:[ `Pip runs up the hill.`, `He sees 2 big dogs.`, `He sees 1 little dog.` ],
+      puzzle:{ tag:"Adding",
+        q:`2 big dogs and 1 little dog. How many dogs?`,
+        vis: V.big("🐕🐕 + 🐶"),
+        options:["2","3","4"], answer:"3",
+        hints:[`Count the big dogs. Then count on 1 more.`,`1, 2… and 1 more makes…?`],
+        win:[`3 dogs!`, `And look! The little dog has a red ball.`, say("Little dog","🐶",`Is this your ball?`), `Pip gets his ball. Pip is so glad!`]},
+      onWin: st => st.items.add("ball"),
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   EASY READER 2 — BEN'S ROCKET
+   ================================================================ */
+const BEN = {
+  id:"ben", theme:"easy2", start:"intro", length:"easy", mins:"3", easy:true,
+  title:"Ben's Rocket",
+  cover:"👦🚀🌙", coverBg:"#dceeff",
+  blurb:"Ben has a red rocket. Zoom! Off he goes to space!",
+  helper:{name:"Ben", icon:"👦"},
+  runner:"🚀", goal:"🏠",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => st.items.has("alien") ? ["🚀 Rocket","👽 New friend"] : ["🚀 Rocket"],
+  badges:{moon:"🌙 Moon Walker", red:"👽 Alien Pal"},
+  ending: st => [
+    `Ben has his tea.`,
+    `Then Ben gets into bed.`,
+    `He looks up at the moon.`,
+    `Night night, moon. Night night, Ben.`
+  ],
+  scenes:{
+    intro:{ name:"Ben's Rocket", art:"👦🚀",
+      story:[ `This is Ben.`, `Ben has a red rocket.`, `Ben gets in. 3, 2, 1… zoom!`, `Up, up, up he goes. Ben can see lots of stars.` ],
+      puzzle:{ tag:"Counting",
+        q:`How many stars?`,
+        vis: V.big("⭐⭐⭐<br>⭐⭐⭐"),
+        options:["5","6","7"], answer:"6",
+        hints:[`Touch each star and count.`,`There are 3 on top and 3 at the bottom.`],
+        win:[`6 stars!`, `Where will Ben go now?`]},
+      after:[
+        {to:"moon", label:"Go to the moon 🌙"},
+        {to:"red", label:"Go to the red planet 🔴"}
+      ]
+    },
+    moon:{ name:"The Moon", art:"🌙",
+      story:[ `Ben lands on the moon.`, `The moon has lots of rocks.`, `Ben picks up 3 rocks.`, `Oops! He drops 1 rock.` ],
+      puzzle:{ tag:"Take away",
+        q:`Ben had 3 rocks. He drops 1. How many rocks now?`,
+        vis: V.big("🪨🪨🪨 − 🪨"),
+        options:["2","3","4"], answer:"2",
+        hints:[`Hold up 3 fingers. Now put 1 down.`,`How many fingers are still up?`],
+        win:[`2 rocks!`, `Ben gets back in his rocket. Zoom!`]},
+      after:[{to:"pattern", label:"Zoom on ➜"}]
+    },
+    red:{ name:"The Red Planet", art:"🔴👽",
+      story:[ `Ben lands on a red planet.`, `He sees an alien.`, `It is a big green alien with lots of eyes!` ],
+      puzzle:{ tag:"Counting",
+        q:`How many eyes?`,
+        vis: V.big("👁️👁️👁️"),
+        options:["2","3","4"], answer:"3",
+        hints:[`Touch each eye and count.`,`1, 2… one more!`],
+        win:[`3 eyes!`, say("Alien","👽",`Hi, Ben! Can I come in your rocket?`), `Yes! Zoom!`]},
+      onWin: st => st.items.add("alien"),
+      after:[{to:"pattern", label:"Zoom on ➜"}]
+    },
+    pattern:{ name:"Moon and Star", art:"🌙⭐",
+      story:[ `Ben zooms on.`, `He sees a moon, then a star.`, `Then a moon, then a star…` ],
+      puzzle:{ tag:"Pattern",
+        q:`What comes next?`,
+        vis: V.big("🌙 ⭐ 🌙 ⭐ 🌙 ❓"),
+        options:["⭐ star","🌙 moon","☀️ sun"], answer:"⭐ star",
+        hints:[`Say it out loud: moon, star, moon, star, moon…`,`After a moon comes a…?`],
+        win:[`Yes! A star!`, `Now it is time to go home.`]},
+      after:[{to:"home", label:"Zoom home 🏠"}]
+    },
+    home:{ name:"Back Home", art:"🏠",
+      story:[ `Zoom! Ben lands back at home.`, `His mum is at the door.` ],
+      puzzle:{ tag:"Sounds",
+        q:`Mum starts with "m". Which word starts with "m" too?`,
+        options:["🌙 moon","☀️ sun","🐕 dog"], answer:"🌙 moon",
+        hints:[`Say each word slowly. Listen to the first sound.`,`Mmm… mum. Mmm… which one?`],
+        win:[`Moon and Mum! M, m, m!`, say("Mum","👩",`Ben! Did you have fun?`), say("Ben","👦",`Yes! I went to space!`)]},
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, SEA, PYRAMID];
+</script>
+
+<!-- ======================= ENGINE ======================= -->
+<script>
+(function(){const s=document.getElementById('sky');for(let i=0;i<60;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*3.5)+'s';s.appendChild(e)}})();
+
+const app = document.getElementById('app');
+const modal = document.getElementById('modal');
+const ARW = {U:"⬆️",D:"⬇️",L:"⬅️",R:"➡️"};
+const CMP = {U:"North",D:"South",L:"West",R:"East"};
+let S=null, st=null, cur=null, attempts=0, solved=false, shown=[];
+
+function loadP(){ try{ return JSON.parse(localStorage.getItem('adv-library-v1')||'{}'); }catch(e){ return {}; } }
+function saveP(d){ try{ localStorage.setItem('adv-library-v1', JSON.stringify(d)); }catch(e){} }
+
+/* longest path (in chapters) for the progress bar */
+function maxLen(story){
+  const memo={};
+  const f=id=>{ if(id==='end') return 0; if(memo[id]!=null) return memo[id];
+    const sc=story.scenes[id]; const nx=[...(sc.after||[]),...(sc.choices||[])].map(c=>c.to);
+    return memo[id]=1+Math.max(0,...nx.map(f)); };
+  return f(story.start);
+}
+function puzzleCount(story){
+  const memo={};
+  const f=id=>{ if(id==='end') return 0; if(memo[id]!=null) return memo[id];
+    const sc=story.scenes[id]; const nx=[...(sc.after||[]),...(sc.choices||[])].map(c=>c.to);
+    return memo[id]=(sc.puzzle?1:0)+Math.max(0,...nx.map(f)); };
+  return f(story.start);
+}
+
+/* ---------- HOME ---------- */
+function home(){
+  S=null; document.body.dataset.theme='home'; document.body.classList.remove('easy'); modal.innerHTML='';
+  const prog=loadP();
+  let h=`<div class="hero"><div class="big">📚✨</div><h1>The Adventure Library</h1><p>Pick a story. You are the hero!</p><button class="installbtn" id="installBtn" onclick="installApp()">📲 Install as an app</button></div>
+  <details class="guide"><summary>👋 For grown-ups: how to read these together</summary><div class="gbody">
+    <p><b>Easy readers</b> 🌱 have big, simple words and easy puzzles with three answers, so children who are learning to read can try them by themselves. A 🔊 button reads each page aloud if they get stuck.</p><p>The other stories come in three lengths: quick (about 7 minutes), adventures (about 15) and epic quests (about 30). Every choice changes the path, so each story can be played again a different way. If you stop part-way through, your place is saved.</p>
+    <div class="legend">
+      <div class="read" style="margin:14px 0 4px;font-size:17px;padding:26px 14px 4px;box-shadow:none"><p><b>Parchment boxes</b> are the story. Read these aloud.</p>
+        <div class="say"><div class="av">🧙‍♂️</div><div class="bub"><div class="who">Speech bubbles</div><div class="tx">These are characters talking. Do the voices!</div></div></div></div>
+      <div class="lg"><b>🧩 White puzzle boxes</b> are for solving together. Read the question, then let your child pick an answer.</div>
+      <div class="lg" style="background:#fff3b0"><b>📒 Yellow notes</b> are clues saved to the notebook (button at the top). Some puzzles need several clues together.</div>
+      <div class="lg" style="background:var(--hint)"><b>💡 Hints</b> appear after a wrong answer, getting more helpful each time. A ⭐ is earned for each puzzle solved on the first try.</div>
+    </div></div></details>
+`;
+  const run=loadRun();
+  const groups=[["easy","🌱 Easy readers","Big, simple words for new readers to read all by themselves · about 3 minutes"],["short","⚡ Quick stories","About 7 minutes · perfect for bedtime"],["medium","📘 Adventures","About 15 minutes"],["long","🏔️ Epic quests","About 30 minutes · your place is saved, so you can stop and carry on later"]];
+  groups.forEach(([len,name,sub])=>{
+    h+=`<div class="sec">${name}</div><div class="secsub">${sub}</div><div class="cardlist">`;
+    STORIES.filter(s=>s.length===len).forEach(s=>{
+      const p=prog[s.id];
+      h+=`<button class="scard" onclick="openStory('${s.id}')">
+        <div class="cov" style="background:${s.coverBg}">${s.cover}</div>
+        <div><div class="t">${s.title}</div><div class="b">${s.blurb}</div>
+        <div class="m"><span>⏱ ~${s.mins} min</span><span>🧩 ${puzzleCount(s)} puzzles</span>${s.easy?`<span class="ertag">🌱 Easy reader</span>`:''}${run&&run.id===s.id?`<span class="tag">▶ In progress</span>`:''}${p?`<span class="done">✅ Best: ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
+      </button>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`<div class="foot">Made for one very clever adventurer</div>`;
+  app.innerHTML=h; window.scrollTo(0,0);
+}
+
+/* ---------- STORY COVER ---------- */
+function openStory(id){
+  S=STORIES.find(s=>s.id===id); document.body.dataset.theme=S.theme; document.body.classList.toggle('easy', !!S.easy);
+  app.innerHTML=`<div class="topbar"><button class="iconbtn" onclick="home()">🏠 <span style="font-size:15px">Library</span></button></div>
+  <div class="cover"><div class="art">${S.cover}</div><h1>${S.title}</h1><div class="bl">${S.blurb}</div>
+    <div class="meta"><span>⏱ About ${S.mins} minutes</span><span>🧩 ${puzzleCount(S)} puzzles</span><span>🔀 Different paths</span>${S.easy?`<span class="ertag">🌱 Easy reader — read it yourself!</span>`:''}</div>
+    <div class="helperbox"><div class="av">${S.helper.icon}</div><div><b>Your helper: ${S.helper.name}</b><br>If you get a puzzle wrong, ${S.helper.name.split(' ')[0]} will give you a hint.</div></div>
+  </div>
+  <div class="choose">${(()=>{const r=loadRun(); return r&&r.id===id
+      ? `<button class="btn center" onclick="resume()">▶ Carry on from Chapter ${r.st.chapter+1}</button><button class="btn alt center" onclick="begin()">Start again from the beginning</button>`
+      : `<button class="btn center" onclick="begin()">Begin the adventure ✨</button>`;})()}</div>`;
+  window.scrollTo(0,0);
+}
+function loadRun(){ try{ return JSON.parse(localStorage.getItem('adv-run-v1')||'null'); }catch(e){ return null; } }
+function saveRun(id){ try{ localStorage.setItem('adv-run-v1', JSON.stringify({id:S.id, cur:id, st:{...st, items:[...st.items]}})); }catch(e){} }
+function clearRun(){ try{ localStorage.removeItem('adv-run-v1'); }catch(e){} }
+function resume(){ const r=loadRun(); if(!r||r.id!==S.id) return begin(); st={...r.st, items:new Set(r.st.items)}; go(r.cur); }
+function begin(){
+  clearRun();
+  st={stars:0,puzzles:0,notes:[],items:new Set(),n:{},chapter:0,path:[],total:maxLen(S)};
+  go(S.start);
+}
+
+/* ---------- SCENE ---------- */
+function blocksOf(x){ return typeof x==='function' ? x(st) : (x||[]); }
+function addNotes(blocks){ let added=false; blocks.forEach(b=>{ if(b&&b.t==='note'&&!st.notes.includes(b.text)){ st.notes.push(b.text); added=true; } }); return added; }
+
+function readHTML(blocks){
+  let h='', open=false;
+  const openBox=()=>{ if(!open){ h+='<div class="read">'; open=true; } };
+  const closeBox=()=>{ if(open){ h+=hearBtn()+'</div>'; open=false; } };
+  blocks.forEach(b=>{
+    if(typeof b==='string'){ openBox(); h+=`<p>${b}</p>`; }
+    else if(b.t==='say'){ openBox(); h+=`<div class="say"><div class="av">${b.icon}</div><div class="bub"><div class="who">${b.who}</div><div class="tx">“${b.text}”</div></div></div>`; }
+    else if(b.t==='note'){ closeBox(); h+=`<div class="note"><div class="lab">📒 NEW CLUE — SAVED IN YOUR NOTEBOOK</div>${b.text}</div>`; }
+  });
+  closeBox(); return h;
+}
+const CAN_SPEAK = (()=>{ try{ return 'speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='undefined'; }catch(e){ return false; } })();
+function hearBtn(){ return (S&&S.easy&&CAN_SPEAK) ? `<button class="hear" onclick="hear(this)">🔊 Hear it</button>` : ''; }
+function hear(btn){
+  try{
+    const box=btn.closest('.read')||btn.closest('.qrow');
+    const c=box.cloneNode(true);
+    c.querySelectorAll('.hear,.who,.av').forEach(x=>x.remove());
+    c.querySelectorAll('p,.say,li').forEach(x=>x.append('. '));
+    const text=c.textContent.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu,'').replace(/\s+/g,' ').replace(/(\.\s*){2,}/g,'. ').trim();
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text); u.rate=0.8; u.lang='en-GB';
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function topbar(){
+  const pct = cur==='end' ? 100 : Math.min(94, Math.round((st.chapter-1)/st.total*100));
+  return `<div class="topbar">
+    <button class="iconbtn" onclick="askLeave()" aria-label="Back to library">🏠</button>
+    <div class="track"><div class="fill" style="width:${pct}%"></div><span class="runner" style="left:${pct}%">${S.runner}</span><span class="goal">${S.goal}</span></div>
+    <button class="iconbtn" id="nbBtn" onclick="openNotes()" aria-label="Notebook">📒<span class="c">${st.notes.length}</span></button>
+    <div class="starchip">⭐ ${st.stars}</div>
+  </div>
+  <div class="bagrow">🎒 ${S.bag(st).map(x=>`<span class="it">${x}</span>`).join('')}</div>`;
+}
+
+function go(id){
+  if(!S.scenes[id].end) saveRun(id);
+  cur=id; attempts=0; solved=false; st.path.push(id);
+  const sc=S.scenes[id];
+  if(sc.end){ return ending(); }
+  st.chapter++;
+  if(sc.enter) sc.enter(st);
+  const blocks=blocksOf(sc.story);
+  const newNote=addNotes(blocks);
+  let h=topbar();
+  h+=`<div class="chap"><div class="num">Chapter ${st.chapter}</div><div class="art">${sc.art}</div><h2>${sc.name}</h2></div>`;
+  h+=readHTML(blocks);
+  if(sc.puzzle) h+=puzzleHTML(sc.puzzle);
+  else h+=choicesHTML(sc.after||sc.choices||[]);
+  h+=`<div id="after"></div>`;
+  app.innerHTML=h;
+  if(newNote) pulseNB();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function puzzleHTML(p){
+  shown=shuffle(p.options);
+  let vis = typeof p.vis==='function' ? p.vis(st) : (p.vis||'');
+  if(p.type==='grid'){
+    vis = (p.hideDirs?'':`<div class="dirs">${p.moves.map(m=>`<span style="white-space:nowrap">${ARW[m[0]]} ${p.compass?CMP[m[0]]+' ':''}${m[1]}</span>`).join(' · ')}</div>`) + V.grid(p.grid,p.start,p.cell) + (p.compass?`<div class="compass">⬆️ North · ⬇️ South · ➡️ East · ⬅️ West</div>`:'') + (p.extra||'');
+  }
+  return `<div class="puz">
+    <div class="puzhead"><span class="l">🧩 Puzzle · ${p.tag}</span><span class="r">${S.easy?"Your<br>turn!":"Solve it<br>together"}</span></div>
+    <div class="puzbody"><div class="qrow"><div class="q">${p.q}</div>${hearBtn()}</div>${vis}
+      <div class="opts">${shown.map((o,i)=>`<button class="opt" onclick="answer(${i},this)">${o}</button>`).join('')}</div>
+      <div id="fb"></div>
+    </div></div>`;
+}
+
+function choicesHTML(list){
+  if(!list.length) return '';
+  const lab = list.length>1 ? '🤔 What will you do?' : '📖 Turn the page';
+  return `<div class="choose"><div class="lab">${lab}</div>${list.map(c=>`<button class="btn" onclick="go('${c.to}')">${c.label}${c.sub?`<small>${c.sub}</small>`:''}</button>`).join('')}</div>`;
+}
+
+function answer(i,el){
+  if(solved) return;
+  const sc=S.scenes[cur], p=sc.puzzle, fb=document.getElementById('fb');
+  if(shown[i]===p.answer){
+    solved=true; st.puzzles++;
+    const first=attempts===0; if(first) st.stars++;
+    el.classList.add('right');
+    document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+    if(sc.onWin) sc.onWin(st);
+    const win=blocksOf(p.win); const newNote=addNotes(win);
+    fb.innerHTML = first
+      ? `<div class="correct"><span class="s">⭐</span>Correct, first try! You earned a star.</div>`
+      : `<div class="correct"><span class="s">✅</span>You got it! Well worked out.</div>`;
+    document.getElementById('after').innerHTML = readHTML(win) + choicesHTML(sc.after||[]);
+    // refresh top bar counts
+    const tb=document.querySelector('.topbar'); const br=document.querySelector('.bagrow');
+    const tmp=document.createElement('div'); tmp.innerHTML=topbar();
+    tb.replaceWith(tmp.children[0]); br.replaceWith(tmp.children[0]);
+    if(newNote) pulseNB();
+    setTimeout(()=>fb.scrollIntoView({behavior:'smooth',block:'start'}),120);
+  } else {
+    attempts++;
+    el.classList.add('wrong'); el.disabled=true;
+    const hint=p.hints[Math.min(attempts-1,p.hints.length-1)];
+    fb.innerHTML=`<div class="hint"><div class="av">${S.helper.icon}</div><div><div class="lab">💡 Not quite! Hint from ${S.helper.name}</div>${hint}</div></div>`;
+  }
+}
+
+function pulseNB(){ const b=document.getElementById('nbBtn'); if(b){ b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); } }
+
+/* ---------- ENDING ---------- */
+function ending(){
+  const ratio = st.puzzles ? st.stars/st.puzzles : 0;
+  const rank = ratio===1 ? S.ranks[0] : ratio>=0.7 ? S.ranks[1] : S.ranks[2];
+  const badges=[`🏆 Story complete`];
+  Object.entries(S.badges).forEach(([k,v])=>{ if(st.path.includes(k)) badges.push(v); });
+  if(ratio===1) badges.push('🌟 Perfect score');
+  clearRun();
+  const prog=loadP(); const old=prog[S.id];
+  if(!old || st.stars>old.best) prog[S.id]={best:st.stars,of:st.puzzles};
+  saveP(prog);
+  let h=topbar();
+  h+=`<div class="chap"><div class="num">The End</div><div class="art">🎉${S.goal}🎉</div><h2>${S.title}</h2></div>`;
+  h+=readHTML(blocksOf(S.ending));
+  h+=`<div class="cert"><div>📜 This certifies that <b>you</b> are now a</div><div class="r">${rank}</div>
+     <div class="stars">${'⭐'.repeat(st.stars)}</div><div><b>${st.stars}</b> stars from <b>${st.puzzles}</b> puzzles</div></div>
+     <div class="badges">${badges.map(b=>`<span class="badge">${b}</span>`).join('')}</div>
+     <div class="tip">🔀 There are other paths through this story with different puzzles. Play again and choose differently to find them!</div>
+     <div class="choose"><button class="btn center" onclick="begin()">Play this story again 🔄</button><button class="btn alt center" onclick="home()">Back to the Library 📚</button></div>`;
+  app.innerHTML=h; window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- MODALS ---------- */
+function closeModal(){ modal.innerHTML=''; }
+function openNotes(){
+  const list = st.notes.length ? st.notes.map(n=>`<div class="nb">📒 ${n}</div>`).join('') : `<div class="empty">No clues yet. Keep your eyes open!</div>`;
+  modal.innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><h3>📒 Your Notebook</h3>${list}
+    <p style="font-size:14px;color:#777;margin-top:10px">Not everything goes in the notebook. Some things you just have to remember!</p>
+    <button class="btn center" onclick="closeModal()">Close</button></div></div>`;
+}
+function askLeave(){
+  modal.innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><h3>Leave this story?</h3>
+    <p>Don't worry — your place is saved. Next time you open this story, you can carry on from this chapter.</p>
+    <button class="btn center" onclick="closeModal()">Keep playing</button><button class="btn alt center" onclick="home()">Back to the Library</button></div></div>`;
+}
+
+/* ---------- APP INSTALL ---------- */
+let deferredPrompt=null;
+const isTop=(()=>{ try{ return window.self===window.top; }catch(e){ return false; } })();
+const isStandalone=(()=>{ try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }catch(e){ return false; } })();
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+function showInstall(){ const b=document.getElementById('installBtn'); if(b && !isStandalone && (deferredPrompt || isTop)) b.style.display='block'; }
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=e; showInstall(); });
+window.addEventListener('appinstalled', ()=>{ deferredPrompt=null; const b=document.getElementById('installBtn'); if(b) b.style.display='none'; });
+async function installApp(){
+  if(deferredPrompt){ try{ deferredPrompt.prompt(); await deferredPrompt.userChoice; }catch(e){} deferredPrompt=null; const b=document.getElementById('installBtn'); if(b) b.style.display='none'; return; }
+  const steps = isIOS
+    ? `<h3>📲 Install on iPhone or iPad</h3>
+       <p>1. Open this page in <b>Safari</b>.</p>
+       <p>2. Tap the <b>Share</b> button <span style="font-size:22px">⬆️</span>.</p>
+       <p>3. Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</p>`
+    : /android/i.test(navigator.userAgent)
+    ? `<h3>📲 Install on Android</h3>
+       <p>1. Open this page in <b>Chrome</b>.</p>
+       <p>2. Tap the <b>⋮</b> menu in the top corner.</p>
+       <p>3. Tap <b>Install app</b> (or <b>Add to Home screen</b>).</p>`
+    : `<h3>📲 Install on this computer</h3>
+       <p>In <b>Chrome</b> or <b>Edge</b>, click the install icon <span style="font-size:20px">⊕</span> at the right-hand end of the address bar, or open the browser menu and choose <b>Install The Adventure Library</b>.</p>
+       <p>On a phone or tablet, open this page there and tap this button again.</p>`;
+  modal.innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet">${steps}
+    <p style="font-size:15px;color:#666">Once installed, it opens full-screen like an app and works offline.</p>
+    <button class="btn center" onclick="closeModal()">Got it</button></div></div>`;
+}
+try{ if('serviceWorker' in navigator && isTop && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(e){}
+
+home();
+showInstall();
+</script>
+</body>
+</html>
