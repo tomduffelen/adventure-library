@@ -231,6 +231,7 @@ body.easy .btn{font-size:24px}
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .qrow .hear{flex-shrink:0;white-space:nowrap;background:var(--soft);box-shadow:none}
 .ertag{display:inline-block;background:#d3f9d8;color:#1b5e20;border-radius:99px;padding:2px 10px;font-weight:900}
+.resumebox{background:#fff;border:3px solid #ffd23f;border-radius:16px;padding:12px 14px;margin:0 0 14px;font-size:17px;line-height:1.5;color:var(--ui)}
 .installbtn{margin:14px auto 0;display:none;background:#ffd23f;color:#3a2a00;border:none;border-radius:99px;padding:10px 18px;font:800 16px 'Nunito';cursor:pointer;box-shadow:0 4px 0 #c99b00}
 .foot{color:rgba(255,255,255,.55);text-align:center;font-size:13px;margin-top:26px}
 
@@ -2578,7 +2579,7 @@ function home(){
       <div class="lg" style="background:var(--hint)"><b>💡 Hints</b> appear after a wrong answer, getting more helpful each time. A ⭐ is earned for each puzzle solved on the first try.</div>
     </div></div></details>
 `;
-  const run=loadRun();
+  const runs=allRuns();
   const groups=[["easy","🌱 Easy readers","Big, simple words for new readers to read all by themselves · about 3 minutes"],["short","⚡ Quick stories","About 7 minutes · perfect for bedtime"],["medium","📘 Adventures","About 15 minutes"],["long","🏔️ Epic quests","About 30 minutes · your place is saved, so you can stop and carry on later"]];
   groups.forEach(([len,name,sub])=>{
     h+=`<div class="sec">${name}</div><div class="secsub">${sub}</div><div class="cardlist">`;
@@ -2587,7 +2588,7 @@ function home(){
       h+=`<button class="scard" onclick="openStory('${s.id}')">
         <div class="cov" style="background:${s.coverBg}">${s.cover}</div>
         <div><div class="t">${s.title}</div><div class="b">${s.blurb}</div>
-        <div class="m"><span>⏱ ~${s.mins} min</span><span>🧩 ${puzzleCount(s)} puzzles</span>${s.easy?`<span class="ertag">🌱 Easy reader</span>`:''}${run&&run.id===s.id?`<span class="tag">▶ In progress</span>`:''}${p?`<span class="done">✅ Best: ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
+        <div class="m"><span>⏱ ~${s.mins} min</span><span>🧩 ${puzzleCount(s)} puzzles</span>${s.easy?`<span class="ertag">🌱 Easy reader</span>`:''}${runs[s.id]&&runs[s.id].st&&runs[s.id].st.chapter>0?`<span class="tag">▶ In progress · Ch ${runs[s.id].st.chapter+1}</span>`:''}${p?`<span class="done">✅ Best: ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
       </button>`;
     });
     h+=`</div>`;
@@ -2604,15 +2605,30 @@ function openStory(id){
     <div class="meta"><span>⏱ About ${S.mins} minutes</span><span>🧩 ${puzzleCount(S)} puzzles</span><span>🔀 Different paths</span>${S.easy?`<span class="ertag">🌱 Easy reader — read it yourself!</span>`:''}</div>
     <div class="helperbox"><div class="av">${S.helper.icon}</div><div><b>Your helper: ${S.helper.name}</b><br>If you get a puzzle wrong, ${S.helper.name.split(' ')[0]} will give you a hint.</div></div>
   </div>
-  <div class="choose">${(()=>{const r=loadRun(); return r&&r.id===id
-      ? `<button class="btn center" onclick="resume()">▶ Carry on from Chapter ${r.st.chapter+1}</button><button class="btn alt center" onclick="begin()">Start again from the beginning</button>`
-      : `<button class="btn center" onclick="begin()">Begin the adventure ✨</button>`;})()}</div>`;
+  <div class="choose">${(()=>{
+      const r=loadRun(id), p=loadP()[id];
+      if(r) return `<div class="resumebox">🔖 <b>You've started this story before!</b><br>You got to <b>Chapter ${r.st.chapter+1}: ${S.scenes[r.cur].name||''}</b> with ⭐ ${r.st.stars} so far.</div>
+        <button class="btn center" onclick="resume()">▶ Continue from Chapter ${r.st.chapter+1}</button>
+        <button class="btn alt center" onclick="begin()">🔄 Start over from the beginning</button>`;
+      if(p) return `<div class="resumebox">🏆 <b>You've finished this story before</b> — your best was ⭐ ${p.best} out of ${p.of}. Try a different path this time!</div>
+        <button class="btn center" onclick="begin()">Play again ✨</button>`;
+      return `<button class="btn center" onclick="begin()">Begin the adventure ✨</button>`;})()}</div>`;
   window.scrollTo(0,0);
 }
-function loadRun(){ try{ return JSON.parse(localStorage.getItem('adv-run-v1')||'null'); }catch(e){ return null; } }
-function saveRun(id){ try{ localStorage.setItem('adv-run-v1', JSON.stringify({id:S.id, cur:id, st:{...st, items:[...st.items]}})); }catch(e){} }
-function clearRun(){ try{ localStorage.removeItem('adv-run-v1'); }catch(e){} }
-function resume(){ const r=loadRun(); if(!r||r.id!==S.id) return begin(); st={...r.st, items:new Set(r.st.items)}; go(r.cur); }
+/* one saved place PER STORY */
+function allRuns(){
+  try{
+    const runs=JSON.parse(localStorage.getItem('adv-runs-v2')||'{}');
+    const old=JSON.parse(localStorage.getItem('adv-run-v1')||'null');   // move an old single save across
+    if(old&&old.id&&!runs[old.id]){ runs[old.id]=old; localStorage.setItem('adv-runs-v2',JSON.stringify(runs)); }
+    if(old) localStorage.removeItem('adv-run-v1');
+    return runs;
+  }catch(e){ return {}; }
+}
+function loadRun(id){ const r=allRuns()[id||(S&&S.id)]; return r&&r.st&&r.st.chapter>0 ? r : null; }
+function saveRun(id){ try{ const runs=allRuns(); runs[S.id]={id:S.id, cur:id, st:{...st, items:[...st.items]}}; localStorage.setItem('adv-runs-v2', JSON.stringify(runs)); }catch(e){} }
+function clearRun(){ try{ const runs=allRuns(); delete runs[S.id]; localStorage.setItem('adv-runs-v2', JSON.stringify(runs)); }catch(e){} }
+function resume(){ const r=loadRun(S.id); if(!r) return begin(); st={...r.st, items:new Set(r.st.items)}; go(r.cur); }
 function begin(){
   clearRun();
   st={stars:0,puzzles:0,notes:[],items:new Set(),n:{},chapter:0,path:[],total:maxLen(S)};
