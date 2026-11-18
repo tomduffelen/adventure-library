@@ -1959,7 +1959,7 @@ const PYRAMID = {
     statues:{ name:"The Hall of Statues", art:"🔴🐈🔵🐈🟢🐈",
       story:[
         `In a long hall stand three giant cat statues — one painted red, one blue and one green. Behind ONE of them is a secret door.`,
-        say("Miu the cat","🐈‍⬛",`Mrrrow. (Miu means: they can talk — but only ONE of them tells the truth!)`),
+        `“Mrrrow,” says Miu, flicking her tail. Aunt Ada knows exactly what that means: the statues can talk — but only ONE of them tells the truth!`,
         `The statues' stone mouths creak open.`,
         say("Red cat","🔴",`The door is behind ME.`),
         say("Blue cat","🔵",`The door is NOT behind me.`),
@@ -2057,7 +2057,7 @@ const PYRAMID = {
     river:{ name:"The Underground River", art:"🛶🐊",
       story:[
         `A little wooden boat bobs on a dark underground river. As you row along, you spot crocodiles on the banks — 3 groups, with 4 crocodiles in each group.`,
-        say("Miu the cat","🐈‍⬛",`Mrrow! (Miu has counted 5 of them fast asleep.)`)
+        `“Mrrow!” says Miu, and taps the boat with her paw five times. She has counted 5 of them fast asleep.`
       ],
       puzzle:{ tag:"Maths",
         q:`3 groups of 4 crocodiles. 5 of them are asleep. How many crocodiles are awake?`,
@@ -3068,7 +3068,7 @@ function home(){
     <p><b>Easy readers</b> 🌱 come in three levels: Level 1 is the simplest, Level 3 has longer pages and four answers to choose from. They have big, simple words and easy puzzles with three answers, so children who are learning to read can try them by themselves. A 🔊 button reads each page aloud if they get stuck.</p><p>The other stories come in three lengths: quick (about 7 minutes), adventures (about 15) and epic quests (about 30). Every choice changes the path, so each story can be played again a different way. If you stop part-way through, your place is saved.</p>
     <div class="legend">
       <div class="read" style="margin:14px 0 4px;font-size:17px;padding:26px 14px 4px;box-shadow:none"><p><b>Parchment pages</b> are the story. Read these aloud.</p>
-        <div class="say"><div class="who"><span class="av">🧙‍♂️</span>A character's name</div><p class="tx">“Lines with a coloured edge are characters talking. Do the voices!”</p></div></div>
+        <p>“When characters talk, it's written just like a book,” says the guide. “Do the voices!”</p></div>
       <div class="lg"><b>🧩 White puzzle boxes</b> are for solving together. Read the question, then let your child pick an answer.</div>
       <div class="lg" style="background:#fff3b0"><b>📒 Yellow notes</b> are clues saved to the notebook (button at the top). Some puzzles need several clues together.</div>
       <div class="lg" style="background:var(--hint)"><b>💡 Hints</b> appear after a wrong answer, getting more helpful each time. A ⭐ is earned for each puzzle solved on the first try.</div>
@@ -3152,13 +3152,41 @@ function begin(){
 function blocksOf(x){ return typeof x==='function' ? x(st) : (x||[]); }
 function addNotes(blocks){ let added=false; blocks.forEach(b=>{ if(b&&b.t==='note'&&!st.notes.includes(b.text)){ st.notes.push(b.text); added=true; } }); return added; }
 
+/* ---------- book-style speech ---------- */
+const SHORT={"Wizard Bramble":"Bramble","Captain Barnacle Bess":"Captain Bess","Bubbles the dolphin":"Bubbles","Ellie the elephant":"Ellie",
+ "Mortimer the Mouse":"Mortimer","Olive the otter":"Olive","Old Horace the goat":"Horace","Coco the clownfish":"Coco","Octavia the octopus":"Octavia",
+ "Big Blue the whale":"the whale","Merla the Mermaid":"Merla","Meg the hen":"Meg","The Great Marvella":"Marvella","Glorp the Shopkeeper":"Glorp",
+ "Station Guard":"the guard","The Chief of Space":"the Chief of Space","The Museum Director":"the museum director","Ferry Troll":"the troll",
+ "Coconut Stall Keeper":"the stall keeper","Zib's Dad":"Zib's dad","Wise Owl":"the owl","Troll":"the troll","T-Rex":"the T-Rex","Hen":"the hen",
+ "Pig":"the pig","Cat":"the cat","Little dog":"the little dog","Little chick":"the little chick","Mouse":"the mouse","Duck":"the duck","Worm":"the worm",
+ "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa"};
+const VERB={"Polly":"squawks","BLIP":"beeps","Station Guard":"beeps","Mortimer the Mouse":"squeaks","Captain Wisp":"writes"};
+function bookSay(b, tag){
+  let t=b.text.replace(/"([^"]*)"/g,'‘$1’');
+  if(!tag) return `“${t}”`;
+  const name=SHORT[b.who]||b.who;
+  let s1=t, rest='';
+  const m=t.match(/^(.+?[.!?…])\s+(?=[A-Z0-9‘(“])([\s\S]+)$/);
+  const openInner = x => (x.match(/‘/g)||[]).length > (x.match(/’/g)||[]).length;
+  if(m && !/\b(Mr|Mrs|Dr)\.$/.test(m[1]) && !openInner(m[1])){ s1=m[1]; rest=m[2]; }
+  let verb = s1.endsWith('?') ? 'asks' : (VERB[b.who]||'says');
+  if(verb!=='says' && verb!=='asks' && s1.toLowerCase().includes(verb.replace(/s$/,''))) verb='says';
+  // reading something out, or no good place to split: put the speaker first
+  if(!rest && (/[’]$/.test(t) || t.includes('‘') || t.length>110)){
+    const Name=name.charAt(0).toUpperCase()+name.slice(1);
+    if(/^(It|The [a-z]+|Jack's logbook) says:/.test(t)) verb='reads out';
+    return `${Name} ${verb}, “${t}”`;
+  }
+  if(s1.endsWith('.')) s1=s1.slice(0,-1)+',';
+  return `“${s1}” ${verb} ${name}.` + (rest?` “${rest}”`:'');
+}
 function readHTML(blocks, opening){
   let h='', open=false, lastWho=null, boxes=0;
   const openBox=()=>{ if(!open){ h+=`<div class="read${opening&&boxes===0&&!(S&&S.easy)&&typeof blocks[0]==='string'?' first':''}">`; open=true; boxes++; } };
   const closeBox=()=>{ if(open){ h+=hearBtn()+'</div>'; open=false; } };
   blocks.forEach(b=>{
     if(typeof b==='string'){ openBox(); h+=`<p>${b}</p>`; lastWho=null; }
-    else if(b.t==='say'){ openBox(); const same=lastWho===b.who; h+=`<div class="say${same?' same':''}">${same?'':`<div class="who"><span class="av">${b.icon}</span>${b.who}</div>`}<p class="tx">“${b.text}”</p></div>`; lastWho=b.who; return; }
+    else if(b.t==='say'){ openBox(); h+=`<p>${bookSay(b, lastWho!==b.who)}</p>`; lastWho=b.who; return; }
     else if(b.t==='note'){ closeBox(); lastWho=null; h+=`<div class="note"><div class="lab">📒 NEW CLUE — SAVED IN YOUR NOTEBOOK</div>${b.text}</div>`; }
   });
   closeBox(); return h;
