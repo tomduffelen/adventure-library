@@ -99,17 +99,20 @@ button{font-family:inherit}
 
 /* ---------- READ ALOUD STORY BOX ---------- */
 .read{position:relative;background:linear-gradient(var(--parch),var(--parch2));border-radius:20px;
-  padding:30px 20px 10px;margin:22px 0 14px;border:2px solid #e6cf9a;box-shadow:0 8px 0 #c9a96a,0 16px 34px rgba(0,0,0,.35);
-  font-family:'Literata',Georgia,serif;color:var(--ink);font-size:20px;line-height:1.7;animation:in .45s ease}
+  padding:32px 22px 12px;margin:22px 0 14px;border:2px solid #e6cf9a;box-shadow:0 8px 0 #c9a96a,0 16px 34px rgba(0,0,0,.35);
+  font-family:'Literata',Georgia,serif;color:var(--ink);font-size:19.5px;line-height:1.75;animation:in .45s ease;
+  text-wrap:pretty;-webkit-font-smoothing:antialiased}
 .read::before{content:"📖  READ ALOUD";position:absolute;top:-14px;left:18px;background:#8a5a1c;color:#fff;
   font:900 12px 'Nunito';letter-spacing:1.5px;padding:6px 12px;border-radius:99px;box-shadow:0 3px 0 #5e3c10}
-.read p{margin-bottom:14px}
+.read p{margin:0 0 .85em}
 .read b{font-weight:700}
-.say{display:flex;gap:10px;align-items:flex-start;margin:4px 0 16px}
-.say .av{flex:0 0 46px;height:46px;border-radius:50%;background:#fff;border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px}
-.say .bub{position:relative;background:#fff;border-radius:4px 18px 18px 18px;padding:8px 14px 10px;border:2px solid #eadbb8;flex:1}
-.say .who{font:900 12px 'Nunito';letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:2px}
-.say .tx{font-style:italic}
+.read.first>p:first-child::first-letter{float:left;font-size:3.2em;line-height:.82;font-weight:700;color:var(--accent2);padding:6px 8px 0 0}
+/* dialogue: flows like a book, with a quiet speaker label */
+.say{margin:.2em 0 .95em;padding:0 0 0 14px;border-left:3px solid var(--accent)}
+.say+.say.same{margin-top:-.5em}
+.say .who{display:flex;align-items:center;gap:6px;font:800 12.5px 'Nunito';letter-spacing:.9px;text-transform:uppercase;color:var(--accent2);margin-bottom:1px}
+.say .av{font-size:17px;letter-spacing:0}
+.say .tx{margin:0}
 
 /* ---------- NOTEBOOK CALLOUT ---------- */
 .note{background:#fff3b0;border:3px dashed #d29d00;border-radius:16px;padding:12px 14px;margin:0 0 14px;font-size:17px;line-height:1.45;animation:in .45s ease}
@@ -121,7 +124,7 @@ button{font-family:inherit}
 .puzhead .l{font:700 18px 'Fredoka'}
 .puzhead .r{font:800 12px 'Nunito';letter-spacing:1px;text-transform:uppercase;opacity:.9;text-align:right}
 .puzbody{padding:16px}
-.q{font:800 20px/1.45 'Nunito';color:var(--ui);margin-bottom:12px}
+.q{font:700 20px/1.5 'Nunito';color:var(--ui);margin-bottom:12px}
 .q ul{margin:8px 0 0 0;list-style:none}
 .q li{padding:3px 0 3px 26px;position:relative}
 .q li::before{content:"🔎";position:absolute;left:0;font-size:16px}
@@ -179,7 +182,7 @@ button{font-family:inherit}
 .grid .st{box-shadow:0 0 0 3px #ff4f8b inset;background:#fff}
 .dirs{text-align:center;font:700 19px/1.5 'Fredoka';margin:6px 0}
 .compass{text-align:center;font:800 14px 'Nunito';color:#5c5470;margin-top:6px}
-.clues{background:#fff8d8;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:15px;line-height:1.45}
+.clues{background:#fff8d8;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:16px;line-height:1.5}
 .clues div{padding:2px 0}
 
 /* ---------- CHOICES ---------- */
@@ -216,12 +219,13 @@ button{font-family:inherit}
 .sheet .empty{color:#777;font-size:16px;margin-bottom:12px}
 .sheet p{font-size:17px;margin-bottom:14px;line-height:1.5}
 /* ---------- EASY READERS ---------- */
-body.easy .read{font-family:'Andika','Nunito',sans-serif;font-size:30px;line-height:1.55;padding:34px 22px 14px}
+body.easy .read{font-family:'Andika','Nunito',sans-serif;font-size:27px;line-height:1.6;padding:34px 22px 14px;word-spacing:.08em}
 body.easy .read::before{content:"📖  READ IT YOURSELF";background:var(--accent2);box-shadow:0 3px 0 rgba(0,0,0,.3)}
-body.easy .read p{margin-bottom:10px}
-body.easy .say .tx{font-style:normal}
+body.easy .read p{margin-bottom:.6em}
 body.easy .say .who{font-size:14px}
-body.easy .q{font-family:'Andika','Nunito',sans-serif;font-size:28px;font-weight:700}
+body.easy .say .av{font-size:22px}
+body.easy .q{font-family:'Andika','Nunito',sans-serif;font-size:26px;font-weight:700;line-height:1.45;margin-bottom:6px}
+body.easy .qrow{flex-direction:column;align-items:flex-start;gap:4px}
 body.easy .opts{grid-template-columns:1fr 1fr 1fr}
 body.easy .opts.four{grid-template-columns:1fr 1fr}
 body.easy .opt{font-family:'Andika','Nunito',sans-serif;font-size:25px;min-height:88px;font-weight:700}
@@ -3063,8 +3067,8 @@ function home(){
   <details class="guide"><summary>👋 For grown-ups: how to read these together</summary><div class="gbody">
     <p><b>Easy readers</b> 🌱 come in three levels: Level 1 is the simplest, Level 3 has longer pages and four answers to choose from. They have big, simple words and easy puzzles with three answers, so children who are learning to read can try them by themselves. A 🔊 button reads each page aloud if they get stuck.</p><p>The other stories come in three lengths: quick (about 7 minutes), adventures (about 15) and epic quests (about 30). Every choice changes the path, so each story can be played again a different way. If you stop part-way through, your place is saved.</p>
     <div class="legend">
-      <div class="read" style="margin:14px 0 4px;font-size:17px;padding:26px 14px 4px;box-shadow:none"><p><b>Parchment boxes</b> are the story. Read these aloud.</p>
-        <div class="say"><div class="av">🧙‍♂️</div><div class="bub"><div class="who">Speech bubbles</div><div class="tx">These are characters talking. Do the voices!</div></div></div></div>
+      <div class="read" style="margin:14px 0 4px;font-size:17px;padding:26px 14px 4px;box-shadow:none"><p><b>Parchment pages</b> are the story. Read these aloud.</p>
+        <div class="say"><div class="who"><span class="av">🧙‍♂️</span>A character's name</div><p class="tx">“Lines with a coloured edge are characters talking. Do the voices!”</p></div></div>
       <div class="lg"><b>🧩 White puzzle boxes</b> are for solving together. Read the question, then let your child pick an answer.</div>
       <div class="lg" style="background:#fff3b0"><b>📒 Yellow notes</b> are clues saved to the notebook (button at the top). Some puzzles need several clues together.</div>
       <div class="lg" style="background:var(--hint)"><b>💡 Hints</b> appear after a wrong answer, getting more helpful each time. A ⭐ is earned for each puzzle solved on the first try.</div>
@@ -3148,14 +3152,14 @@ function begin(){
 function blocksOf(x){ return typeof x==='function' ? x(st) : (x||[]); }
 function addNotes(blocks){ let added=false; blocks.forEach(b=>{ if(b&&b.t==='note'&&!st.notes.includes(b.text)){ st.notes.push(b.text); added=true; } }); return added; }
 
-function readHTML(blocks){
-  let h='', open=false;
-  const openBox=()=>{ if(!open){ h+='<div class="read">'; open=true; } };
+function readHTML(blocks, opening){
+  let h='', open=false, lastWho=null, boxes=0;
+  const openBox=()=>{ if(!open){ h+=`<div class="read${opening&&boxes===0&&!(S&&S.easy)&&typeof blocks[0]==='string'?' first':''}">`; open=true; boxes++; } };
   const closeBox=()=>{ if(open){ h+=hearBtn()+'</div>'; open=false; } };
   blocks.forEach(b=>{
-    if(typeof b==='string'){ openBox(); h+=`<p>${b}</p>`; }
-    else if(b.t==='say'){ openBox(); h+=`<div class="say"><div class="av">${b.icon}</div><div class="bub"><div class="who">${b.who}</div><div class="tx">“${b.text}”</div></div></div>`; }
-    else if(b.t==='note'){ closeBox(); h+=`<div class="note"><div class="lab">📒 NEW CLUE — SAVED IN YOUR NOTEBOOK</div>${b.text}</div>`; }
+    if(typeof b==='string'){ openBox(); h+=`<p>${b}</p>`; lastWho=null; }
+    else if(b.t==='say'){ openBox(); const same=lastWho===b.who; h+=`<div class="say${same?' same':''}">${same?'':`<div class="who"><span class="av">${b.icon}</span>${b.who}</div>`}<p class="tx">“${b.text}”</p></div>`; lastWho=b.who; return; }
+    else if(b.t==='note'){ closeBox(); lastWho=null; h+=`<div class="note"><div class="lab">📒 NEW CLUE — SAVED IN YOUR NOTEBOOK</div>${b.text}</div>`; }
   });
   closeBox(); return h;
 }
@@ -3196,7 +3200,7 @@ function go(id){
   const newNote=addNotes(blocks);
   let h=topbar();
   h+=`<div class="chap"><div class="num">Chapter ${st.chapter}</div><div class="art">${sc.art}</div><h2>${sc.name}</h2></div>`;
-  h+=readHTML(blocks);
+  h+=readHTML(blocks, true);
   if(sc.puzzle) h+=puzzleHTML(sc.puzzle);
   else h+=choicesHTML(sc.after||sc.choices||[]);
   h+=`<div id="after"></div>`;
