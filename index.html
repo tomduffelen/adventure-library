@@ -31,6 +31,10 @@ body[data-theme=snow]{--bg1:#2c4a86;--bg2:#0b1630;--accent:#4f6bd8;--accent2:#36
 body[data-theme=fair]{--bg1:#7a1f2b;--bg2:#2a070c;--accent:#d6336c;--accent2:#a61e4d;--soft:#ffe3ec;--cell:#ffe8cc}
 body[data-theme=easy1]{--bg1:#3d8b37;--bg2:#163d14;--accent:#2f9e44;--accent2:#237032;--soft:#ebfbee;--cell:#d3f9d8}
 body[data-theme=easy2]{--bg1:#1d5fb8;--bg2:#0a1f45;--accent:#1c7ed6;--accent2:#1864ab;--soft:#e7f5ff;--cell:#d0ebff}
+body[data-theme=easy3]{--bg1:#b07d10;--bg2:#3d2a03;--accent:#e67700;--accent2:#b35c00;--soft:#fff4e6;--cell:#fff3bf}
+body[data-theme=easy4]{--bg1:#0c8599;--bg2:#06363f;--accent:#1098ad;--accent2:#0b7285;--soft:#e3fafc;--cell:#c5f6fa}
+body[data-theme=easy5]{--bg1:#4f7a12;--bg2:#1a2a05;--accent:#5c940d;--accent2:#3f6b06;--soft:#f4fce3;--cell:#e9fac8}
+body[data-theme=easy6]{--bg1:#8b3aa8;--bg2:#2e0d3b;--accent:#ae3ec9;--accent2:#862e9c;--soft:#f8f0fc;--cell:#f3d9fa}
 body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -219,6 +223,7 @@ body.easy .say .tx{font-style:normal}
 body.easy .say .who{font-size:14px}
 body.easy .q{font-family:'Andika','Nunito',sans-serif;font-size:28px;font-weight:700}
 body.easy .opts{grid-template-columns:1fr 1fr 1fr}
+body.easy .opts.four{grid-template-columns:1fr 1fr}
 body.easy .opt{font-family:'Andika','Nunito',sans-serif;font-size:25px;min-height:88px;font-weight:700}
 body.easy .vbig{font-size:48px}
 body.easy .hint{font-size:22px;font-family:'Andika','Nunito',sans-serif}
@@ -231,6 +236,32 @@ body.easy .btn{font-size:24px}
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .qrow .hear{flex-shrink:0;white-space:nowrap;background:var(--soft);box-shadow:none}
 .ertag{display:inline-block;background:#d3f9d8;color:#1b5e20;border-radius:99px;padding:2px 10px;font-weight:900}
+.hero{padding:22px 8px 12px}
+.hero .big{font-size:42px}
+.hero h1{font-size:30px;margin:6px 0 4px}
+.hero p{font-size:16px}
+.guide{margin-bottom:14px}
+.guide summary{font-size:15px;padding:11px 16px}
+.contstrip{background:rgba(255,255,255,.1);border-radius:16px;padding:10px;margin-bottom:14px}
+.contstrip .clab{color:#ffd23f;font:900 13px 'Nunito';letter-spacing:1px;text-transform:uppercase;margin:0 4px 8px}
+.cbtn{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:none;border-radius:12px;background:#fff;padding:8px 12px;margin-bottom:6px;cursor:pointer;font:700 15px 'Nunito';color:var(--ui)}
+.cbtn:last-child{margin-bottom:0}
+.cbtn .ci{font-size:26px}
+.cbtn small{color:#6a6280;font-weight:800}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:0;z-index:4;padding:8px 0;background:linear-gradient(var(--bg1) 75%,transparent)}
+.tabbtn{border:none;border-radius:14px;background:rgba(255,255,255,.12);color:#fff;font:700 14px 'Fredoka';padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabbtn .ti{font-size:22px}
+.tabbtn.on{background:#ffd23f;color:#3a2a00}
+.secsub{margin:4px 4px 12px}
+.lvhead{color:#fff;font:700 19px 'Fredoka';margin:14px 4px 8px}
+.lvhead span{font:700 13px 'Nunito';opacity:.75}
+.cardlist{gap:10px}
+.scard{padding:12px;gap:12px;border-radius:18px}
+.scard .cov{flex:0 0 64px;height:64px;font-size:22px;border-radius:14px}
+.scard .t{font-size:18px;margin-bottom:2px}
+.scard .b{font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.scard .m{margin-top:6px;gap:8px;font-size:12px}
+.sbody{min-width:0}
 .resumebox{background:#fff;border:3px solid #ffd23f;border-radius:16px;padding:12px 14px;margin:0 0 14px;font-size:17px;line-height:1.5;color:var(--ui)}
 .installbtn{margin:14px auto 0;display:none;background:#ffd23f;color:#3a2a00;border:none;border-radius:99px;padding:10px 18px;font:800 16px 'Nunito';cursor:pointer;box-shadow:0 4px 0 #c99b00}
 .foot{color:rgba(255,255,255,.55);text-align:center;font-size:13px;margin-top:26px}
@@ -2384,7 +2415,7 @@ const FAIR = {
    EASY READER 1 — PIP THE PUP
    ================================================================ */
 const PIP = {
-  id:"pip", theme:"easy1", start:"intro", length:"easy", mins:"3", easy:true,
+  id:"pip", theme:"easy1", start:"intro", length:"easy", level:1, mins:"3", easy:true,
   title:"Pip the Pup",
   cover:"🐶🔴", coverBg:"#e6f7d9",
   blurb:"Pip has lost his red ball. Can you help him find it?",
@@ -2459,7 +2490,7 @@ const PIP = {
    EASY READER 2 — BEN'S ROCKET
    ================================================================ */
 const BEN = {
-  id:"ben", theme:"easy2", start:"intro", length:"easy", mins:"3", easy:true,
+  id:"ben", theme:"easy2", start:"intro", length:"easy", level:1, mins:"3", easy:true,
   title:"Ben's Rocket",
   cover:"👦🚀🌙", coverBg:"#dceeff",
   blurb:"Ben has a red rocket. Zoom! Off he goes to space!",
@@ -2532,7 +2563,467 @@ const BEN = {
   }
 };
 
-const STORIES = [PIP, BEN, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, SEA, PYRAMID];
+
+/* ================================================================
+   EASY READER LEVEL 2 — THE LOST LITTLE CHICK
+   ================================================================ */
+const CHICK = {
+  id:"chick", theme:"easy3", start:"intro", length:"easy", level:2, mins:"5", easy:true,
+  title:"The Lost Little Chick",
+  cover:"🐔🐥❓", coverBg:"#fff3bf",
+  blurb:"Meg the hen has six chicks — but one is missing! Can you find it?",
+  helper:{name:"Meg the hen", icon:"🐔"},
+  runner:"🐥", goal:"🐔",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => st.items.has("chick") ? ["🐥 Little chick"] : ["🔍 Looking…"],
+  badges:{shed:"🏚️ Shed Searcher", pond:"🦆 Pond Explorer"},
+  ending: st => [
+    `Meg counts her chicks again. One, two, three, four, five, six!`,
+    `All six chicks snuggle up under her wings.`,
+    say("Meg the hen","🐔",`Thank you! You are the best chick finder on the farm.`),
+    `Cheep, cheep, cheep! That means thank you in chick.`
+  ],
+  scenes:{
+    intro:{ name:"Where Is the Chick?", art:"🐔🐥🐥",
+      story:[
+        `Meg the hen lives on a farm. She has six little chicks.`,
+        `Every morning, she counts them. One, two, three, four, five…`,
+        `Oh no! She can only find five chicks!`,
+        say("Meg the hen","🐔",`Cluck, cluck! One of my chicks is lost. Will you help me look?`)
+      ],
+      puzzle:{ tag:"Take away",
+        q:`Meg has 6 chicks. She can only find 5. How many chicks are lost?`,
+        vis: V.big("🐥🐥🐥🐥🐥 ❓"),
+        options:["1","2","6"], answer:"1",
+        hints:[`Hold up 6 fingers. Put down 5. How many fingers are left?`,`5 and one more makes 6…`],
+        win:[`Yes! Just 1 chick is lost.`, `Where shall we look first?`]},
+      after:[
+        {to:"shed", label:"Look in the shed 🏚️"},
+        {to:"pond", label:"Look by the pond 🦆"}
+      ]
+    },
+    shed:{ name:"The Shed", art:"🏚️🐭",
+      story:[
+        `You go into the old shed. It is dark and dusty.`,
+        `There are three big sacks on the floor. One of the sacks is wiggling!`,
+        say("Meg the hen","🐔",`It is the sack in the middle. I can hear a squeak!`)
+      ],
+      puzzle:{ tag:"Look carefully",
+        q:`Which sack is in the middle?`,
+        vis: V.big("🟥 🟦 🟩"),
+        options:["🟥 red sack","🟦 blue sack","🟩 green sack"], answer:"🟦 blue sack",
+        hints:[`The middle is the one between the other two.`,`It has one sack on each side of it.`],
+        win:[`You open the blue sack. Out pops… a mouse!`, say("Mouse","🐭",`Squeak! I am not a chick! But I saw a chick go to the field.`)]},
+      after:[{to:"field", label:"Go to the field 🌾"}]
+    },
+    pond:{ name:"The Pond", art:"🦆🐸",
+      story:[
+        `You go down to the pond. The water is green and still.`,
+        `A duck is swimming with her ducklings. Some frogs are sitting on a log.`
+      ],
+      puzzle:{ tag:"Adding",
+        q:`There are 4 ducklings and 3 frogs. How many animals is that?`,
+        vis: V.big("🐤🐤🐤🐤 + 🐸🐸🐸"),
+        options:["6","7","8"], answer:"7",
+        hints:[`Start at 4. Count on 3 more.`,`4… 5, 6, 7!`],
+        win:[`7 animals! But no chick.`, say("Duck","🦆",`Quack! I saw a little chick run to the field.`)]},
+      after:[{to:"field", label:"Go to the field 🌾"}]
+    },
+    field:{ name:"The Field", art:"🌾🌻",
+      story:[
+        `The field is full of tall grass and big yellow flowers.`,
+        `You hear a tiny sound. Cheep, cheep! But you cannot see who it is.`,
+        `Then a voice from the grass asks you a riddle.`
+      ],
+      puzzle:{ tag:"Riddle",
+        q:`"I am small and yellow and fluffy. I say cheep, cheep. When I grow up, I will be a hen." What am I?`,
+        options:["🐥 a chick","🐝 a bee","🦆 a duck"], answer:"🐥 a chick",
+        hints:[`A bee is yellow, but it says buzz!`,`What grows up to be a hen?`],
+        win:[`A chick! And there it is, sitting under a big sunflower.`, say("Little chick","🐥",`Cheep! I got lost. Can you help me get home?`)]},
+      onWin: st => st.items.add("chick"),
+      after:[{to:"rhyme", label:"Pick up the chick 🐥"}]
+    },
+    rhyme:{ name:"A Rhyme for the Chick", art:"🐥🎵",
+      story:[
+        `The chick is a bit sad. You sing a song to cheer it up.`,
+        `In your song, every word rhymes with chick!`
+      ],
+      puzzle:{ tag:"Rhyme",
+        q:`Which word rhymes with chick?`,
+        options:["🥢 stick","🐔 hen","🦆 duck"], answer:"🥢 stick",
+        hints:[`Say each word out loud: chick… stick. Chick… hen. Chick… duck.`,`Which one ends with "ick"?`],
+        win:[`Yes! Chick, stick, quick, kick! The chick starts to giggle. Cheep, cheep!`]},
+      after:[{to:"home", label:"Go back to Meg 🐔"}]
+    },
+    home:{ name:"Back to Meg", art:"🏡🐔",
+      story:[
+        `The chick wants to hop home by itself.`,
+        `It is 10 hops back to Meg. The chick has done 6 hops. It is getting tired!`
+      ],
+      puzzle:{ tag:"Take away",
+        q:`It is 10 hops home. The chick has done 6 hops. How many hops are left?`,
+        vis: V.big("🐥 ➜ 🐔<br>10 hops"),
+        options:["3","4","5"], answer:"4",
+        hints:[`Count on from 6 to 10 on your fingers.`,`7, 8, 9, 10. How many fingers did you use?`],
+        win:[`4 hops! Hop, hop, hop, HOP! The chick jumps into Meg's wing.`]},
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   EASY READER LEVEL 2 — JESS AND THE FISH
+   ================================================================ */
+const JESS = {
+  id:"jess", theme:"easy4", start:"intro", length:"easy", level:2, mins:"5", easy:true,
+  title:"Jess Goes Fishing",
+  cover:"👧⛵🐟", coverBg:"#d3f9f5",
+  blurb:"Jess sails out to sea to catch fish for her hungry cat. What will she find?",
+  helper:{name:"Fluff the cat", icon:"🐱"},
+  runner:"⛵", goal:"🐱",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => [`🐟 Fish: ${st.n.fish||0}`],
+  badges:{rocks:"🦀 Crab Spotter", wreck:"📦 Box Opener"},
+  ending: st => [
+    `Jess gives Fluff six fish. Fluff eats them all up.`,
+    `Then Fluff sits on Jess's lap and purrs and purrs.`,
+    say("Jess","👧",`What a fun day! Shall we go out to sea again tomorrow?`),
+    `Fluff just yawns and shuts her eyes.`
+  ],
+  scenes:{
+    intro:{ name:"A Hungry Cat", art:"👧🐱",
+      story:[
+        `This is Jess. She lives in a little house by the sea.`,
+        `Jess has a cat called Fluff. Fluff is very hungry!`,
+        say("Jess","👧",`Fluff wants 3 fish for lunch and 3 fish for tea. I will go fishing in my boat!`)
+      ],
+      puzzle:{ tag:"Adding",
+        q:`3 fish for lunch and 3 fish for tea. How many fish does Jess need?`,
+        vis: V.big("🐟🐟🐟 + 🐟🐟🐟"),
+        options:["5","6","7"], answer:"6",
+        hints:[`Start at 3 and count on 3 more.`,`3… 4, 5, 6!`],
+        win:[`6 fish! Jess gets her rod and her net, and jumps into her boat.`]},
+      after:[{to:"sea", label:"Sail out to sea ⛵"}]
+    },
+    sea:{ name:"Out at Sea", art:"⛵🌊",
+      story:[
+        `Jess sails out to sea. The wind is fresh and the sun is hot.`,
+        `She looks down into the water. She can see fish swimming past in a long line.`
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`What fish comes next?`,
+        vis: V.big("🐟 🐠 🐟 🐠 🐟 ❓"),
+        options:["🐠 stripy fish","🐟 blue fish","🐡 puffer fish"], answer:"🐠 stripy fish",
+        hints:[`Say it out loud: blue, stripy, blue, stripy, blue…`,`After a blue fish comes a…?`],
+        win:[`Yes! A stripy fish! Jess catches lots of fish with her net. Splash!`, `Where shall Jess fish next?`]},
+      onWin: st => st.n.fish = 4,
+      after:[
+        {to:"rocks", label:"Fish by the rocks 🪨"},
+        {to:"wreck", label:"Fish by the old ship 🚢"}
+      ]
+    },
+    rocks:{ name:"The Rocks", art:"🪨🦀",
+      story:[
+        `Jess sails to the rocks. A big red crab is sitting on a rock.`,
+        `Snap, snap! The crab has 2 big claws. It has 8 legs as well.`
+      ],
+      puzzle:{ tag:"Adding",
+        q:`The crab has 2 claws and 8 legs. How many is that altogether?`,
+        vis: V.big("🦀 2 claws + 8 legs"),
+        options:["9","10","11"], answer:"10",
+        hints:[`Start at 8. Count on 2 more.`,`8… 9, 10!`],
+        win:[`10! The crab waves a claw at Jess, and Jess catches 4 more fish. Now she has 8!`]},
+      onWin: st => st.n.fish = 8,
+      after:[{to:"gull", label:"Sail home ⛵"}]
+    },
+    wreck:{ name:"The Old Ship", art:"🚢📦",
+      story:[
+        `Jess sails to an old ship. It is stuck on the sand.`,
+        `On the ship is a box with a lock. The lock has numbers on it: 2, 4, 6…`,
+        `What number comes next?`
+      ],
+      puzzle:{ tag:"Counting in 2s",
+        q:`2, 4, 6… what comes next?`,
+        vis: V.big("2 · 4 · 6 · ❓"),
+        options:["7","8","10"], answer:"8",
+        hints:[`Count in 2s. Jump over one number each time.`,`2, 4, 6… skip 7… and land on…?`],
+        win:[`8! The box pops open. It is full of… fish food! Jess drops some in the sea, and 4 more fish swim into her net. Now she has 8!`]},
+      onWin: st => st.n.fish = 8,
+      after:[{to:"gull", label:"Sail home ⛵"}]
+    },
+    gull:{ name:"The Cheeky Gull", art:"🐦🐟",
+      story:[
+        `Jess sails back to the shore with her fish.`,
+        `But then a big gull swoops down. Swish! It grabs 2 fish and flies off!`,
+        say("Jess","👧",`Hey! Come back, you cheeky gull!`)
+      ],
+      puzzle:{ tag:"Take away",
+        q:`Jess had 8 fish. The gull took 2. How many fish does she have now?`,
+        vis: V.big("🐟🐟🐟🐟🐟🐟🐟🐟 − 🐟🐟"),
+        options:["5","6","7"], answer:"6",
+        hints:[`Count back 2 from 8.`,`8… 7, 6!`],
+        win:[`6 fish! That is just enough for Fluff. Phew!`]},
+      onWin: st => st.n.fish = 6,
+      after:[{to:"shell", label:"Walk up the beach 🐚"}]
+    },
+    shell:{ name:"On the Beach", art:"🐚🏖️",
+      story:[
+        `On the beach, Jess sees lots of things that start with "sh".`,
+        `Sh is the sound you make when you say ship. Shhh!`
+      ],
+      puzzle:{ tag:"Sounds",
+        q:`Which word STARTS with "sh", like ship?`,
+        options:["🐚 shell","🍟 chips","🐟 fish"], answer:"🐚 shell",
+        hints:[`Fish has "sh" in it… but is it at the start or the end?`,`Say them slowly. Which one begins with "shhh"?`],
+        win:[`Shell! Sh, sh, sh! Jess picks up the shell and runs home to Fluff.`]},
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+
+/* ================================================================
+   EASY READER LEVEL 3 — ZIGGY'S BIG ROAR
+   ================================================================ */
+const ZIGGY = {
+  id:"ziggy", theme:"easy5", start:"intro", length:"easy", level:3, mins:"8", easy:true,
+  title:"Ziggy's Big Roar",
+  cover:"🐲🔊", coverBg:"#e9fac8",
+  blurb:"All the big dragons can roar. But when little Ziggy tries, out comes a tiny squeak! Can you help him find his roar?",
+  helper:{name:"Ziggy", icon:"🐲"},
+  runner:"🐲", goal:"🔊",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => st.items.has("roar") ? ["🔊 A big roar!"] : ["🐲 Ziggy"],
+  badges:{owl:"🦉 Owl's Friend", troll:"🧌 Troll Visitor"},
+  ending: st => [
+    `That night, all the dragons sit together on top of the mountain.`,
+    `"One, two, three!" they shout. Then they all ROAR at the moon, and Ziggy roars the loudest of all.`,
+    say("Ziggy","🐲",`Thank you for helping me. You are my best friend!`),
+    `And from that day on, Ziggy never squeaked again. Well… only when he was tickled.`
+  ],
+  scenes:{
+    intro:{ name:"The Little Dragon", art:"🐲🐉🐉",
+      story:[
+        `High up on a mountain, in a big dark cave, there lives a family of dragons.`,
+        `The smallest dragon is called Ziggy. He is green and spiky, with tiny wings that flap very fast.`,
+        `Every morning, all the big dragons stand at the front of the cave and roar. ROAR! ROAR! The rocks shake and the trees wobble.`,
+        `But when Ziggy opens his mouth, out comes a tiny little squeak.`
+      ],
+      puzzle:{ tag:"Counting in 2s",
+        q:`There are 8 big dragons. Each one roars 2 times. How many roars is that?`,
+        vis: V.big("🐉🐉🐉🐉🐉🐉🐉🐉<br>ROAR! ROAR!"),
+        options:["10","14","16","18"], answer:"16",
+        hints:[`Count in 2s, once for each dragon: 2, 4, 6…`,`2, 4, 6, 8, 10, 12, 14… one more dragon!`],
+        win:[`16 roars! What a noise!`, say("Ziggy","🐲",`I want to roar too. Will you help me? I know two people who might help: the wise old owl, or the troll under the bridge.`)]},
+      after:[
+        {to:"owl", label:"Ask the wise old owl 🦉"},
+        {to:"troll", label:"Ask the troll under the bridge 🧌"}
+      ]
+    },
+    owl:{ name:"The Wise Old Owl", art:"🦉🌳",
+      story:[
+        `The wise old owl lives at the top of the tallest tree in the forest. She has big round glasses and she knows lots of things.`,
+        say("Wise Owl","🦉",`Hoo, hoo! I know how to find a roar. But first, you must answer my riddle.`)
+      ],
+      puzzle:{ tag:"Riddle",
+        q:`"I have a spine, but no bones. I have pages, but no paws. I am full of words, but I cannot talk." What am I?`,
+        options:["📖 a book","🐶 a dog","🌳 a tree","🦴 a bone"], answer:"📖 a book",
+        hints:[`A dog has bones and paws. This thing has none!`,`You are reading one right now…`],
+        win:[`A book! The owl opens a big old book and reads it.`, say("Wise Owl","🦉",`Hoo! It says here: "To find your roar, go to the Echo Cave."`)]},
+      after:[{to:"fly", label:"Fly to the Echo Cave ➜"}]
+    },
+    troll:{ name:"The Troll Under the Bridge", art:"🧌🌉",
+      story:[
+        `The troll lives under a bridge by the river. He is big and hairy, but he is very kind.`,
+        `But the troll is fast asleep! A sign on his door says: <b>Back at 3 o'clock.</b>`,
+        `Ziggy looks at the clock on the bridge. It says 1 o'clock.`
+      ],
+      puzzle:{ tag:"Time",
+        q:`It is 1 o'clock now. The troll will be back at 3 o'clock. How many hours do they have to wait?`,
+        vis: V.big("🕐 ➜ 🕒"),
+        options:["1","2","3","4"], answer:"2",
+        hints:[`Count on from 1 o'clock: 2 o'clock, 3 o'clock.`,`How many hours did you count?`],
+        win:[`2 hours! Ziggy and you play hopscotch until the troll wakes up with a big yawn.`, say("Troll","🧌",`Lost your roar? Go to the Echo Cave. It will help you.`)]},
+      after:[{to:"fly", label:"Fly to the Echo Cave ➜"}]
+    },
+    fly:{ name:"Flap, Flap, Flap!", art:"🐲💨⛰️",
+      story:[
+        `The Echo Cave is on the other side of the mountain. Ziggy's wings are small, so he has to stop and rest.`,
+        `He flaps 10 times, then rests. He flaps 10 more times, then rests. Then he flaps 5 more times, and lands with a bump.`
+      ],
+      puzzle:{ tag:"Adding",
+        q:`10 flaps, then 10 flaps, then 5 flaps. How many flaps is that altogether?`,
+        vis: V.big("💨 10 + 10 + 5"),
+        options:["20","25","15","30"], answer:"25",
+        hints:[`10 and 10 make 20.`,`20 and 5 more makes…?`],
+        win:[`25 flaps! Ziggy is puffed out, but he made it to the Echo Cave.`]},
+      after:[{to:"echo", label:"Go into the cave ➜"}]
+    },
+    echo:{ name:"The Echo Cave", art:"🕳️🔁",
+      story:[
+        `The Echo Cave is dark and cold. When you say something in the cave, it says it back to you. That is called an echo.`,
+        `Ziggy says, "Squeak, squeak, ROAR!" But the echo is a muddle. It goes on and on, in a pattern.`
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`What comes next in the echo?`,
+        vis: `<div class="vbig" style="font-size:24px;letter-spacing:0;font-family:Andika,sans-serif">squeak, squeak, ROAR,<br>squeak, squeak, ROAR,<br>squeak, ❓</div>`,
+        options:["squeak","ROAR","hiss","growl"], answer:"squeak",
+        hints:[`Say it out loud: squeak, squeak, ROAR… squeak, squeak, ROAR…`,`After one squeak, what comes next — another squeak, or a ROAR?`],
+        win:[`Squeak! The pattern is squeak, squeak, ROAR. Ziggy laughs. "I DID say ROAR! It came out of me!"`, `But it was only a little one. He needs to practise.`]},
+      after:[{to:"breathe", label:"Practise breathing 🌬️"}]
+    },
+    breathe:{ name:"A Deep Breath", art:"🌬️🐲",
+      story:[
+        `To roar, you need to take a deep, deep breath. Ziggy fills up his tummy like a big balloon.`,
+        `"Deep" has the "ee" sound in it. Can you hear it? D-ee-p.`
+      ],
+      puzzle:{ tag:"Sounds",
+        q:`Which word has the same "ee" sound as deep?`,
+        options:["🐑 sheep","🚢 ship","🛒 shop","🔺 shape"], answer:"🐑 sheep",
+        hints:[`Say each word slowly. Listen to the sound in the middle.`,`d-EE-p… sh-EE-p!`],
+        win:[`Sheep! Deep and sheep both have "ee". Ziggy takes the deepest breath ever.`]},
+      after:[{to:"roar", label:"Get ready to ROAR! ➜"}]
+    },
+    roar:{ name:"The Big Roar", art:"🐲🔊💥",
+      story:[
+        `Ziggy runs back to the cave. All the big dragons are watching.`,
+        `"I will count in 5s," says Ziggy, "and when I get to 20, I will roar!"`
+      ],
+      puzzle:{ tag:"Counting in 5s",
+        q:`Ziggy counts: 5, 10, 15… What comes next?`,
+        vis: V.big("5 · 10 · 15 · ❓"),
+        options:["16","20","25","30"], answer:"20",
+        hints:[`Counting in 5s means adding 5 each time.`,`15 and 5 more makes…?`],
+        win:[`"…20!" Ziggy opens his mouth and — <b>ROAAAAAR!</b> The rocks shake. The trees wobble. A bird falls out of its nest (but it's fine).`, `All the big dragons cheer!`]},
+      onWin: st => st.items.add("roar"),
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   EASY READER LEVEL 3 — MIA'S MAGIC GARDEN
+   ================================================================ */
+const MIA = {
+  id:"mia", theme:"easy6", start:"intro", length:"easy", level:3, mins:"8", easy:true,
+  title:"Mia's Magic Garden",
+  cover:"👧🌱🌻", coverBg:"#f8e1ff",
+  blurb:"Mia finds a packet of magic seeds. What will grow in her garden? Help her plant, water and wait to find out!",
+  helper:{name:"Mia", icon:"👧"},
+  runner:"🌱", goal:"🌻",
+  ranks:["Super Star Reader","Great Reader","Brave Reader"],
+  bag: st => [`🌱 Seeds: ${st.n.seeds==null?12:st.n.seeds}`],
+  badges:{shed:"🪱 Worm Finder", greenhouse:"🪴 Greenhouse Shopper"},
+  ending: st => [
+    `By the next morning, the magic flower is taller than Mia's house! Its petals are every colour of the rainbow.`,
+    `Birds sit on its leaves. Bees buzz all around it. People come from all over town to see it.`,
+    say("Mia","👧",`I could never have done it without you. Shall we plant the rest of the seeds next week?`),
+    `What do you think will grow next time?`
+  ],
+  scenes:{
+    intro:{ name:"The Magic Seeds", art:"👧📦✨",
+      story:[
+        `Mia is digging in her garden when her spade hits something hard. It is a little tin box!`,
+        `Inside the box is a packet of seeds. They sparkle in the sun. On the packet it says: <b>MAGIC SEEDS. Plant in rows.</b>`,
+        `Mia counts the seeds. There are 12. She wants to plant them in 3 rows, with the same number in each row.`
+      ],
+      puzzle:{ tag:"Sharing",
+        q:`12 seeds shared into 3 rows. How many seeds go in each row?`,
+        vis: V.big("🌱🌱🌱🌱🌱🌱<br>🌱🌱🌱🌱🌱🌱"),
+        options:["3","4","5","6"], answer:"4",
+        hints:[`Share them out one at a time: one in row 1, one in row 2, one in row 3, then start again.`,`3 rows of 4 make 12. Check: 4 + 4 + 4.`],
+        win:[`4 seeds in each row! Mia pushes them into the soil and pats them down.`]},
+      after:[{to:"water", label:"Water the seeds 💧"}]
+    },
+    water:{ name:"Watering Time", art:"🚿💧",
+      story:[
+        `Seeds need water to grow. Mia fills up her watering can. It holds 10 cups of water.`,
+        `She waters the first two rows. Then she looks in the can. She has used 7 cups already!`
+      ],
+      puzzle:{ tag:"Take away",
+        q:`The can holds 10 cups. Mia has used 7. How many cups are left?`,
+        vis: V.big("💧 10 − 7"),
+        options:["2","3","4","17"], answer:"3",
+        hints:[`Count on from 7 to 10.`,`8, 9, 10. How many numbers did you say?`],
+        win:[`3 cups left — just enough for the last row! Now the seeds need something else to help them grow.`, say("Mia","👧",`Shall we look in the shed, or in the greenhouse?`)]},
+      after:[
+        {to:"shed", label:"Look in the shed 🏚️"},
+        {to:"greenhouse", label:"Look in the greenhouse 🪴"}
+      ]
+    },
+    shed:{ name:"The Shed", art:"🏚️🪱",
+      story:[
+        `In the shed, Mia finds a bag of rich, dark soil. And in the soil is a wiggly pink worm!`,
+        say("Worm","🪱",`Hello! I help gardens grow. I'll come with you — if you can solve my word puzzle.`),
+        `"Rain" and "bow" are two small words. Put them together and you get a big word: rainbow!`
+      ],
+      puzzle:{ tag:"Words",
+        q:`Which two small words make the big word "sunflower"?`,
+        options:["sun + flower","sea + flower","fun + flower","sun + power"], answer:"sun + flower",
+        hints:[`Say it slowly: sun… flower.`,`What is hot and yellow in the sky? And what grows in a garden?`],
+        win:[`Sun and flower make sunflower! The worm wriggles into the garden and makes the soil nice and soft.`]},
+      after:[{to:"bees", label:"Back to the garden ➜"}]
+    },
+    greenhouse:{ name:"The Greenhouse", art:"🪴🏪",
+      story:[
+        `Next to the greenhouse, Mr Patel has a little stall that sells plant things.`,
+        `Mia buys a pot for 20p and a bag of plant food for 10p. She gives Mr Patel a 50p coin.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`A pot is 20p. Plant food is 10p. Mia pays with 50p. How much change does she get?`,
+        vis: V.big("🪴 20p + 🧴 10p<br>🪙 50p"),
+        options:["10p","20p","30p","40p"], answer:"20p",
+        hints:[`First add up what Mia buys: 20p + 10p.`,`It costs 30p. Count on from 30 to 50 in tens: 40, 50.`],
+        win:[`20p change! Mia sprinkles the plant food on her seeds. They wiggle!`]},
+      after:[{to:"bees", label:"Back to the garden ➜"}]
+    },
+    bees:{ name:"The Busy Bees", art:"🐝🐝🐝",
+      story:[
+        `The next day, tiny green shoots are poking out of the soil. Four bees come buzzing over to look.`,
+        `One of them is the Queen Bee. She is very important. Mia wants to say hello to her.`,
+        say("Bee","🐝",`Buzz! The Queen has a crown. She is not at the end of the line. And she is right next to bee number 1.`)
+      ],
+      puzzle:{ tag:"Logic",
+        q:`Which bee is the Queen?`,
+        vis: V.row([["1","🐝","–"],["2","🐝","👑"],["3","🐝","👑"],["4","🐝","👑"]]) + V.legend("👑 crown · – no crown"),
+        options:["Bee 1","Bee 2","Bee 3","Bee 4"], answer:"Bee 2",
+        hints:[`Bee 1 has no crown, so it's not her.`,`Which crowned bee is right next to bee 1?`],
+        win:[`Bee 2! The Queen Bee does a little twirl. "Buzz! Your flower will open today. Watch the clock!"`]},
+      after:[{to:"clock", label:"Watch the clock 🕠"}]
+    },
+    clock:{ name:"Watching the Clock", art:"🕠🌷",
+      story:[
+        `The Queen Bee says the magic flower will open at half past 5.`,
+        `Half past means the long hand points down to the 6, and the short hand is halfway between two numbers.`
+      ],
+      puzzle:{ tag:"Time",
+        q:`Which one shows half past 5?`,
+        options:["5:30","5:00","6:30","3:30"], answer:"5:30",
+        hints:[`Half past 5 is 30 minutes after 5 o'clock.`,`Look for a 5 first, and then 30.`],
+        win:[`5:30! At half past 5 exactly, the bud slowly opens… and it keeps on growing!`]},
+      after:[{to:"grow", label:"Watch it grow 🌻"}]
+    },
+    grow:{ name:"Growing and Growing", art:"🌻📏",
+      story:[
+        `Every day the magic flower gets twice as tall!`,
+        `On Monday it was 2 cm. On Tuesday it was 4 cm. On Wednesday it was 8 cm.`
+      ],
+      puzzle:{ tag:"Doubling",
+        q:`If it doubles again, how tall will it be on Thursday?`,
+        vis: V.big("2 → 4 → 8 → ❓"),
+        options:["10","12","14","16"], answer:"16",
+        hints:[`Doubling means adding a number to itself: 2 + 2 = 4, 4 + 4 = 8.`,`8 + 8 = ?`],
+        win:[`16 cm! And by Friday it is 32 cm… and then it goes WHOOSH! up into the sky.`]},
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, SEA, PYRAMID];
 </script>
 
 <!-- ======================= ENGINE ======================= -->
@@ -2570,7 +3061,7 @@ function home(){
   const prog=loadP();
   let h=`<div class="hero"><div class="big">📚✨</div><h1>The Adventure Library</h1><p>Pick a story. You are the hero!</p><button class="installbtn" id="installBtn" onclick="installApp()">📲 Install as an app</button></div>
   <details class="guide"><summary>👋 For grown-ups: how to read these together</summary><div class="gbody">
-    <p><b>Easy readers</b> 🌱 have big, simple words and easy puzzles with three answers, so children who are learning to read can try them by themselves. A 🔊 button reads each page aloud if they get stuck.</p><p>The other stories come in three lengths: quick (about 7 minutes), adventures (about 15) and epic quests (about 30). Every choice changes the path, so each story can be played again a different way. If you stop part-way through, your place is saved.</p>
+    <p><b>Easy readers</b> 🌱 come in three levels: Level 1 is the simplest, Level 3 has longer pages and four answers to choose from. They have big, simple words and easy puzzles with three answers, so children who are learning to read can try them by themselves. A 🔊 button reads each page aloud if they get stuck.</p><p>The other stories come in three lengths: quick (about 7 minutes), adventures (about 15) and epic quests (about 30). Every choice changes the path, so each story can be played again a different way. If you stop part-way through, your place is saved.</p>
     <div class="legend">
       <div class="read" style="margin:14px 0 4px;font-size:17px;padding:26px 14px 4px;box-shadow:none"><p><b>Parchment boxes</b> are the story. Read these aloud.</p>
         <div class="say"><div class="av">🧙‍♂️</div><div class="bub"><div class="who">Speech bubbles</div><div class="tx">These are characters talking. Do the voices!</div></div></div></div>
@@ -2580,16 +3071,29 @@ function home(){
     </div></div></details>
 `;
   const runs=allRuns();
-  const groups=[["easy","🌱 Easy readers","Big, simple words for new readers to read all by themselves · about 3 minutes"],["short","⚡ Quick stories","About 7 minutes · perfect for bedtime"],["medium","📘 Adventures","About 15 minutes"],["long","🏔️ Epic quests","About 30 minutes · your place is saved, so you can stop and carry on later"]];
-  groups.forEach(([len,name,sub])=>{
-    h+=`<div class="sec">${name}</div><div class="secsub">${sub}</div><div class="cardlist">`;
-    STORIES.filter(s=>s.length===len).forEach(s=>{
-      const p=prog[s.id];
-      h+=`<button class="scard" onclick="openStory('${s.id}')">
-        <div class="cov" style="background:${s.coverBg}">${s.cover}</div>
-        <div><div class="t">${s.title}</div><div class="b">${s.blurb}</div>
-        <div class="m"><span>⏱ ~${s.mins} min</span><span>🧩 ${puzzleCount(s)} puzzles</span>${s.easy?`<span class="ertag">🌱 Easy reader</span>`:''}${runs[s.id]&&runs[s.id].st&&runs[s.id].st.chapter>0?`<span class="tag">▶ In progress · Ch ${runs[s.id].st.chapter+1}</span>`:''}${p?`<span class="done">✅ Best: ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
-      </button>`;
+  const inProg=STORIES.filter(s=>runs[s.id]&&runs[s.id].st&&runs[s.id].st.chapter>0);
+  if(inProg.length){
+    h+=`<div class="contstrip"><div class="clab">▶ Carry on reading</div>${inProg.map(s=>`<button class="cbtn" onclick="openStory('${s.id}')"><span class="ci">${Array.from(s.cover)[0]}</span><span><b>${s.title}</b><br><small>Chapter ${runs[s.id].st.chapter+1}</small></span></button>`).join('')}</div>`;
+  }
+  const groups=[["easy","🌱","Easy readers","For new readers to read by themselves"],["short","⚡","Quick","About 7 minutes · 5 puzzles"],["medium","📘","Adventures","About 15 minutes · 10 puzzles"],["long","🏔️","Epic","About 30 minutes · 16 puzzles · your place is saved"]];
+  let tab='short'; try{ tab=localStorage.getItem('adv-tab')||'short'; }catch(e){}
+  h+=`<div class="tabs" role="tablist">${groups.map(([k,ic,name])=>`<button class="tabbtn ${k===tab?'on':''}" onclick="setTab('${k}')"><span class="ti">${ic}</span>${name}</button>`).join('')}</div>`;
+  groups.forEach(([len,ic,name,sub])=>{
+    h+=`<div class="tabpane" data-tab="${len}" style="${len===tab?'':'display:none'}"><div class="secsub">${sub}</div>`;
+    const list=STORIES.filter(s=>s.length===len);
+    const levels = len==='easy' ? [...new Set(list.map(s=>s.level))] : [null];
+    levels.forEach(lv=>{
+      if(lv) h+=`<div class="lvhead">Level ${lv} <span>${({1:'· short words, 4 puzzles',2:'· longer sentences, 5 puzzles',3:'· longer pages, 6 puzzles'})[lv]||''}</span></div>`;
+      h+=`<div class="cardlist">`;
+      list.filter(s=>!lv||s.level===lv).forEach(s=>{
+        const p=prog[s.id]; const r=runs[s.id]&&runs[s.id].st&&runs[s.id].st.chapter>0;
+        h+=`<button class="scard" onclick="openStory('${s.id}')">
+          <div class="cov" style="background:${s.coverBg}">${s.cover}</div>
+          <div class="sbody"><div class="t">${s.title}</div><div class="b">${s.blurb}</div>
+          <div class="m">${s.easy?`<span class="ertag">🌱 Level ${s.level}</span>`:''}<span>⏱ ${s.mins} min</span>${r?`<span class="tag">▶ Ch ${runs[s.id].st.chapter+1}</span>`:''}${p?`<span class="done">✅ ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
+        </button>`;
+      });
+      h+=`</div>`;
     });
     h+=`</div>`;
   });
@@ -2597,12 +3101,17 @@ function home(){
   app.innerHTML=h; window.scrollTo(0,0);
 }
 
+function setTab(k){
+  try{ localStorage.setItem('adv-tab',k); }catch(e){}
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('on', b.getAttribute('onclick')===`setTab('${k}')`));
+  document.querySelectorAll('.tabpane').forEach(p=>p.style.display = p.dataset.tab===k ? '' : 'none');
+}
 /* ---------- STORY COVER ---------- */
 function openStory(id){
   S=STORIES.find(s=>s.id===id); document.body.dataset.theme=S.theme; document.body.classList.toggle('easy', !!S.easy);
   app.innerHTML=`<div class="topbar"><button class="iconbtn" onclick="home()">🏠 <span style="font-size:15px">Library</span></button></div>
   <div class="cover"><div class="art">${S.cover}</div><h1>${S.title}</h1><div class="bl">${S.blurb}</div>
-    <div class="meta"><span>⏱ About ${S.mins} minutes</span><span>🧩 ${puzzleCount(S)} puzzles</span><span>🔀 Different paths</span>${S.easy?`<span class="ertag">🌱 Easy reader — read it yourself!</span>`:''}</div>
+    <div class="meta"><span>⏱ About ${S.mins} minutes</span><span>🧩 ${puzzleCount(S)} puzzles</span><span>🔀 Different paths</span>${S.easy?`<span class="ertag">🌱 Easy reader · Level ${S.level} — read it yourself!</span>`:''}</div>
     <div class="helperbox"><div class="av">${S.helper.icon}</div><div><b>Your helper: ${S.helper.name}</b><br>If you get a puzzle wrong, ${S.helper.name.split(' ')[0]} will give you a hint.</div></div>
   </div>
   <div class="choose">${(()=>{
@@ -2707,7 +3216,7 @@ function puzzleHTML(p){
   return `<div class="puz">
     <div class="puzhead"><span class="l">🧩 Puzzle · ${p.tag}</span><span class="r">${S.easy?"Your<br>turn!":"Solve it<br>together"}</span></div>
     <div class="puzbody"><div class="qrow"><div class="q">${p.q}</div>${hearBtn()}</div>${vis}
-      <div class="opts">${shown.map((o,i)=>`<button class="opt" onclick="answer(${i},this)">${o}</button>`).join('')}</div>
+      <div class="opts ${p.options.length===4?'four':''}">${shown.map((o,i)=>`<button class="opt" onclick="answer(${i},this)">${o}</button>`).join('')}</div>
       <div id="fb"></div>
     </div></div>`;
 }

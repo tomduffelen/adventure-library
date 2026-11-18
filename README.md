@@ -2,7 +2,7 @@
 
 Choose-your-path puzzle adventures for young explorers — plus easy readers for children learning to read.
 
-- **🌱 Easy readers** (about 3 min): big, simple text, 3-answer puzzles, and a 🔊 "Hear it" button.
+- **🌱 Easy readers** in three levels (Level 1 simplest → Level 3 longer pages, 6 puzzles): big, simple text, and a 🔊 "Hear it" button.
 - **⚡ Quick stories** (about 7 min, 5 puzzles)
 - **📘 Adventures** (about 15 min, 10 puzzles)
 - **🏔️ Epic quests** (about 30 min, 16 puzzles, place saved automatically)
