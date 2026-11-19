@@ -37,6 +37,7 @@ body[data-theme=easy5]{--bg1:#4f7a12;--bg2:#1a2a05;--accent:#5c940d;--accent2:#3
 body[data-theme=easy6]{--bg1:#8b3aa8;--bg2:#2e0d3b;--accent:#ae3ec9;--accent2:#862e9c;--soft:#f8f0fc;--cell:#f3d9fa}
 body[data-theme=tower]{--bg1:#2b3a8f;--bg2:#0d1338;--accent:#4263eb;--accent2:#364fc7;--soft:#edf2ff;--cell:#dbe4ff}
 body[data-theme=robot]{--bg1:#1f4a3a;--bg2:#08180f;--accent:#2f9e44;--accent2:#237032;--soft:#ebfbee;--cell:#1b2f4a}
+body[data-theme=giant]{--bg1:#5c6b14;--bg2:#1e2405;--accent:#74a00f;--accent2:#567a08;--soft:#f4fce3;--cell:#e9fac8}
 body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -3474,7 +3475,248 @@ const BOLT = {
   }
 };
 
-const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, SEA, PYRAMID];
+
+/* ================================================================
+   ADVENTURE — GUSTY THE GIANT'S GREAT BIG PONG
+   ================================================================ */
+const GUSTY = {
+  id:"gusty", theme:"giant", start:"village", length:"medium", mins:"15",
+  title:"Gusty the Giant's Great Big Pong",
+  cover:"🧌💨🩲", coverBg:"#f0f7d4",
+  blurb:"A rude, stinky giant lives on the hill. He blows the village roofs off with his farts, shows everyone his bottom, and calls people silly names. Somebody has to go up there…",
+  helper:{name:"Peggy the pigeon", icon:"🐦"},
+  runner:"🧍", goal:"🧌",
+  ranks:["Champion Pong-Buster","Expert Stink Detective","Brave Nose-Holder"],
+  bag: st => {
+    const out=["📎 Clothes peg (on your nose)"];
+    if (st.items.has("soap")) out.push("🧼 Giant soap");
+    return out;
+  },
+  badges:{beanstalk:"🌱 Beanstalk Climber", road:"👣 Footprint Follower", manners:"🫙 Rude-Word Jar Keeper", cook:"🥕 Giant Chef"},
+  ending: st => [
+    `From that day on, the village has a new rule. Gusty can do as many farts as he likes — but only on Saturday mornings, and only in the big empty field behind the hill. The villagers call it Parp Field.`,
+    `Every Saturday, the whole village sits on the hill with their clothes pegs on and gives him marks out of ten. Last week he did one so loud it set off a car alarm three villages away. Ten out of ten.`,
+    say("Gusty","🧌",`You're not bad, pipsqueak. For a tiny little person with a face like a squashed strawberry.`),
+    `Then he turns round, wiggles his enormous bottom at you, and laughs so hard he does an accidental PARP.`,
+    `Some things never change.`
+  ],
+  scenes:{
+    village:{ name:"The Stinkiest Village in the World", art:"🏘️💨🤢",
+      story:[
+        `Little Puddleby is the nicest village in the world. Or it WAS — until Gusty the Giant moved onto the hill.`,
+        `Gusty is as tall as a church, as wide as a bus, and he has NEVER had a bath. Not once. Not ever.`,
+        `Every morning he does an enormous fart. <b>PAAAAARRRRP!</b> It's so big it blows the roofs off the houses. Then the smell rolls down the hill like a big green fog, and all the flowers droop.`,
+        `This morning, you're in the village square when a pigeon lands on your head. She has a clothes peg on her beak.`,
+        say("Peggy the pigeon","🐦",`Thank goodness you're here! Gusty did a really bad one this morning. It blew 3 roofs off on every street. There are 6 streets in Puddleby! The builders have already fixed 7 roofs.`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`3 roofs blew off on each of 6 streets. The builders have fixed 7. How many roofs are still missing?`,
+        vis: V.big("🏠💨 3 roofs × 6 streets<br>🔨 7 fixed"),
+        options:["11","18","25","9","12","16"], answer:"11",
+        hints:[`First, how many roofs blew off? 6 lots of 3.`,`18 roofs blew off. The builders fixed 7.`,`18 − 7 = ?`],
+        win:[
+          `11 roofs still missing! The mayor is sitting in his kitchen, and he can see the sky through the ceiling.`,
+          say("Peggy the pigeon","🐦",`And here's the worst bit. The SMELL is coming!`)
+        ]},
+      after:[{to:"smell", label:"Sniff the air 👃"}]
+    },
+    smell:{ name:"The Green Fog", art:"🌫️🍞",
+      story:[
+        `A wobbly green cloud is creeping down the high street. It smells of old cabbage, sweaty socks and egg sandwiches left in the sun.`,
+        say("Peggy the pigeon","🐦",`The fog moves 4 metres every minute. The bakery is 36 metres away. If it gets there, every loaf of bread will taste of FART!`)
+      ],
+      puzzle:{ tag:"Speed",
+        q:`The stink moves 4 metres every minute. The bakery is 36 metres away. How many minutes until it reaches the bakery?`,
+        vis: V.big("💨 4 m a minute<br>🥖 36 m away"),
+        options:["9","8","32","40","10","6"], answer:"9",
+        hints:[`How many 4s make 36? Count in 4s: 4, 8, 12…`,`4, 8, 12, 16, 20, 24, 28, 32, 36. How many jumps?`],
+        win:[
+          `9 minutes! The baker slams the door and stuffs a tea towel under it, just in time.`,
+          `You clip a clothes peg on your nose. Somebody has to go up the hill and sort out this giant.`,
+          say("Peggy the pigeon","🐦",`You can climb the beanstalk at the back of the hill — or follow his giant footprints up the Bumpy Road.`)
+        ]},
+      after:[
+        {to:"beanstalk", label:"Climb the beanstalk 🌱", sub:"It grew out of one of his beans…"},
+        {to:"road", label:"Follow the Bumpy Road 👣", sub:"Mind the giant footprints"}
+      ]
+    },
+    beanstalk:{ name:"The Rumbling Beanstalk", art:"🌱🌱💨",
+      story:[
+        `The beanstalk grew from a bean that Gusty dropped. It's enormous, and it wobbles every time he farts.`,
+        `As you climb, you can hear him at the top. He farts in a pattern, over and over:`,
+        `<b>PARP, PARP, POOT. PARP, PARP, POOT. PARP, PARP, POOT…</b>`,
+        say("Peggy the pigeon","🐦",`Hold on tight when there's a POOT. The POOTs are the wobbly ones!`)
+      ],
+      puzzle:{ tag:"Pattern",
+        q:`The farts go PARP, PARP, POOT, over and over. What will the 14th fart be?`,
+        vis: V.big("1 PARP · 2 PARP · 3 POOT<br>4 PARP · 5 PARP · 6 POOT …"),
+        options:["PARP","POOT","TOOT","PFFFT","BRRRP","Silence"], answer:"PARP",
+        hints:[`Every 3rd fart is a POOT: the 3rd, the 6th, the 9th…`,`Keep counting in 3s: 3, 6, 9, 12. So the 12th is a POOT.`,`Then the 13th and 14th are…?`],
+        win:[`PARP! You hold on through the POOTs and climb safely to the top. Nailed to a tree is a sign in giant handwriting.`]},
+      after:[{to:"beanstalk2", label:"Read the sign 🪧"}]
+    },
+    beanstalk2:{ name:"Gusty's Sign", art:"🪧❓",
+      story:[
+        `Gusty has written his sign in a secret code: A is 1, B is 2, C is 3, and so on. It says: <b>KEEP OUT, YOU BIG…</b> and then some numbers.`
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`A = 1, B = 2, C = 3… What rude word has Gusty written?`,
+        vis: V.code("2 · 21 · 13") + V.a1z26(),
+        options:["BUM","BUN","GUM","BUG","HUM","MUM"], answer:"BUM",
+        hints:[`Find 2 in the key. Then 21, then 13.`,`2 is B and 21 is U…`],
+        win:[`BUM! "KEEP OUT, YOU BIG BUM." Very rude. Peggy giggles so much she falls off your shoulder.`]},
+      after:[{to:"gusty", label:"Go and find Gusty 🧌"}]
+    },
+    road:{ name:"The Bumpy Road", art:"👣👣👣",
+      story:[
+        `The Bumpy Road is bumpy because it's covered in Gusty's footprints. Each one is a huge muddy hole.`,
+        say("Peggy the pigeon","🐦",`Each footprint is 3 metres long, and I can count 14 of them in a row. How far has he walked?`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`14 footprints, each 3 metres long. How far is that?`,
+        vis: V.big("👣 × 14 · 3 m each"),
+        options:["42","17","11","36","44","28"], answer:"42",
+        hints:[`10 footprints would be 30 metres.`,`That leaves 4 more footprints: 4 × 3 = 12.`,`30 + 12 = ?`],
+        win:[`42 metres! At the end of the footprints is a washing line with six pairs of ENORMOUS underpants flapping on it.`]},
+      after:[{to:"road2", label:"Look at the underpants 🩲"}]
+    },
+    road2:{ name:"The Giant Underpants", art:"🩲🩲🩲",
+      story:[
+        `Each pair of pants is the size of a tent. Peggy the pigeon flaps along the washing line, holding her nose.`,
+        say("Peggy the pigeon","🐦",`Only one pair belongs to Gusty. His are spotty, they've got a hole in the bum, and they are NOT hanging next to any stripy ones.`)
+      ],
+      puzzle:{ tag:"Detective logic",
+        q:`Which pants are Gusty's?<ul><li>Spotty.</li><li>A hole in the bum.</li><li>NOT next to a stripy pair.</li></ul>`,
+        vis: V.cards([
+          {n:"1",icon:"🩲",lines:["stripy","no hole"]},
+          {n:"2",icon:"🩲",lines:["spotty","no hole"]},
+          {n:"3",icon:"🩲",lines:["stripy","no hole"]},
+          {n:"4",icon:"🩲",lines:["spotty","🕳️ hole"]},
+          {n:"5",icon:"🩲",lines:["plain","🕳️ hole"]},
+          {n:"6",icon:"🩲",lines:["spotty","🕳️ hole"]}
+        ]) + V.legend("They hang in a row, 1 to 6"),
+        options:["Pants 1","Pants 2","Pants 3","Pants 4","Pants 5","Pants 6"], answer:"Pants 6",
+        hints:[`Which pants are spotty? Cross out the rest.`,`2, 4 and 6 are spotty. Which of those have a hole?`,`4 and 6 both have holes. Which one is next to a stripy pair?`],
+        win:[`Pants 6! And from the cave next door comes a booming voice: "OI! WHO'S LOOKING AT MY UNDIES?"`]},
+      after:[{to:"gusty", label:"Peek into the cave 🧌"}]
+    },
+    gusty:{ name:"Meet Gusty", art:"🧌💨",
+      story:[
+        `Out of the cave stomps Gusty the Giant. His hair is full of twigs, his toenails are green, and the pong is SO bad your eyebrows curl up.`,
+        say("Gusty","🧌",`Well, well, well! A tiny pipsqueak with a face like a squashed strawberry! What do YOU want?`),
+        `Before you can answer, Gusty turns round, pulls down his trousers, and wiggles his huge bare bottom at you.`,
+        say("Gusty","🧌",`HA! Have a good look at THAT, pongy pants! I bet you've never seen a bottom this magnificent!`),
+        `It's covered in big red spots. Peggy the pigeon faints.`
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`Gusty's bottom has 5 rows of spots, with 7 spots in each row. There are also 3 extra spots on one cheek. How many spots altogether?`,
+        vis: V.big("🔴 × 7 in each row · 5 rows<br>+ 3 extra"),
+        options:["38","35","15","45","40","12"], answer:"38",
+        hints:[`First, 5 rows of 7: 7, 14, 21, 28, 35.`,`35 spots in the rows. Now add the 3 extra.`],
+        win:[
+          `38 spots! "How did you know?" gasps Gusty, pulling his trousers back up. "Nobody's ever counted them before."`,
+          `For a moment he looks a little bit sad.`,
+          say("Gusty","🧌",`Nobody ever comes to visit me. Everybody runs away holding their noses.`)
+        ]},
+      after:[{to:"fridge", label:"Ask why he's SO stinky 🤢"}]
+    },
+    fridge:{ name:"The Giant's Fridge", art:"🥫🥫🥫",
+      story:[
+        `Gusty opens his fridge. It's as big as a garage — and it's full of nothing but tins of baked beans.`,
+        say("Gusty","🧌",`Beans for breakfast, beans for lunch, beans for tea! I eat 12 tins every single day. Yum, yum, PARP!`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`Gusty eats 12 tins of beans every day. How many tins does he eat in a week (7 days)?`,
+        vis: V.big("🥫 × 12 every day<br>📅 7 days"),
+        options:["84","19","72","96","70","74"], answer:"84",
+        hints:[`10 tins a day for 7 days is 70.`,`2 more tins a day for 7 days is 14.`,`70 + 14 = ?`],
+        win:[
+          `84 tins a week! No wonder he's so windy.`,
+          say("Peggy the pigeon","🐦",`Right. Two things need fixing: his MANNERS and his DINNER. Which first?`)
+        ]},
+      after:[
+        {to:"manners", label:"Teach him some manners 🫙", sub:"No more rude names!"},
+        {to:"cook", label:"Cook him something new 🥕", sub:"Anything but beans!"}
+      ]
+    },
+    manners:{ name:"The Rude-Word Jar", art:"🫙🪙",
+      story:[
+        `You find an empty jam jar and write <b>RUDE-WORD JAR</b> on it.`,
+        say("Peggy the pigeon","🐦",`Every time Gusty says something rude, he puts 5p in the jar!`),
+        say("Gusty","🧌",`That's not fair, you silly sausage! Oops. Oh, BUM. Oops! Oh, PIFFLE-POO…`),
+        `By the end of the day, Gusty has said 13 rude words.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`Each rude word costs 5p. Gusty said 13 rude words. How much money is in the jar?`,
+        vis: V.big("🫙 5p × 13"),
+        options:["65p","18p","60p","£6.50","55p","70p"], answer:"65p",
+        hints:[`10 rude words would be 50p.`,`3 more rude words is 3 × 5p = 15p.`,`50p + 15p = ?`],
+        win:[`65p! Gusty spends it on a huge bar of soap. 🧼 "I suppose I could try being a bit… nicer," he mumbles.`]},
+      onWin: st => st.items.add("soap"),
+      after:[{to:"bath", label:"Run him a bath 🛁"}]
+    },
+    cook:{ name:"Gusty's New Dinner", art:"🥕🍲",
+      story:[
+        `You decide to cook Gusty something that ISN'T beans. You find 24 giant carrots in his garden.`,
+        say("Peggy the pigeon","🐦",`Use three quarters of the carrots for soup, and the rest for a carrot cake!`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`There are 24 carrots. Three quarters go in the soup. How many are left for the cake?`,
+        vis: V.big("🥕 × 24"),
+        options:["6","18","8","12","4","3"], answer:"6",
+        hints:[`One quarter of 24 is 6. (Share 24 into 4 groups.)`,`Three quarters is 18 carrots for the soup.`,`24 − 18 = ?`],
+        win:[`6 carrots for the cake! Gusty tries the soup. "Hmm… that's actually DELICIOUS," he says. He only does one very small toot afterwards. Then he finds a bar of soap at the back of a cupboard. 🧼`]},
+      onWin: st => st.items.add("soap"),
+      after:[{to:"bath", label:"Run him a bath 🛁"}]
+    },
+    bath:{ name:"The First Bath Ever", art:"🛁🫧",
+      story:[
+        `Gusty has never had a bath, so his bath is an old swimming pool full of leaves. It takes 100 buckets of water to fill.`,
+        `The villagers have already poured in 37 buckets. Now they're carrying the rest up the hill on a cart, which holds 9 buckets each trip.`
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`The bath needs 100 buckets. 37 are already in. The cart carries 9 buckets each trip. How many more trips to fill the bath?`,
+        vis: V.big("🪣 100 needed · 37 in<br>🛒 9 per trip"),
+        options:["7","6","8","63","9","10"], answer:"7",
+        hints:[`First, how many more buckets are needed? 100 − 37.`,`63 more buckets. How many 9s make 63?`,`Count in 9s: 9, 18, 27, 36, 45, 54, 63…`],
+        win:[`7 trips! Gusty climbs in with a SPLOOSH. A wave of muddy water sweeps three sheep down the hill (they're fine). The water turns brown, then grey, then green — and then, at last, clear.`]},
+      after:[{to:"meter", label:"Check the Pong-o-Meter 📟"}]
+    },
+    meter:{ name:"The Pong-o-Meter", art:"📟👃",
+      story:[
+        `The mayor has a machine called the Pong-o-Meter. It measures smells in Pongs. Zero means you can't smell anything. Minus numbers mean it smells NICE!`,
+        `Before the bath, Gusty measured 8 Pongs. The bath makes it fall by 11. Then he sneaks one tiny tin of beans, and it rises by 2.`
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`Start at 8 Pongs. Fall 11, then rise 2. What does the Pong-o-Meter say now?`,
+        vis: V.hline(-8,8) + V.legend("🌸 smells nice ← 0 → stinky 🤢"),
+        options:["−1","1","−3","21","3","−5"], answer:"−1",
+        hints:[`Falling 8 takes you to 0. You still have 3 more to fall.`,`0 down 3 is −3. Now rise 2.`,`−3, −2, −1…`],
+        win:[`Minus 1 Pong — he smells NICE! Like soap and carrot cake. The villagers take their pegs off for the first time in a year and cheer.`]},
+      after:[{to:"party", label:"Go to the party 🎉"}]
+    },
+    party:{ name:"The Welcome Party", art:"🎉🧌🏘️",
+      story:[
+        `That evening, the village throws a party for Gusty. He's never been to a party before. He's so happy he goes pink.`,
+        say("The Mayor","🎩",`Gusty, we'd like to make you a special cake. What's your favourite food?`),
+        say("Gusty","🧌",`Ooh, that's easy. It's the thing I used to eat 12 tins of every day!`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What did Gusty eat 12 tins of every day?`,
+        vis: V.big("🥫 ❓"),
+        options:["Baked beans","Peas","Custard","Sprouts","Cabbage","Socks"], answer:"Baked beans",
+        hints:[`Think back to when Gusty opened his giant fridge…`,`They're small, orange and come in tomato sauce. They make you VERY windy!`],
+        win:[
+          `"BAKED BEANS!" everybody groans.`,
+          `So the baker makes a giant cake shaped like a tin of beans — but with no beans in it. Gusty eats the whole thing in one bite.`
+        ]},
+      after:[{to:"end", label:"The end… PARP! 💨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, GUSTY, SEA, PYRAMID];
 </script>
 
 <!-- ======================= ENGINE ======================= -->
@@ -3610,7 +3852,7 @@ const SHORT={"Wizard Bramble":"Bramble","Captain Barnacle Bess":"Captain Bess","
  "Station Guard":"the guard","The Chief of Space":"the Chief of Space","The Museum Director":"the museum director","Ferry Troll":"the troll",
  "Coconut Stall Keeper":"the stall keeper","Zib's Dad":"Zib's dad","Wise Owl":"the owl","Troll":"the troll","T-Rex":"the T-Rex","Hen":"the hen",
  "Pig":"the pig","Cat":"the cat","Little dog":"the little dog","Little chick":"the little chick","Mouse":"the mouse","Duck":"the duck","Worm":"the worm",
- "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa"};
+ "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa","Peggy the pigeon":"Peggy"};
 const VERB={"Polly":"squawks","BLIP":"beeps","Station Guard":"beeps","Mortimer the Mouse":"squeaks","Captain Wisp":"writes"};
 function bookSay(b, tag){
   let t=b.text.replace(/"([^"]*)"/g,'‘$1’');
