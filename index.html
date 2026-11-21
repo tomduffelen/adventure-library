@@ -38,6 +38,8 @@ body[data-theme=easy6]{--bg1:#8b3aa8;--bg2:#2e0d3b;--accent:#ae3ec9;--accent2:#8
 body[data-theme=tower]{--bg1:#2b3a8f;--bg2:#0d1338;--accent:#4263eb;--accent2:#364fc7;--soft:#edf2ff;--cell:#dbe4ff}
 body[data-theme=robot]{--bg1:#1f4a3a;--bg2:#08180f;--accent:#2f9e44;--accent2:#237032;--soft:#ebfbee;--cell:#1b2f4a}
 body[data-theme=giant]{--bg1:#5c6b14;--bg2:#1e2405;--accent:#74a00f;--accent2:#567a08;--soft:#f4fce3;--cell:#e9fac8}
+body[data-theme=dragon]{--bg1:#0b6e4f;--bg2:#03251a;--accent:#12b886;--accent2:#087f5b;--soft:#e6fcf5;--cell:#c3fae8}
+body[data-theme=loo]{--bg1:#6b5a12;--bg2:#241d03;--accent:#d4a20b;--accent2:#9a7506;--soft:#fff9db;--cell:#d0ebff}
 body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -273,6 +275,9 @@ body.easy .btn{font-size:24px}
 .scard .m{margin-top:6px;gap:8px;font-size:12px}
 .sbody{min-width:0}
 .backbtn{display:inline-flex;align-items:center;gap:4px;border:none;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:800 14px 'Nunito';padding:7px 14px;margin:0 0 2px;cursor:pointer}
+.rating{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#e03131;color:#fff;font:900 11px 'Nunito';letter-spacing:-.3px;box-shadow:0 0 0 2px #fff,0 0 0 3px #e03131}
+.rating.big{width:38px;height:38px;font-size:15px;flex:0 0 38px}
+.ratingline{display:flex;gap:10px;align-items:center;text-align:left;font-size:13.5px;line-height:1.35;color:#5c5470;margin:0 4px 12px}
 .resumebox{background:#fff;border:3px solid #ffd23f;border-radius:16px;padding:12px 14px;margin:0 0 14px;font-size:17px;line-height:1.5;color:var(--ui)}
 .installbtn{margin:14px auto 0;display:none;background:#ffd23f;color:#3a2a00;border:none;border-radius:99px;padding:10px 18px;font:800 16px 'Nunito';cursor:pointer;box-shadow:0 4px 0 #c99b00}
 .foot{color:rgba(255,255,255,.55);text-align:center;font-size:13px;margin-top:26px}
@@ -3481,6 +3486,7 @@ const BOLT = {
    ================================================================ */
 const GUSTY = {
   id:"gusty", theme:"giant", start:"village", length:"medium", mins:"15",
+  rating:{age:"9+", reason:"Contains farts, bare bottoms and very bad manners."},
   title:"Gusty the Giant's Great Big Pong",
   cover:"🧌💨🩲", coverBg:"#f0f7d4",
   blurb:"A rude, stinky giant lives on the hill. He blows the village roofs off with his farts, shows everyone his bottom, and calls people silly names. Somebody has to go up there…",
@@ -3716,7 +3722,436 @@ const GUSTY = {
   }
 };
 
-const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, GUSTY, SEA, PYRAMID];
+
+/* ================================================================
+   RUDE ADVENTURE — BURPINDA THE BOGEY DRAGON
+   ================================================================ */
+const BURPINDA = {
+  id:"burpinda", theme:"dragon", start:"village", length:"medium", mins:"15",
+  rating:{age:"9+", reason:"Contains burps, bogeys and flying snot."},
+  title:"Burpinda the Bogey Dragon",
+  cover:"🐲🤧💚", coverBg:"#e6fcf5",
+  blurb:"A grumpy dragon is burping green fire and flicking enormous bogeys at the village. Somebody needs to find out why — and fast.",
+  helper:{name:"Tilly the toad", icon:"🐸"},
+  runner:"🧒", goal:"🐲",
+  ranks:["Supreme Snot Stopper","Expert Bogey Buster","Brave Tissue Carrier"],
+  bag: st => {
+    const out=["🧻 Tissues"];
+    if (st.items.has("pepper")) out.push("🌶️ Pepper");
+    return out;
+  },
+  badges:{swamp:"🐸 Swamp Squelcher", bridge:"🌉 Snot Bridge Crosser", kitchen:"🫙 Pepper Pincher", market:"🛒 Market Shopper"},
+  ending: st => [
+    `That night, if you look up at the moon, you can see a small green blob stuck to it. Scientists all over the world are very confused.`,
+    `Burpinda still burps, of course. But now she says "pardon me" afterwards — usually.`,
+    say("Burpinda","🐲",`Thanks, wart-face. I mean… thanks, friend. Want a bogey? Only joking. HA!`),
+    `She does one last enormous burp, and it comes out as a perfect smoke ring shaped like a heart.`
+  ],
+  scenes:{
+    village:{ name:"Green Fire!", art:"🏘️🔥💚",
+      story:[
+        `Up on Snotty Crag lives a dragon called Burpinda. Every few minutes she does an enormous BURP, and a ball of slimy green fire shoots out and sets the village hedges on fire.`,
+        `Worse than that, she picks her nose. Then she flicks the bogeys down the hill. Some of them are as big as footballs.`,
+        `A little toad in a raincoat hops up to you.`,
+        say("Tilly the toad","🐸",`Hello! I'm Tilly, and I've been timing her! She burps every 4 minutes, as regular as a clock. Between 9 o'clock and 10 o'clock, how many burps is that?`)
+      ],
+      puzzle:{ tag:"Time",
+        q:`Burpinda burps every 4 minutes. How many burps does she do in one hour (60 minutes)?`,
+        vis: V.big("🤢 BURRRP every 4 minutes<br>⏱️ 60 minutes"),
+        options:["15","14","16","40","12","24"], answer:"15",
+        hints:[`How many 4s make 60?`,`10 lots of 4 is 40. You still need 20 more — how many 4s is that?`,`10 + 5 = ?`],
+        win:[`15 burps an hour! And right on time — BUUUURRRRP! — a green fireball whooshes over your head.`]},
+      after:[{to:"bogeys", label:"Duck! 🙈"}]
+    },
+    bogeys:{ name:"Bogey Rain", art:"💚💚💚",
+      story:[
+        `SPLAT! SPLAT! SPLAT! Bogeys are raining down on the village.`,
+        say("Tilly the toad","🐸",`This morning, 3 bogeys hit the church. Twice as many hit the school. And half as many as the school hit the mayor — right in his ear!`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`3 bogeys hit the church. Twice as many hit the school. Half as many as the school hit the mayor. How many bogeys altogether?`,
+        vis: V.big("⛪ 3 · 🏫 double · 🎩 half of the school"),
+        options:["12","9","11","15","18","6"], answer:"12",
+        hints:[`Twice as many as 3 is 6. That's the school.`,`Half of the school's 6 is 3. That's the mayor.`,`3 + 6 + 3 = ?`],
+        win:[
+          `12 bogeys! The mayor is still trying to get one out of his ear.`,
+          say("Tilly the toad","🐸",`We'll have to go up to Snotty Crag. We can squelch through the Slime Swamp — or cross the wobbly Snot Bridge.`)
+        ]},
+      after:[
+        {to:"swamp", label:"Squelch through the Slime Swamp 🐸", sub:"Wellies on!"},
+        {to:"bridge", label:"Cross the Snot Bridge 🌉", sub:"It's VERY wobbly"}
+      ]
+    },
+    swamp:{ name:"The Slime Swamp", art:"🌿🐸🦟",
+      story:[
+        `The Slime Swamp is full of green, gloopy puddles that go BLORP. Tilly knows the way.`,
+        say("Tilly the toad","🐸",`Follow me! RIGHT 2, UP 3, LEFT 1, UP 1. Don't step in the slime!`)
+      ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🧒 (that's you). Follow Tilly's directions. Where do you end up?`,
+        grid:["🌳 🐸 🍄 . 🦟","🪨 . . 🐍 .",". 🌿 . 🌿 🐌","🌿 . . 🌿 .","🧒 . . 🌿 🪨"],
+        start:"🧒", moves:[["R",2],["U",3],["L",1],["U",1]],
+        options:["🐸 Giant frog","🍄 Toadstool","🐍 Snake","🐌 Snail","🦟 Mosquito","🌳 Tree"], answer:"🐸 Giant frog",
+        hints:[`Right 2 along the bottom, then up 3.`,`Now left 1, then up 1 to the top row.`],
+        win:[`A giant frog — Tilly's grandad! "Burpinda? She's been grumpy all week," he croaks. "Mind the slime pools on your way up."`]},
+      after:[{to:"swamp2", label:"Head for the slime pools ➜"}]
+    },
+    swamp2:{ name:"The Slime Pools", art:"🟢🟢🟢",
+      story:[
+        `The slime pools get deeper and deeper as you climb. Grandad Frog has measured them all.`,
+        say("Tilly the toad","🐸",`The first pool is −2 metres deep, the next is −5, then −8. The one after that is too deep to swim — if we know how deep, we can go round it!`)
+      ],
+      puzzle:{ tag:"Minus numbers",
+        q:`The slime pools are −2, −5, −8… How deep is the next one?`,
+        vis: V.big("−2 → −5 → −8 → ❓"),
+        options:["−11","−10","−13","−9","−14","11"], answer:"−11",
+        hints:[`How much deeper does each pool get?`,`Each pool is 3 metres deeper. −8 and 3 metres deeper is…?`],
+        win:[`−11 metres! You go the long way round, and arrive at the mouth of Burpinda's cave.`]},
+      after:[{to:"meet", label:"Peek into the cave 🐲"}]
+    },
+    bridge:{ name:"The Snot Bridge", art:"🌉💚",
+      story:[
+        `The Snot Bridge is made of old rope and dried-up bogeys. It's very crunchy and very wobbly. A sign says: <b>MAXIMUM WEIGHT 50 KG.</b>`,
+        `You weigh 23 kg. Your backpack weighs 9 kg. And you want to bring boxes of tissues for Burpinda — each box weighs 3 kg.`
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`The bridge holds 50 kg. You weigh 23 kg and your backpack weighs 9 kg. How many 3 kg tissue boxes can you carry?`,
+        vis: V.big("🌉 50 kg max<br>🧒 23 + 🎒 9 + 🧻 3 each"),
+        options:["6","5","7","18","9","4"], answer:"6",
+        hints:[`You and your backpack weigh 23 + 9 = 32 kg.`,`50 − 32 = 18 kg left for tissues.`,`How many 3s make 18?`],
+        win:[`6 boxes of tissues! The bridge creaks and crunches… but holds. On the other side, a riddle is carved into a rock.`]},
+      after:[{to:"bridge2", label:"Read the riddle 🪨"}]
+    },
+    bridge2:{ name:"The Riddle Rock", art:"🪨❓",
+      story:[ `Tilly reads the riddle out loud, holding her nose.` ],
+      puzzle:{ tag:"Riddle",
+        q:`"I live up your nose. I'm green and I'm sticky. Some people pick me, and some people even EAT me — yuck!" What am I?`,
+        vis: V.big("👃 ❓"),
+        options:["💚 A bogey","🟢 Slime","🐸 A frog","🍮 Jelly","🥬 A sprout","🫛 A pea"], answer:"💚 A bogey",
+        hints:[`Where does it live? Up your…?`,`You're NOT supposed to pick it — and definitely not eat it!`],
+        win:[`A BOGEY! "Eurgh," says Tilly. The rock rolls aside, and there's Burpinda's cave.`]},
+      after:[{to:"meet", label:"Peek into the cave 🐲"}]
+    },
+    meet:{ name:"Meet Burpinda", art:"🐲😤",
+      story:[
+        `Inside the cave is the biggest, greenest, grumpiest dragon you've ever seen. Her nose is bright red and runny, and her eyes are all watery.`,
+        say("Burpinda","🐲",`What do YOU want, wart-face? Come to laugh at me? Want a bogey? I've got LOADS!`),
+        `She does a burp so big your hair blows backwards. Then she sniffs a long, wet, gloopy sniff.`,
+        say("Burpinda","🐲",`I've had this cold for WEEKS. My nose is all blocked up. That's why I'm so grumpy! I need 100 tissues, and nobody ever brings me any.`),
+        `Luckily, you brought 4 boxes from the village, with 18 tissues in each.`
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`Burpinda needs 100 tissues. You have 4 boxes of 18. How many MORE tissues does she need?`,
+        vis: V.big("🧻 18 × 4<br>needs 100"),
+        options:["28","72","82","22","32","18"], answer:"28",
+        hints:[`First, 4 boxes of 18: 18 + 18 + 18 + 18.`,`That's 72 tissues. How many more to make 100?`,`72 + 8 = 80. 80 + 20 = 100.`],
+        win:[
+          `28 more! She blows her nose — HOOOONK! — and it sounds like a ship's horn.`,
+          `But it's no good. There's one ENORMOUS bogey stuck right at the very top, and it won't budge.`
+        ]},
+      after:[{to:"code", label:"Look for a cure 📜"}]
+    },
+    code:{ name:"The Dragon Doctor's Note", art:"📜🤧",
+      story:[
+        `On the wall of the cave is an old note from the Dragon Doctor. It's written in sneeze code.`,
+        say("Burpinda","🐲",`I can't read it, my eyes are too watery. You do it, wart-face. PLEASE.`)
+      ],
+      puzzle:{ tag:"Secret code",
+        q:`Use the sneeze code. What does the Dragon Doctor say will cure a blocked dragon nose?`,
+        vis: V.code("🤧 💚 🤧 🤧 💚 👃") + V.symkey([["🤧","P"],["💚","E"],["👃","R"],["🔥","A"],["💨","S"],["🐲","D"]]),
+        options:["PEPPER","PAPER","PEPPERS","PEEPER","REPPEP","SPEEDER"], answer:"PEPPER",
+        hints:[`Find each symbol in the key, from left to right.`,`🤧 is P and 💚 is E…`,`P, E, P, P, E… and 👃 is R.`],
+        win:[
+          `PEPPER! One sniff of pepper and she'll do the biggest sneeze ever, and blast that bogey right out.`,
+          say("Tilly the toad","🐸",`There's pepper in the village kitchen — or we can buy some at the spice market.`)
+        ]},
+      after:[
+        {to:"kitchen", label:"Borrow some from the kitchen 🫙", sub:"Shh, don't tell the cook"},
+        {to:"market", label:"Buy some at the spice market 🛒", sub:"Bring your pocket money"}
+      ]
+    },
+    kitchen:{ name:"The Village Kitchen", art:"🫙🌶️",
+      story:[
+        `In the village kitchen, the cook has a jar with 40 grams of pepper in it.`,
+        say("The Cook","👨‍🍳",`You can take some, but I need some for my soup! I'll use a quarter of the jar now, and half of what's left tomorrow. You can have whatever's left over.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`40 g of pepper. The cook uses a quarter, then half of what's left. How much is left for you?`,
+        vis: V.big("🫙 40 g"),
+        options:["15","20","10","25","5","30"], answer:"15",
+        hints:[`A quarter of 40 is 10. So 30 g is left.`,`Half of the 30 g left is 15 g. The cook uses that too.`,`30 − 15 = ?`],
+        win:[`15 grams — plenty for one gigantic sneeze! You race back up Snotty Crag. 🌶️`]},
+      onWin: st => st.items.add("pepper"),
+      after:[{to:"sneeze", label:"Back to Burpinda 🐲"}]
+    },
+    market:{ name:"The Spice Market", art:"🛒🌶️",
+      story:[
+        `The spice market smells of cinnamon, ginger and — slightly — of dragon bogey.`,
+        say("The Spice Seller","🧕",`Pepper is 35p a bag. For a dragon-sized sneeze, you'll need 3 bags!`),
+        `You pay with a £2 coin.`
+      ],
+      puzzle:{ tag:"Money",
+        q:`3 bags of pepper cost 35p each. You pay with £2 (200p). How much change do you get?`,
+        vis: V.big("🌶️ 35p × 3<br>🪙 £2"),
+        options:["95p","£1.05","85p","65p","£1.95","90p"], answer:"95p",
+        hints:[`3 bags: 35p + 35p + 35p.`,`That's 105p, which is £1.05. Now count up to 200p.`,`105 → 200: that's 95 more.`],
+        win:[`95p change! You race back up Snotty Crag with three bags of pepper. 🌶️`]},
+      onWin: st => st.items.add("pepper"),
+      after:[{to:"sneeze", label:"Back to Burpinda 🐲"}]
+    },
+    sneeze:{ name:"The Great Sneeze", art:"🐲🤧💥",
+      story:[
+        `You sprinkle the pepper right under Burpinda's nose.`,
+        `Her nostrils twitch. Her eyes water. "Ah… ahh… AHHH…"`,
+        `<b>AAAAAA-CHOOOOOOO!!!</b>`,
+        `The giant bogey shoots out of her nose like a rocket. It flies 25 metres every second, for 8 whole seconds, before it disappears into the clouds.`
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`The bogey flies 25 metres every second for 8 seconds. How far does it fly?`,
+        vis: V.big("💚💨 25 m every second × 8"),
+        options:["200","33","160","250","225","180"], answer:"200",
+        hints:[`4 seconds would be 25 + 25 + 25 + 25 = 100 metres.`,`8 seconds is double 4 seconds.`],
+        win:[`200 metres — and still going! Burpinda takes a big, clear, beautiful breath through her nose.`, say("Burpinda","🐲",`I can SMELL again! Ooh… what's that smell? Oh. It's me. I need a bath.`)]},
+      after:[{to:"cleanup", label:"Help clean up 🪣"}]
+    },
+    cleanup:{ name:"The Big Clean-Up", art:"🪣🧽",
+      story:[
+        `Now Burpinda feels better, she feels a bit sorry about all the bogeys. She flies you back to the village to help clean up.`,
+        `There are 48 litres of slime in the village square. Each bucket holds 6 litres.`
+      ],
+      puzzle:{ tag:"Sharing",
+        q:`48 litres of slime. Each bucket holds 6 litres. How many buckets do you need?`,
+        vis: V.big("🟢 48 litres → 🪣 6 each"),
+        options:["8","6","7","42","9","54"], answer:"8",
+        hints:[`How many 6s make 48? Count in 6s.`,`6, 12, 18, 24, 30, 36, 42, 48…`],
+        win:[`8 buckets! The village square sparkles. The mayor finally gets the bogey out of his ear.`]},
+      after:[{to:"party", label:"The village party 🎉"}]
+    },
+    party:{ name:"Pardon Me!", art:"🎉🐲",
+      story:[
+        `The village throws a party, and Burpinda is the guest of honour. She lights the bonfire with a (polite) burp.`,
+        say("Tilly the toad","🐸",`Do you remember the very first thing Burpinda called you, when you walked into her cave?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What rude name did Burpinda call you when you first met?`,
+        vis: V.big("🐲 ❓"),
+        options:["Wart-face","Snot-bucket","Pea-brain","Slug-bum","Toad-toes","Nose-picker"], answer:"Wart-face",
+        hints:[`Think back to when you first peeked into the cave…`,`Something you might find on a toad's face!`],
+        win:[`"WART-FACE!" everyone shouts, and Burpinda laughs so hard she does a little burp. "Pardon me!" she says.`]},
+      after:[{to:"end", label:"The end… BURRRP! 💚"}]
+    },
+    end:{ end:true }
+  }
+};
+
+/* ================================================================
+   RUDE ADVENTURE — THE KING'S RUNAWAY LOO
+   ================================================================ */
+const LOO = {
+  id:"loo", theme:"loo", start:"palace", length:"medium", mins:"15",
+  rating:{age:"9+", reason:"Contains poo jokes, a royal bottom and a very rude toilet."},
+  title:"The King's Runaway Loo",
+  cover:"👑🚽🏃", coverBg:"#fff3bf",
+  blurb:"The King's magic golden toilet has run away — and the King is DESPERATE. Chase it through the gardens and down the sewers before something terrible happens!",
+  helper:{name:"Wilf the royal butler", icon:"🤵"},
+  runner:"🤵", goal:"🚽",
+  ranks:["Knight of the Golden Loo","Royal Toilet Tracker","Brave Bog Brush Holder"],
+  bag: st => ["🪥 Royal bog brush"],
+  badges:{sewer:"🐀 Sewer Explorer", gardens:"🌹 Garden Chaser", carry:"💪 Loo Lifter", carriage:"🐴 Carriage Rider"},
+  ending: st => [
+    `From that day on, the palace has some new rules, written on a golden sign above the loo:`,
+    `<b>1. NO SPROUTS. 2. ALWAYS SAY THANK YOU TO THE TOILET. 3. FLUSH TWICE IF IT'S A BIG ONE.</b>`,
+    say("Lou","🚽",`Not bad, bum-breath. Not bad at all. Now, are you going to use me, or just stand there staring?`),
+    `And somewhere in the palace, the King is reading his newspaper on the loo, humming happily — and, for the first time in years, the whole palace smells of roses.`
+  ],
+  scenes:{
+    palace:{ name:"The Royal Emergency", art:"👑😱",
+      story:[
+        `In the palace of King Bottomley the Third, there is a toilet made of solid gold. It's called Lou, and it's magic. It can talk, it plays music when you flush, and it has a heated seat.`,
+        `But this morning, there's a terrible scream from the royal bathroom.`,
+        say("King Bottomley","👑",`MY LOO! My beautiful golden loo has RUN AWAY! And I need to go! I'm DESPERATE!`),
+        `The royal butler, Wilf, looks at his pocket watch.`,
+        say("Wilf the royal butler","🤵",`Your Majesty last visited the loo at quarter to eight, sir. It is now twenty past nine.`)
+      ],
+      puzzle:{ tag:"Time",
+        q:`The King last went to the loo at 7:45. It's now 9:20. How long has he been waiting?`,
+        vis: V.big("🕗 7:45 ➜ 🕘 9:20"),
+        options:["1 hour 35 minutes","2 hours 35 minutes","1 hour 25 minutes","1 hour 75 minutes","35 minutes","2 hours 25 minutes"], answer:"1 hour 35 minutes",
+        hints:[`From 7:45 to 8:00 is 15 minutes.`,`From 8:00 to 9:00 is 1 hour. From 9:00 to 9:20 is 20 minutes.`,`15 minutes + 1 hour + 20 minutes…`],
+        win:[`1 hour and 35 minutes! The King is hopping from foot to foot and crossing his legs.`, say("King Bottomley","👑",`FIND IT! QUICKLY! OOH!`)]},
+      after:[{to:"puddles", label:"Follow the trail 💦"}]
+    },
+    puddles:{ name:"The Splashy Trail", art:"💦💦💦",
+      story:[
+        `Lou has left a trail of splashes across the palace floor. (It's just water. Probably.)`,
+        say("Wilf the royal butler","🤵",`Lou hops along and leaves a puddle every 7 steps. There's one at step 7, step 14, step 21… We just need to find the next puddle on this list.`)
+      ],
+      puzzle:{ tag:"Times tables",
+        q:`There's a puddle every 7 steps. Which of these steps has a puddle?`,
+        vis: V.big("💦 7 · 14 · 21 · 28 …"),
+        options:["63","60","64","50","45","66"], answer:"63",
+        hints:[`Count in 7s: 7, 14, 21, 28, 35, 42…`,`Keep going: 49, 56, 63…`],
+        win:[
+          `Step 63! The trail leads out of the palace door. Then it splits in two.`,
+          say("Wilf the royal butler","🤵",`One trail goes down a drain into the royal sewers — urgh. The other goes into the Royal Gardens.`)
+        ]},
+      after:[
+        {to:"sewer", label:"Down the drain into the sewers 🐀", sub:"Hold your nose!"},
+        {to:"gardens", label:"Into the Royal Gardens 🌹", sub:"Something's been knocked over…"}
+      ]
+    },
+    sewer:{ name:"The Royal Sewers", art:"🐀🐀🐀",
+      story:[
+        `The royal sewers are dark, drippy and very, very smelly. You can't even tell what some of the floating things are. (You don't want to know.)`,
+        `Suddenly, an army of rats marches out of a pipe. At the front is a rat in a tiny tin helmet.`,
+        say("General Whiskers","🐀",`HALT! Who goes there? My army has 4 rows of 9 rats. A third of them are asleep. If you can tell me how many are awake, I'll help you.`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`4 rows of 9 rats. A third of them are asleep. How many rats are awake?`,
+        vis: V.big("🐀 × 9 in each row · 4 rows"),
+        options:["24","36","12","27","9","13"], answer:"24",
+        hints:[`First, how many rats altogether? 4 lots of 9.`,`36 rats. A third of 36 is 12. They're asleep.`,`36 − 12 = ?`],
+        win:[`24! General Whiskers salutes you. "A golden toilet came through here, shouting rude names," he squeaks. "It went to hide by the rubber duck. Follow my directions!"`]},
+      after:[{to:"sewer2", label:"Follow the General's directions ➜"}]
+    },
+    sewer2:{ name:"The Sewer Maze", art:"🧱🦆",
+      story:[ say("General Whiskers","🐀",`UP 2, RIGHT 1, UP 2! And don't touch the walls. You don't want to know what's on them.`) ],
+      puzzle:{ tag:"Map", type:"grid",
+        q:`Start at 🧒 (that's you). Follow the General's directions. Where do you end up?`,
+        grid:["🧀 . 🦆 . 🐊",". 🧱 . 🧱 .",". . . 🧱 🐀","🧱 . 🧱 . .","🧦 🧒 . . 🍌"],
+        start:"🧒", moves:[["U",2],["R",1],["U",2]],
+        options:["🦆 Rubber duck","🧀 Old cheese","🐊 Sewer crocodile","🐀 Rat","🧦 Lost sock","🍌 Banana skin"], answer:"🦆 Rubber duck",
+        hints:[`Up 2 first. Then right 1.`,`Now up 2 more to the top row.`],
+        win:[`The rubber duck! And hiding behind it, gleaming in the gloom, is a small golden toilet.`]},
+      after:[{to:"lou", label:"Talk to the toilet 🚽"}]
+    },
+    gardens:{ name:"The Royal Gardens", art:"🌹🗿💥",
+      story:[
+        `In the Royal Gardens, the statues are all knocked over. The royal gardener is very cross.`,
+        say("The Gardener","👨‍🌾",`That flipping toilet came hopping through here like a kangaroo! It knocked over 3 out of every 5 statues. And there are 20 statues!`)
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`Lou knocked over 3 out of every 5 statues. There are 20 statues. How many were knocked over?`,
+        vis: V.big("🗿 × 20 · 3 in every 5 knocked over"),
+        options:["12","8","15","5","3","17"], answer:"12",
+        hints:[`How many groups of 5 are there in 20?`,`There are 4 groups of 5. In each group, 3 were knocked over.`,`4 lots of 3 = ?`],
+        win:[`12 statues! Behind the rose bushes there's a little sign stuck in the ground. It's a riddle.`]},
+      after:[{to:"gardens2", label:"Read the riddle 🪧"}]
+    },
+    gardens2:{ name:"The Gardener's Riddle", art:"🪧❓",
+      story:[ say("The Gardener","👨‍🌾",`Lou left this. Cheeky thing. Answer it, and you'll know where it's gone.`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"I have a seat, but no legs. I have a lid, but I'm not a box. And when you've finished, you push my handle to say goodbye." What am I?`,
+        vis: V.big("🪑❌ 📦❌ ❓"),
+        options:["🚽 A toilet","🪑 A chair","🗑️ A bin","🚌 A bus","🎹 A piano","🫖 A teapot"], answer:"🚽 A toilet",
+        hints:[`It has a seat and a lid… and you flush it!`,`It's what you're chasing!`],
+        win:[`A toilet! And there it is, hiding in the potting shed, trying to look like a plant pot.`]},
+      after:[{to:"lou", label:"Talk to the toilet 🚽"}]
+    },
+    lou:{ name:"Meet Lou", art:"🚽😤",
+      story:[
+        `Lou the golden toilet glares at you and rattles its lid.`,
+        say("Lou","🚽",`Go away, bum-breath! I'm NEVER going back to that stinky King. NEVER!`),
+        say("Lou","🚽",`Do you know how many times I get flushed? He does 3 poos a day, and every poo needs 6 flushes because they're SO ENORMOUS. Plus 2 flushes for wees. EVERY. SINGLE. DAY.`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`3 poos a day, with 6 flushes each. Plus 2 flushes for wees. How many flushes a day?`,
+        vis: V.big("💩 × 3 · 6 flushes each<br>+ 2"),
+        options:["20","18","11","24","36","9"], answer:"20",
+        hints:[`First the poos: 3 lots of 6.`,`18 flushes for poos. Now add the 2 for wees.`],
+        win:[
+          `20 flushes a day! "My handle is WORN OUT," wails Lou.`,
+          say("Lou","🚽",`And it's all because he eats SPROUTS. Mountains of sprouts. I've written down my rule for coming home — but in my secret code, so nobody can read it except clever people.`)
+        ]},
+      after:[{to:"rule", label:"Read Lou's rule 📝"}]
+    },
+    rule:{ name:"Lou's Secret Rule", art:"📝🥬",
+      story:[ `Lou's note is written backwards. You have to read it from the last letter to the first.` ],
+      puzzle:{ tag:"Secret code",
+        q:`Read Lou's rule backwards. What does it say?`,
+        vis: V.code("STUORPS ON"),
+        options:["NO SPROUTS","NO SPORTS","ON SPROUTS","NO STRIPES","NO SNOUTS","SO SPROUT"], answer:"NO SPROUTS",
+        hints:[`Start at the very end: N, O…`,`The last word, ON, backwards is NO.`],
+        win:[
+          `NO SPROUTS! "If the King stops eating sprouts, I'll come home," says Lou. "But I'm NOT walking."`,
+          say("Wilf the royal butler","🤵",`We could carry it between us… or I could fetch the royal carriage.`)
+        ]},
+      after:[
+        {to:"carry", label:"Carry Lou home 💪", sub:"It's solid gold. It's heavy."},
+        {to:"carriage", label:"Fetch the royal carriage 🐴", sub:"Fancy!"}
+      ]
+    },
+    carry:{ name:"Heave-Ho!", art:"💪🚽",
+      story:[
+        `Lou is solid gold, and weighs 45 kilograms. You, Wilf, the gardener and two of General Whiskers's strongest rats all grab a corner. (A toilet has more corners than you'd think.)`
+      ],
+      puzzle:{ tag:"Sharing",
+        q:`Lou weighs 45 kg. 5 of you share the weight equally. How many kg does each of you carry?`,
+        vis: V.big("🚽 45 kg ➗ 5"),
+        options:["9","5","40","50","11","8"], answer:"9",
+        hints:[`How many 5s make 45? Count in 5s.`,`5, 10, 15, 20, 25, 30, 35, 40, 45. How many jumps?`],
+        win:[`9 kilograms each — easy-peasy! Well, easy-peasy for everyone except the rats. You stagger into the palace together.`]},
+      after:[{to:"crown", label:"Into the palace 👑"}]
+    },
+    carriage:{ name:"The Royal Carriage", art:"🐴🚽",
+      story:[
+        `Wilf brings the golden royal carriage. Lou sits on the velvet seat like a king, and waves its lid at the crowds.`,
+        say("Wilf the royal butler","🤵",`The carriage travels at 12 kilometres an hour. The palace is 3 kilometres away. How many minutes will it take?`)
+      ],
+      puzzle:{ tag:"Speed",
+        q:`The carriage goes 12 km every hour (60 minutes). The palace is 3 km away. How many minutes will it take?`,
+        vis: V.big("🐴 12 km = 60 minutes<br>🏰 3 km = ❓"),
+        options:["15","4","36","20","25","9"], answer:"15",
+        hints:[`3 km is a quarter of 12 km.`,`So it takes a quarter of 60 minutes.`],
+        win:[`15 minutes! The carriage pulls up at the palace gates, where the King is jumping up and down.`]},
+      after:[{to:"crown", label:"Into the palace 👑"}]
+    },
+    crown:{ name:"Just in Time!", art:"👑🚽💨",
+      story:[
+        `Lou is back in the royal bathroom! The King rushes in, slams the door, and you hear a huge sigh of relief.`,
+        say("King Bottomley","👑",`AAAAAAH. That's better.`),
+        `Then there's a long, loud, wet noise. You decide not to think about it.`,
+        `Afterwards, the King is so grateful he takes off his crown. "Choose any jewel you like!" he says. The crown has 24 jewels: half are red, a third are blue, and the rest are green.`
+      ],
+      puzzle:{ tag:"Fractions",
+        q:`24 jewels. Half are red. A third are blue. The rest are green. How many green jewels are there?`,
+        vis: V.big("👑 💎 × 24"),
+        options:["4","12","8","6","2","10"], answer:"4",
+        hints:[`Half of 24 is 12 red jewels.`,`A third of 24 is 8 blue jewels.`,`12 + 8 = 20. How many of the 24 are left?`],
+        win:[`4 green jewels — you pick the biggest one. It's the same colour as a sprout. The King doesn't notice.`]},
+      after:[{to:"sprouts", label:"Keep Lou's rule 🥬"}]
+    },
+    sprouts:{ name:"Goodbye, Sprouts!", art:"🥬🚫",
+      story:[
+        `The King keeps his promise. No more sprouts! The royal cook is told to throw away every sprout in the palace.`,
+        say("The Royal Cook","👩‍🍳",`But the King ate 5 sprouts at every meal, 3 meals a day! I've got a whole week's worth here. That's 7 days!`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`5 sprouts at every meal, 3 meals a day, for 7 days. How many sprouts is that?`,
+        vis: V.big("🥬 5 × 3 meals × 7 days"),
+        options:["105","15","35","21","100","110"], answer:"105",
+        hints:[`First, how many sprouts in ONE day? 5 at each of 3 meals.`,`15 sprouts a day. Now 7 days of 15: 10 days would be 150…`,`7 × 10 = 70, and 7 × 5 = 35. 70 + 35 = ?`],
+        win:[`105 sprouts! The cook tips them into the compost heap. Somewhere in the palace, Lou does a happy little flush.`]},
+      after:[{to:"knight", label:"Kneel before the King 🗡️"}]
+    },
+    knight:{ name:"Arise, Sir Flush!", art:"🗡️🚽",
+      story:[
+        `The King makes you a knight, tapping you on each shoulder with the royal bog brush.`,
+        say("King Bottomley","👑",`Before I write your name in the Royal Book, remind me. What rude name did Lou call you?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`What rude name did Lou the toilet call you?`,
+        vis: V.big("🚽 ❓"),
+        options:["Bum-breath","Wart-face","Pongy pants","Snot-bucket","Smelly-knickers","Toad-toes"], answer:"Bum-breath",
+        hints:[`Think back to when you first found Lou…`,`It starts with "Bum"…`],
+        win:[`"BUM-BREATH!" The King laughs so hard his crown falls off. "Arise, Sir Bum-Breath!"`]},
+      after:[{to:"end", label:"The end… FLUSH! 🚽"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, GUSTY, BURPINDA, LOO, SEA, PYRAMID];
 </script>
 
 <!-- ======================= ENGINE ======================= -->
@@ -3783,7 +4218,7 @@ function home(){
         h+=`<button class="scard" onclick="openStory('${s.id}')">
           <div class="cov" style="background:${s.coverBg}">${s.cover}</div>
           <div class="sbody"><div class="t">${s.title}</div><div class="b">${s.blurb}</div>
-          <div class="m">${s.easy?`<span class="ertag">🌱 Level ${s.level}</span>`:''}<span>⏱ ${s.mins} min</span>${r?`<span class="tag">▶ Ch ${runs[s.id].st.chapter+1}</span>`:''}${p?`<span class="done">✅ ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
+          <div class="m">${s.rating?`<span class="rating" title="Rated ${s.rating.age}: ${s.rating.reason}">${s.rating.age}</span>`:''}${s.easy?`<span class="ertag">🌱 Level ${s.level}</span>`:''}<span>⏱ ${s.mins} min</span>${r?`<span class="tag">▶ Ch ${runs[s.id].st.chapter+1}</span>`:''}${p?`<span class="done">✅ ⭐ ${p.best}/${p.of}</span>`:''}</div></div>
         </button>`;
       });
       h+=`</div>`;
@@ -3805,6 +4240,7 @@ function openStory(id){
   app.innerHTML=`<div class="topbar"><button class="iconbtn" onclick="home()">🏠 <span style="font-size:15px">Library</span></button></div>
   <div class="cover"><div class="art">${S.cover}</div><h1>${S.title}</h1><div class="bl">${S.blurb}</div>
     <div class="meta"><span>⏱ About ${S.mins} minutes</span><span>🧩 ${puzzleCount(S)} puzzles</span><span>🔀 Different paths</span>${S.easy?`<span class="ertag">🌱 Easy reader · Level ${S.level} — read it yourself!</span>`:''}</div>
+    ${S.rating?`<div class="ratingline"><span class="rating big">${S.rating.age}</span><span><b>Rated RUDE.</b> ${S.rating.reason}</span></div>`:''}
     <div class="helperbox"><div class="av">${S.helper.icon}</div><div><b>Your helper: ${S.helper.name}</b><br>If you get a puzzle wrong, ${S.helper.name.split(' ')[0]} will give you a hint.</div></div>
   </div>
   <div class="choose">${(()=>{
@@ -3852,7 +4288,7 @@ const SHORT={"Wizard Bramble":"Bramble","Captain Barnacle Bess":"Captain Bess","
  "Station Guard":"the guard","The Chief of Space":"the Chief of Space","The Museum Director":"the museum director","Ferry Troll":"the troll",
  "Coconut Stall Keeper":"the stall keeper","Zib's Dad":"Zib's dad","Wise Owl":"the owl","Troll":"the troll","T-Rex":"the T-Rex","Hen":"the hen",
  "Pig":"the pig","Cat":"the cat","Little dog":"the little dog","Little chick":"the little chick","Mouse":"the mouse","Duck":"the duck","Worm":"the worm",
- "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa","Peggy the pigeon":"Peggy"};
+ "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa","Peggy the pigeon":"Peggy","Tilly the toad":"Tilly","Wilf the royal butler":"Wilf","King Bottomley":"the King","The Cook":"the cook","The Spice Seller":"the spice seller","The Gardener":"the gardener","The Royal Cook":"the royal cook"};
 const VERB={"Polly":"squawks","BLIP":"beeps","Station Guard":"beeps","Mortimer the Mouse":"squeaks","Captain Wisp":"writes"};
 function bookSay(b, tag){
   let t=b.text.replace(/"([^"]*)"/g,'‘$1’');
