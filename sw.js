@@ -1,5 +1,5 @@
 // The Adventure Library — offline support
-const CACHE = 'adventure-library-v13';
+const CACHE = 'adventure-library-v14';
 const CORE = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

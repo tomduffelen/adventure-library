@@ -40,6 +40,7 @@ body[data-theme=robot]{--bg1:#1f4a3a;--bg2:#08180f;--accent:#2f9e44;--accent2:#2
 body[data-theme=giant]{--bg1:#5c6b14;--bg2:#1e2405;--accent:#74a00f;--accent2:#567a08;--soft:#f4fce3;--cell:#e9fac8}
 body[data-theme=dragon]{--bg1:#0b6e4f;--bg2:#03251a;--accent:#12b886;--accent2:#087f5b;--soft:#e6fcf5;--cell:#c3fae8}
 body[data-theme=loo]{--bg1:#6b5a12;--bg2:#241d03;--accent:#d4a20b;--accent2:#9a7506;--soft:#fff9db;--cell:#d0ebff}
+body[data-theme=lawn]{--bg1:#2b6a1f;--bg2:#0c2108;--accent:#40a02b;--accent2:#2b7a1c;--soft:#ebfbee;--cell:#b2f2bb}
 body[data-theme=dino]{--bg1:#2f6b33;--bg2:#0f2612;--accent:#d2691e;--accent2:#a34f12;--soft:#fdeedd;--cell:#cfe8b5}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -179,6 +180,7 @@ button{font-family:inherit}
 .hline{display:flex;gap:2px;overflow-x:auto;margin:6px 0}
 .hline{gap:1px}.hline div{flex:1 1 0;min-width:0;text-align:center;font:700 11.5px 'Fredoka';background:#f3f0fa;border-radius:4px;padding:6px 0}
 .hline .zero{background:#ffe08a}
+.grid.pool div{width:30px;height:30px;background:#74c0fc}
 .coords{border-collapse:separate;border-spacing:4px;margin:6px auto}
 .coords td{width:46px;height:46px;background:#1b2f4a;border-radius:8px;text-align:center;font-size:26px}
 .coords th{font:700 17px 'Fredoka';color:var(--accent2);width:24px}
@@ -4151,7 +4153,214 @@ const LOO = {
   }
 };
 
-const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, GUSTY, BURPINDA, LOO, SEA, PYRAMID];
+
+/* ================================================================
+   ADVENTURE — ZOMBIES ON THE LAWN!
+   ================================================================ */
+const LAWN = {
+  id:"lawn", theme:"lawn", start:"sun", length:"medium", mins:"15",
+  title:"Zombies on the Lawn!",
+  cover:"🌻🧟🌱", coverBg:"#ebfbee",
+  blurb:"The zombies are coming for your house — and all you've got is a garden full of plants. Collect sun, plant your defences and outsmart the zombie boss!",
+  helper:{name:"Sunny the sunflower", icon:"🌻"},
+  runner:"🧟", goal:"🏠",
+  ranks:["Grand Garden Defender","Master Gardener","Brave Seedling"],
+  bag: st => [`☀️ Sun: ${st.n.sun||0}`, ...(st.n.plants?[`🌱 Plants: ${st.n.plants}`]:[])],
+  badges:{pool:"🏊 Pool Protector", night:"🌙 Night Watch", walnut:"🥜 Wall Builder", cherry:"🍒 Bomb Expert"},
+  ending: st => [
+    `The sun comes up over the lawn. Not a single zombie made it to your front door.`,
+    `Kev takes the saucepan off his head and waves it in the air. "BEST. GARDEN. EVER!"`,
+    say("Sunny the sunflower","🌻",`We did it! And look — I think that last little zombie wants to be friends.`),
+    `Sure enough, a small zombie is standing at the edge of the lawn, holding a daisy. "Brainsss?" it asks hopefully. You give it a cheese sandwich instead. It seems very happy.`
+  ],
+  scenes:{
+    sun:{ name:"Here Come the Zombies!", art:"🏠🌻🧟",
+      story:[
+        `It's a quiet evening in your garden — until your neighbour Kev comes running over the fence. Kev always wears a saucepan on his head. Nobody knows why.`,
+        say("Kev","🍳",`ZOMBIES! A whole crowd of them, shuffling down the road! And they want to get into YOUR house!`),
+        `Luckily, your garden is no ordinary garden. The plants can fight back! But to grow them, you need sunshine. Little balls of sun float down from the sky, and each one is worth 25.`,
+        say("Sunny the sunflower","🌻",`Quick, catch them! You caught 7 sun drops. How much sun is that?`)
+      ],
+      puzzle:{ tag:"Counting in 25s",
+        q:`Each sun drop is worth 25. You catch 7 sun drops. How much sun do you have?`,
+        vis: V.big("☀️ × 7 · 25 each"),
+        options:["175","150","200","32","125","185"], answer:"175",
+        hints:[`25, 50, 75, 100… keep counting in 25s!`,`4 sun drops make 100. 3 more sun drops make another 75.`,`100 + 75 = ?`],
+        win:[`175 sun! Then another big sun drop floats down — and you catch that too. Now you've got 300 sun. Time to go shopping for plants!`]},
+      onWin: st => st.n.sun = 300,
+      after:[{to:"shop", label:"Go to the seed shop 🌱"}]
+    },
+    shop:{ name:"The Seed Shop", art:"🌱🛒",
+      story:[
+        `Kev runs a seed shop from the back of his car. It's very messy.`,
+        say("Kev","🍳",`Peashooters cost 100 sun. Sunflowers cost 50. Walnuts cost 50. You've got 300 sun — spend it ALL, not a sun left over!`)
+      ],
+      puzzle:{ tag:"Spending",
+        q:`You have 300 sun. Which plants cost EXACTLY 300?`,
+        vis: V.big("🌱 Peashooter 100 · 🌻 Sunflower 50 · 🥜 Walnut 50"),
+        options:["2 Peashooters + 2 Sunflowers","3 Peashooters + 1 Sunflower","1 Peashooter + 3 Walnuts","2 Peashooters + 1 Walnut","1 Peashooter + 5 Sunflowers","3 Sunflowers + 2 Walnuts"], answer:"2 Peashooters + 2 Sunflowers",
+        hints:[`Work out each one. 2 Peashooters cost 200.`,`2 Peashooters (200) + 2 Sunflowers (100) = ?`,`Check the others too — some come to 250, some to 350.`],
+        win:[
+          `2 Peashooters and 2 Sunflowers — exactly 300! You plant them in a neat row. The Peashooters puff out their cheeks, ready to fire.`,
+          say("Sunny the sunflower","🌻",`Zombies are coming from two directions! Some are swimming across the pool, and some are creeping across the lawn in the dark.`)
+        ]},
+      onWin: st => { st.n.sun = 0; st.n.plants = 4; },
+      after:[
+        {to:"pool", label:"Defend the swimming pool 🏊", sub:"Zombies in rubber rings!"},
+        {to:"night", label:"Defend the lawn at night 🌙", sub:"Spooky and dark"}
+      ]
+    },
+    pool:{ name:"The Pool", art:"🏊🧟",
+      story:[
+        `Some zombies are paddling across your swimming pool in rubber rings. To put plants on the water, you need lily pads.`,
+        say("Sunny the sunflower","🌻",`The pool has 2 lanes, with 9 squares in each lane. Every square needs a lily pad. We've already put down 7.`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`The pool has 2 lanes of 9 squares. Every square needs a lily pad. You've placed 7. How many more do you need?`,
+        vis: V.grid([". . . . . . . . .",". . . . . . . . ."],"").replace('class="grid"','class="grid pool"'),
+        options:["11","18","9","16","7","2"], answer:"11",
+        hints:[`First, how many squares altogether? 2 lots of 9.`,`18 squares. You've already done 7.`,`18 − 7 = ?`],
+        win:[`11 more lily pads! Your Peashooters hop onto them and fire — POP POP POP — and the rubber-ring zombies sink with a glug. One of them drops a soggy sign.`]},
+      after:[{to:"pool2", label:"Read the soggy sign 🪧"}]
+    },
+    pool2:{ name:"The Zombie's Sign", art:"🪧🧟",
+      story:[
+        `Zombies are terrible at spelling. The sign just says <b>SNIRAB</b>.`,
+        say("Sunny the sunflower","🌻",`I think the letters are all jumbled up. Can you unscramble them? It's the thing zombies love most of all!`)
+      ],
+      puzzle:{ tag:"Unscramble",
+        q:`Unscramble the letters S N I R A B. What word does it make?`,
+        vis: V.code("S N I R A B"),
+        options:["BRAINS","BRAIDS","BRINES","BRANDS","RAISIN","BASINS"], answer:"BRAINS",
+        hints:[`Every letter must be used once — and no extra letters!`,`BRAIDS has a D, but there's no D on the sign. What do zombies always want to eat?`],
+        win:[`BRAINS! Of course. "Well, they're not having OURS," says Sunny.`]},
+      after:[{to:"peas", label:"Back to the front lawn ➜"}]
+    },
+    night:{ name:"The Night Lawn", art:"🌙🍄🧟",
+      story:[
+        `At night, the lawn is dark, and spooky mushrooms glow in the grass.`,
+        say("Kev","🍳",`The zombies attack every 3rd night! The first attack was on Monday night. I need to know which night the 4th attack will be, so I can stay up late.`)
+      ],
+      puzzle:{ tag:"Days of the week",
+        q:`Zombies attack every 3rd night. The 1st attack is Monday. Which night is the 4th attack?`,
+        vis: V.big("Mon · Tue · Wed · Thu · Fri · Sat · Sun"),
+        options:["Wednesday","Thursday","Sunday","Friday","Tuesday","Monday"], answer:"Wednesday",
+        hints:[`Count 3 nights on from Monday: Tuesday, Wednesday, Thursday. That's the 2nd attack.`,`Count 3 more from Thursday: Friday, Saturday, Sunday. That's the 3rd.`,`3 more from Sunday — remember the week starts again after Sunday!`],
+        win:[`Wednesday! Kev writes it on his saucepan with a pen. Then something underground goes "psst". It's a little potato, poking its head out of the soil.`]},
+      after:[{to:"night2", label:"Talk to the potato 🥔"}]
+    },
+    night2:{ name:"The Potato's Riddle", art:"🥔❓",
+      story:[ say("Spud","🥔",`I'm the secret weapon. But I'll only help if you can guess who I am!`) ],
+      puzzle:{ tag:"Riddle",
+        q:`"I have lots of eyes, but I can't see a thing. I hide under the ground. And when a zombie steps on me in this garden — BOOM!" What am I?`,
+        vis: V.big("👀 ⬇️ 💥"),
+        options:["🥔 A potato","🕷️ A spider","🥕 A carrot","🪱 A worm","🍄 A mushroom","🪨 A rock"], answer:"🥔 A potato",
+        hints:[`A spider has lots of eyes, but it CAN see. This thing has "eyes" that can't see anything…`,`Potatoes have little bumps called eyes! And this one is a potato… mine.`],
+        win:[`A potato! Spud buries himself in the lawn. When the next zombie steps on him — <b>KA-BOOM!</b> — it flies all the way over the fence in its pants.`]},
+      after:[{to:"peas", label:"Back to the front lawn ➜"}]
+    },
+    peas:{ name:"Pea Power", art:"🌱🟢🧟",
+      story:[
+        `Now a zombie wearing a traffic cone on its head is shuffling up the lawn. The cone makes it extra tough.`,
+        say("Sunny the sunflower","🌻",`A normal zombie needs 10 peas to stop it. A cone-head zombie needs 3 times as many! And our Peashooter fires 1 pea every 2 seconds.`)
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`A cone-head needs 3 times as many peas as a normal zombie (10). The Peashooter fires 1 pea every 2 seconds. How many seconds to stop the cone-head?`,
+        vis: V.big("🧟 10 peas · 🧟🚧 × 3<br>🌱 1 pea every 2 seconds"),
+        options:["60","30","20","15","40","90"], answer:"60",
+        hints:[`First, how many peas does the cone-head need? 3 × 10.`,`30 peas. Each pea takes 2 seconds.`,`30 lots of 2 seconds = ?`],
+        win:[`60 seconds — one whole minute! POP POP POP… the cone goes flying, and the zombie runs off holding its head.`]},
+      after:[{to:"sign", label:"Check Kev's lock ➜"}]
+    },
+    sign:{ name:"Kev's Shed Lock", art:"🔐🏚️",
+      story:[
+        `Kev keeps his best plants in his shed, locked with a sum puzzle. But one of the signs has been rubbed off!`,
+        say("Kev","🍳",`Was it plus? Minus? Times? Divide? I can't remember! Saucepan brain!`)
+      ],
+      puzzle:{ tag:"Missing sign",
+        q:`Which sign makes this sum correct?`,
+        vis: V.big("12 ❓ 3 = 4"),
+        options:["+","−","×","÷","=","There isn't one"], answer:"÷",
+        hints:[`Try each one: 12 + 3 = 15. That's not 4!`,`12 − 3 = 9, 12 × 3 = 36… which one makes 12 smaller, all the way down to 4?`,`If you share 12 into 3 equal groups, how many are in each group?`],
+        win:[
+          `Divide! 12 ÷ 3 = 4. The shed door swings open.`,
+          `Inside there are walnuts and cherry bombs. Kev says you can only take one kind.`
+        ]},
+      after:[
+        {to:"walnut", label:"Build a walnut wall 🥜", sub:"Strong and chompy"},
+        {to:"cherry", label:"Take the cherry bombs 🍒", sub:"BOOM!"}
+      ]
+    },
+    walnut:{ name:"The Walnut Wall", art:"🥜🥜🥜",
+      story:[
+        `You build a wall of big, tough walnuts right across the lawn. It's 4 walnuts high and 6 walnuts long.`,
+        `The zombies chomp and chomp. By the morning, they've eaten 7 walnuts. (The walnuts are fine about it. They grow back.)`
+      ],
+      puzzle:{ tag:"Two steps",
+        q:`The wall is 4 walnuts high and 6 walnuts long. The zombies ate 7. How many walnuts are left?`,
+        vis: V.big("🥜 × 6 long · 4 high"),
+        options:["17","24","31","10","14","18"], answer:"17",
+        hints:[`First, how many walnuts in the whole wall? 4 rows of 6.`,`24 walnuts. 7 got eaten.`,`24 − 7 = ?`],
+        win:[`17 walnuts left — still a great wall! The zombies give up and sit down for a sulk.`]},
+      after:[{to:"boss", label:"Uh oh… something BIG is coming 🤖"}]
+    },
+    cherry:{ name:"The Cherry Bombs", art:"🍒💣",
+      story:[
+        `The cherry bombs are two angry little cherries on one stalk. They have a fuse that's lit by a password.`,
+        say("Sunny the sunflower","🌻",`The password is made by changing ONE letter in the word BRAINS — to make something you can ride on!`)
+      ],
+      puzzle:{ tag:"Word puzzle",
+        q:`Change ONE letter in BRAINS to make something you can ride on.`,
+        vis: V.code("B R A I N S"),
+        options:["TRAINS","DRAINS","GRAINS","BRAINY","CRANES","BRAWNS"], answer:"TRAINS",
+        hints:[`Only change the FIRST letter. Lots of words work: DRAINS, GRAINS, TRAINS…`,`Which one can you ride on? Choo choo!`],
+        win:[`TRAINS! The fuse fizzes — <b>KABOOOOM!</b> — and a whole crowd of zombies gets blown into the next street, covered in cherry juice.`]},
+      after:[{to:"boss", label:"Uh oh… something BIG is coming 🤖"}]
+    },
+    boss:{ name:"The Zombie Boss", art:"🤖🧟‍♂️",
+      story:[
+        `The ground shakes. Clanking up the road comes an ENORMOUS zombie robot, with a tiny zombie in a lab coat at the controls. It's Professor Rotbottom, the zombie boss!`,
+        say("Professor Rotbottom","🧟‍♂️",`MWAHAHA! My robot has 450 power points! Your silly plants can't stop me!`),
+        `Kev hands you a giant watermelon catapult. Every melon knocks off 50 power points.`
+      ],
+      puzzle:{ tag:"Sharing",
+        q:`The robot has 450 power points. Each melon knocks off 50. How many melons do you need?`,
+        vis: V.big("🤖 450 · 🍉 −50 each"),
+        options:["9","45","8","10","500","90"], answer:"9",
+        hints:[`How many 50s make 100? Two!`,`So 400 needs 8 melons. Then there's 50 more…`],
+        win:[`9 melons! SPLAT, SPLAT, SPLAT… on the ninth melon, the robot shudders, sparks, and falls to pieces. Professor Rotbottom is left sitting in the road in his pants, covered in watermelon.`]},
+      after:[{to:"joke", label:"Professor Rotbottom has something to say ➜"}]
+    },
+    joke:{ name:"Rotbottom's Joke", art:"🧟‍♂️😂",
+      story:[
+        say("Professor Rotbottom","🧟‍♂️",`Fine! You win! But I bet you can't answer my favourite joke. Why did the zombie stay home from school?`),
+        `Zombies are green and smelly, and a bit… mouldy. Like old fruit at the bottom of the fruit bowl.`
+      ],
+      puzzle:{ tag:"Joke riddle",
+        q:`Why did the zombie stay home from school?`,
+        vis: V.big("🧟 🏫 ❓"),
+        options:["He felt rotten","He lost his pencil","It was raining","He was too tall","He missed the bus","He forgot his lunch"], answer:"He felt rotten",
+        hints:[`It's a joke! The answer has two meanings.`,`When you're poorly, you "feel rotten". And zombies are rotten too!`],
+        win:[`"He felt ROTTEN!" Even Professor Rotbottom laughs. Then he wanders off down the road, still in his pants, looking for his robot's head.`]},
+      after:[{to:"final", label:"Count up ➜"}]
+    },
+    final:{ name:"Kev's Question", art:"🍳🌻",
+      story:[
+        say("Kev","🍳",`What a night! I want to plant a whole field of Sunflowers to say thank you. But I've forgotten — how much sun does one Sunflower cost?`)
+      ],
+      puzzle:{ tag:"Memory",
+        q:`How much sun does one Sunflower cost?`,
+        vis: V.big("🌻 = ❓ ☀️"),
+        options:["50","25","100","75","150","300"], answer:"50",
+        hints:[`Think back to Kev's seed shop…`,`Peashooters cost 100. Sunflowers cost half as much.`],
+        win:[`50 sun! Kev plants a hundred Sunflowers. By morning, the whole street is golden.`]},
+      after:[{to:"end", label:"The end ✨"}]
+    },
+    end:{ end:true }
+  }
+};
+
+const STORIES = [PIP, BEN, CHICK, JESS, ZIGGY, MIA, ZOO, LIGHT, SNOW, FAIR, CASTLE, SPACE, PIRATE, DINO, TOWER, BOLT, GUSTY, BURPINDA, LOO, LAWN, SEA, PYRAMID];
 </script>
 
 <!-- ======================= ENGINE ======================= -->
@@ -4288,7 +4497,7 @@ const SHORT={"Wizard Bramble":"Bramble","Captain Barnacle Bess":"Captain Bess","
  "Station Guard":"the guard","The Chief of Space":"the Chief of Space","The Museum Director":"the museum director","Ferry Troll":"the troll",
  "Coconut Stall Keeper":"the stall keeper","Zib's Dad":"Zib's dad","Wise Owl":"the owl","Troll":"the troll","T-Rex":"the T-Rex","Hen":"the hen",
  "Pig":"the pig","Cat":"the cat","Little dog":"the little dog","Little chick":"the little chick","Mouse":"the mouse","Duck":"the duck","Worm":"the worm",
- "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa","Peggy the pigeon":"Peggy","Tilly the toad":"Tilly","Wilf the royal butler":"Wilf","King Bottomley":"the King","The Cook":"the cook","The Spice Seller":"the spice seller","The Gardener":"the gardener","The Royal Cook":"the royal cook"};
+ "Bee":"a bee","Alien":"the alien","Red cat":"the red cat","Blue cat":"the blue cat","Green cat":"the green cat","Granny Mae":"Granny","Ranger Rosa":"Rosa","Peggy the pigeon":"Peggy","Tilly the toad":"Tilly","Wilf the royal butler":"Wilf","King Bottomley":"the King","The Cook":"the cook","The Spice Seller":"the spice seller","The Gardener":"the gardener","The Royal Cook":"the royal cook","Sunny the sunflower":"Sunny"};
 const VERB={"Polly":"squawks","BLIP":"beeps","Station Guard":"beeps","Mortimer the Mouse":"squeaks","Captain Wisp":"writes"};
 function bookSay(b, tag){
   let t=b.text.replace(/"([^"]*)"/g,'‘$1’');
